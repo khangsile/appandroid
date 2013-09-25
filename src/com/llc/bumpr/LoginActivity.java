@@ -1,4 +1,6 @@
-package com.example.bumpr;
+package com.llc.bumpr;
+
+import com.example.bumpr.R;
 
 import android.app.Activity;
 import android.content.Context;
