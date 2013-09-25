@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.example.bumpr.R;
 
@@ -55,8 +56,6 @@ public class LoginActivity extends Activity {
     	//Call toSearch if successful!
     }
     
-    /* Button Methods */
-    
     public void toRegistration(View v) {
     	Intent i = new Intent(this, RegistrationActivity.class);
     	startActivity(i);
@@ -67,4 +66,7 @@ public class LoginActivity extends Activity {
     	startActivity(i);
     }
     
+    public void loginWithFacebook(View v) {
+    
+    }
 }

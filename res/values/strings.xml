@@ -5,8 +5,11 @@
     <string name="app_title">bumpr.</string>
     <string name="action_settings">Settings</string>
     <string name="email">Email</string>
+    <string name="first_name">First Name</string>
     <string name="hello_world">Hello world!</string>
+    <string name="last_name">Last Name</string>
     <string name="login">Login</string>
+    <string name="login_with_fb">Login with Facebook</string>
     <string name="or">or</string>
 	<string name="password">*******</string>
 	<string name="register">Register</string>
