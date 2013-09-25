@@ -7,7 +7,6 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#f8f8ff"
     tools:context=".LoginActivity" >
     <TextView
         android:layout_width="wrap_content"
@@ -15,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:textSize="60sp"
-        android:text="@string/app_name" />
+        android:text="@string/app_title" />
    <RelativeLayout 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,12 +23,14 @@
             android:inputType="textEmailAddress"
             android:layout_width="300dp"
             android:layout_height="wrap_content" 
+            android:maxLines="1"
             android:hint="@string/email"/>
         <EditText android:id="@+id/et_password"
             android:inputType="textPassword"
     		android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/et_email"
+			android:maxLines="1"
             android:hint="@string/password" />
         <Button android:id="@+id/btn_login"
             android:layout_width="300dp"
@@ -46,7 +47,7 @@
             android:background="#e6e6fa"
             android:text="@string/register"
             android:onClick="toRegistration" />
-        <View android:id="@+id/leftDivider"
+        <View android:id="@+id/left_divider"
  			android:layout_width="130dp"
  			android:layout_height="1dp"
  			android:layout_alignParentLeft="true"
@@ -60,13 +61,20 @@
 			android:layout_centerHorizontal="true"
             android:layout_below="@id/btn_register"
             android:text="@string/or" />
-        <View android:id="@+id/rightDivider"
+        <View android:id="@+id/right_divider"
             android:layout_width="130dp"
             android:layout_height="1dp"
             android:layout_alignRight="@id/btn_register"
             android:layout_below="@id/btn_register"
             android:layout_marginTop="15dp"
             android:background="@android:color/black" />
+        <Button android:id="@+id/btn_login_with_fb"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/or"
+            android:layout_marginTop="5dp"
+            android:background="#e6e6fa"
+            android:text="@string/login_with_fb" />
     </RelativeLayout>
 
 </RelativeLayout>
