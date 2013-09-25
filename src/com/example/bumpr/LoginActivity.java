@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 
 public class LoginActivity extends Activity {
 
+	//Test Git Push
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
