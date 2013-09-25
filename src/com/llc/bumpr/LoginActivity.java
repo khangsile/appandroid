@@ -50,10 +50,20 @@ public class LoginActivity extends Activity {
         return true;
     }
     
+    public void authenticate() {
+    	//Fill in authentication process
+    	//Call toSearch if successful!
+    }
+    
     /* Button Methods */
     
     public void toRegistration(View v) {
     	Intent i = new Intent(this, RegistrationActivity.class);
+    	startActivity(i);
+    }
+    
+    public void toSearch(View v) {
+    	Intent i = new Intent(this, SearchDrivers.class);
     	startActivity(i);
     }
     

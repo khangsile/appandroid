@@ -10,5 +10,6 @@
     <string name="or">or</string>
 	<string name="password">*******</string>
 	<string name="register">Register</string>
+	<string name="search_title">Search destination here...</string>
 	
 </resources>
