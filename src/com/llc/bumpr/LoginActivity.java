@@ -1,9 +1,8 @@
 package com.llc.bumpr;
 
-import com.example.bumpr.R;
-
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -11,6 +10,8 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
+
+import com.example.bumpr.R;
 
 public class LoginActivity extends Activity {
 
@@ -28,8 +29,9 @@ public class LoginActivity extends Activity {
                 if (heightDiff > 100) { // if more than 100 pixels, its probably a keyboard...
                 	activityRootView.setOnTouchListener(new OnTouchListener() {
 						@Override
+						// set OnTouchListener to entire screen to grab touch events
 						public boolean onTouch(View arg0, MotionEvent arg1) {
-							// TODO Auto-generated method stub
+							// close keyboard 
 					        final InputMethodManager imm = (InputMethodManager)getSystemService(
 					                Context.INPUT_METHOD_SERVICE);
 					            imm.hideSoftInputFromWindow(activityRootView.getWindowToken(), 0);
@@ -40,13 +42,19 @@ public class LoginActivity extends Activity {
              }
         });
     }
-
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+    
+    /* Button Methods */
+    
+    public void toRegistration(View v) {
+    	Intent i = new Intent(this, RegistrationActivity.class);
+    	startActivity(i);
     }
     
 }
