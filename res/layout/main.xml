@@ -38,7 +38,8 @@
             android:layout_below="@id/et_password"
             android:layout_marginTop="5dp"
             android:background="#e6e6fa"
-            android:text="@string/login" />
+            android:text="@string/login"
+            android:onClick="login" />
 		<Button android:id="@+id/btn_register"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -74,7 +75,8 @@
             android:layout_below="@id/or"
             android:layout_marginTop="5dp"
             android:background="#e6e6fa"
-            android:text="@string/login_with_fb" />
+            android:text="@string/login_with_fb"
+            android:onClick="loginWithFacebook" />
     </RelativeLayout>
 
 </RelativeLayout>

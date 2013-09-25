@@ -40,6 +40,6 @@
             android:layout_marginTop="10dp"
             android:background="#e6e6fa"
             android:text="@string/register"
-            android:onClick="toRegistration" />
+            android:onClick="register" />
     
 </RelativeLayout>
