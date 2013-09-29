@@ -31,7 +31,25 @@ public class CircularImage extends ImageView {
 	
 	@Override
 	protected void onDraw(Canvas canvas){
-		Drawable d = getDrawable();
+	    Drawable drawable = getDrawable();
+
+	    if (drawable == null) {
+	        return;
+	    }
+
+	    if (getWidth() == 0 || getHeight() == 0) {
+	        return; 
+	    }
+	    Bitmap b =  ((BitmapDrawable)drawable).getBitmap() ;
+	    Bitmap bitmap = b.copy(Bitmap.Config.ARGB_8888, true);
+
+	    int w = getWidth(), h = getHeight();
+
+
+	    Bitmap roundBitmap =  circularBitmap(bitmap, w);
+	    canvas.drawBitmap(roundBitmap, 0,0, null);
+		
+		/*Drawable d = getDrawable();
 		
 		if (d == null)
 			return; //No Image
@@ -46,10 +64,10 @@ public class CircularImage extends ImageView {
 		int height = getHeight();
 		
 		Bitmap circularBitmap = circularBitmap(bMap, width);
-		canvas.drawBitmap(circularBitmap, 0, 0, null);
+		canvas.drawBitmap(circularBitmap, 0, 0, null); */
 		}
 
-	public Bitmap circularBitmap(Bitmap bMap, int width) {
+	public static Bitmap circularBitmap(Bitmap bMap, int width) {
 		Bitmap bitmap;
 		if(bMap.getWidth() != width || bMap.getHeight() != width)
 			bitmap = Bitmap.createScaledBitmap(bMap,width, width, false);
