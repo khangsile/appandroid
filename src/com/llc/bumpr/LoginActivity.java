@@ -66,6 +66,12 @@ public class LoginActivity extends Activity {
     	startActivity(i);
     }
     
+    //Kyle Test
+    public void toUser(View v) {
+    	Intent i = new Intent(this, UserProfile.class);
+    	startActivity(i);
+    }
+    
     public void loginWithFacebook(View v) {
     
     }
