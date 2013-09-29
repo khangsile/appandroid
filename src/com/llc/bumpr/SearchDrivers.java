@@ -1,6 +1,6 @@
 package com.llc.bumpr;
 
-import com.example.bumpr.R;
+import com.llc.bumpr.R;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.ConnectionResult;
 
@@ -18,6 +18,7 @@ public class SearchDrivers extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.search_driver);
 	}
 	
     @Override

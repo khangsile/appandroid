@@ -12,7 +12,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.example.bumpr.R;
+import com.llc.bumpr.R;
 
 public class LoginActivity extends Activity {
 

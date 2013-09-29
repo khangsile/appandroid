@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.bumpr.R;
+import com.llc.bumpr.R;
 
 public class RegistrationActivity extends Activity {
 
