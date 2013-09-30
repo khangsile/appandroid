@@ -38,7 +38,7 @@ public class GraphicsUtil {
 		paint.setColor(color);
 		canvas.drawOval(rectF, paint);
 
-		paint.setColor(Color.BLUE);
+		//paint.setColor(Color.BLUE);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth((float) 4);
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
