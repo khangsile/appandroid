@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#000" >
 
-    <com.llc.bumpr.views.CircularImage
-        android:id="@+id/imageView1"
+    <ImageView
+        android:id="@+id/profile_pic"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/common_signin_btn_icon_dark" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
