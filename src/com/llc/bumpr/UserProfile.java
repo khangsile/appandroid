@@ -15,29 +15,24 @@ public class UserProfile extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.user_profile);
 		
 		//Retrieve views
 		ImageView profPic = (ImageView) findViewById(R.id.iv_profile_pic);
 		ImageView carImg = (ImageView) findViewById(R.id.iv_car_image);
 		TextView userName = (TextView) findViewById(R.id.tv_user_name);
-		RelativeLayout imageLayout = (RelativeLayout) findViewById(R.id.rl_image_layout);
 		
 		//Set images
-		carImg.setImageResource(R.drawable.test_car_image);
+		int imageSize = 200; //**TO DO - Change to pixel size based on dp value of phone. Use chris allen lib.
 		GraphicsUtil imageHelper = new GraphicsUtil();
 		Bitmap bm = imageHelper.getCircleBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.test_image), 16);
 		//Resize image to the desired size
-		Bitmap resizedBM = Bitmap.createScaledBitmap(bm, 200, 200, false);
+		Bitmap resizedBM = Bitmap.createScaledBitmap(bm, imageSize, imageSize, false);
 		profPic.setImageBitmap(resizedBM);
 	
 		//Set layout parameters of image view
-		/*MarginLayoutParams profPicMargin = new MarginLayoutParams(profPic.getLayoutParams());
-		profPicMargin.setMargins(0,profPic.getHeight()/2, 0, 0);*/		
-		RelativeLayout.LayoutParams profPicLP = (RelativeLayout.LayoutParams) imageLayout.getLayoutParams();
-		profPicLP.setMargins(0,0,0,profPic.getHeight()/2);
-		imageLayout.setLayoutParams(profPicLP);
+		carImg.setPadding(0,0, 0, 100);
+		carImg.setImageResource(R.drawable.test_car_image);
 		
 		//Set user name
 		userName.setText("Kyle Cooper");
