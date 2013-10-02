@@ -22,6 +22,7 @@ public class UserProfile extends Activity {
 		ImageView profPic = (ImageView) findViewById(R.id.iv_profile_pic);
 		ImageView carImg = (ImageView) findViewById(R.id.iv_car_image);
 		TextView userName = (TextView) findViewById(R.id.tv_user_name);
+		RelativeLayout imageLayout = (RelativeLayout) findViewById(R.id.rl_image_layout);
 		
 		//Set images
 		carImg.setImageResource(R.drawable.test_car_image);
@@ -33,9 +34,10 @@ public class UserProfile extends Activity {
 	
 		//Set layout parameters of image view
 		/*MarginLayoutParams profPicMargin = new MarginLayoutParams(profPic.getLayoutParams());
-		profPicMargin.setMargins(0,profPic.getHeight()/2, 0, 0);		
-		RelativeLayout.LayoutParams profPicLP = new RelativeLayout.LayoutParams(profPicMargin);
-		profPic.setLayoutParams(profPicLP);*/
+		profPicMargin.setMargins(0,profPic.getHeight()/2, 0, 0);*/		
+		RelativeLayout.LayoutParams profPicLP = (RelativeLayout.LayoutParams) imageLayout.getLayoutParams();
+		profPicLP.setMargins(0,0,0,profPic.getHeight()/2);
+		imageLayout.setLayoutParams(profPicLP);
 		
 		//Set user name
 		userName.setText("Kyle Cooper");
