@@ -24,6 +24,8 @@ public class UserProfile extends Activity {
 		TextView userName = (TextView) findViewById(R.id.tv_user_name);
 		TextView userLoc = (TextView) findViewById(R.id.tv_user_loc);
 		TextView userCar = (TextView) findViewById(R.id.tv_user_car);
+		TextView numSeats = (TextView) findViewById(R.id.tv_num_seats);
+		TextView carRate = (TextView) findViewById(R.id.tv_car_rate);
 		
 		//Set images
 		int imageSize = 200; //**TO DO - Change to pixel size based on dp value of phone. Use chris allen lib.
@@ -40,6 +42,8 @@ public class UserProfile extends Activity {
 		//Set text values
 		userName.setText("Kyle Cooper");
 		userLoc.setText("Lexington, KY");
-		userCar.setText("2013 Camry Hybrid XLE");
+		userCar.setText("Car: 2013 Camry Hybrid XLE");
+		numSeats.setText("Seats: 4");
+		carRate.setText("Rate: $2.25/mi");
 	}
 }
