@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="5dp"
+        android:clipToPadding="false"
+        android:gravity="top"
+        android:maxLines="1"
+        android:textColor="#000"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/tv_user_loc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/tv_user_name"
+        android:paddingLeft="5dp"
+        android:layout_marginBottom="-4dp"
+        android:layout_marginTop="-4dp"
+        android:maxLines="1"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/tv_user_car"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/tv_user_loc"
+        android:paddingLeft="5dp"
+        android:maxLines="1"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:typeface="sans" />
+
+</RelativeLayout>

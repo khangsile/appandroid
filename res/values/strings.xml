@@ -14,5 +14,6 @@
 	<string name="password">*******</string>
 	<string name="register">Register</string>
 	<string name="search_title">Search destination here...</string>
+	<string name="request_me">Request Me</string>
 	
 </resources>

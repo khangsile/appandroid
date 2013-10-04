@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -21,9 +22,8 @@ public class UserProfile extends Activity {
 		ImageView profPic = (ImageView) findViewById(R.id.iv_profile_pic);
 		ImageView carImg = (ImageView) findViewById(R.id.iv_car_image);
 		TextView userName = (TextView) findViewById(R.id.tv_user_name);
-		
-		//** TO DO - Convert this to set height in dp!!
-		userName.setHeight(100);//Set height in pixels (Half the height of the prof pic!!
+		TextView userLoc = (TextView) findViewById(R.id.tv_user_loc);
+		TextView userCar = (TextView) findViewById(R.id.tv_user_car);
 		
 		//Set images
 		int imageSize = 200; //**TO DO - Change to pixel size based on dp value of phone. Use chris allen lib.
@@ -37,7 +37,9 @@ public class UserProfile extends Activity {
 		carImg.setPadding(0,0, 0, 100);
 		carImg.setImageResource(R.drawable.test_car_image);
 		
-		//Set user name
+		//Set text values
 		userName.setText("Kyle Cooper");
+		userLoc.setText("Lexington, KY");
+		userCar.setText("2013 Camry Hybrid XLE");
 	}
 }
