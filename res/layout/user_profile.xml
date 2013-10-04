@@ -27,13 +27,17 @@
             android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-			android:layout_alignBottom="@id/iv_car_image"
-			android:layout_toLeftOf="@id/iv_profile_pic"
+            android:layout_alignBottom="@id/iv_car_image"
+            android:layout_alignLeft="@id/iv_car_image"
+            android:clipToPadding="false"
+            android:paddingLeft="5dp"
             android:maxLines="1"
             android:textColor="#000"
             android:textSize="25sp"
             android:textStyle="bold"
             android:typeface="sans" />
+<!--             android:height="55dp" -->
+        
     </RelativeLayout>
 
 </RelativeLayout>

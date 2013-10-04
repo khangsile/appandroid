@@ -22,6 +22,9 @@ public class UserProfile extends Activity {
 		ImageView carImg = (ImageView) findViewById(R.id.iv_car_image);
 		TextView userName = (TextView) findViewById(R.id.tv_user_name);
 		
+		//** TO DO - Convert this to set height in dp!!
+		userName.setHeight(100);//Set height in pixels (Half the height of the prof pic!!
+		
 		//Set images
 		int imageSize = 200; //**TO DO - Change to pixel size based on dp value of phone. Use chris allen lib.
 		GraphicsUtil imageHelper = new GraphicsUtil();
