@@ -1,17 +1,20 @@
 package com.llc.bumpr;
 
 import com.llc.bumpr.R;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.ConnectionResult;
 
+import com.actionbarsherlock.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import android.widget.Toast;
 
-public class SearchDrivers extends Activity {
+public class SearchDrivers extends SherlockActivity {
 
+	com.actionbarsherlock.app.ActionBar actionBar;
 	private static final int RQS_GooglePlayServices = 1;
 
 	@Override
@@ -19,6 +22,7 @@ public class SearchDrivers extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_driver);
+		actionBar = getSupportActionBar();
 	}
 	
     @Override
@@ -40,7 +44,7 @@ public class SearchDrivers extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreateOptionsMenu(menu);
 		
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 		
 		return true;
