@@ -1,5 +1,7 @@
 package com.llc.bumpr;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 import com.llc.bumpr.R;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -23,6 +25,8 @@ public class SearchDrivers extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_driver);
 		actionBar = getSupportActionBar();
+		
+		SlidingMenu menu = new SlidingMenu(this);		
 	}
 	
     @Override
