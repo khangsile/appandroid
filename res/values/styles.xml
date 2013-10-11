@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 	
 	<color name="ghost_white">#f8f8ff</color>
     <!--
@@ -17,6 +17,11 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     	<item name="android:windowBackground">@color/ghost_white</item>
+    	<item name="android:buttonStyle">@style/Button</item>
+    </style>
+    
+    <style name="Button" parent="@android:style/Widget.Button">
+        <item name="android:height">50dp</item>
     </style>
 
 </resources>
