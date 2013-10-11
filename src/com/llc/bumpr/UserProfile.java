@@ -1,5 +1,7 @@
 package com.llc.bumpr;
 
+import com.androidtools.Conversions;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,15 +30,15 @@ public class UserProfile extends Activity {
 		TextView carRate = (TextView) findViewById(R.id.tv_car_rate);
 		
 		//Set images
-		int imageSize = 200; //**TO DO - Change to pixel size based on dp value of phone. Use chris allen lib.
+		float imageSize = Conversions.dpToPixels(this, 100); //**TO DO - Change to pixel size based on dp value of phone. Use chris allen lib.
 		GraphicsUtil imageHelper = new GraphicsUtil();
 		Bitmap bm = imageHelper.getCircleBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.test_image), 16);
 		//Resize image to the desired size
-		Bitmap resizedBM = Bitmap.createScaledBitmap(bm, imageSize, imageSize, false);
+		Bitmap resizedBM = Bitmap.createScaledBitmap(bm, Math.round(imageSize), Math.round(imageSize), false);
 		profPic.setImageBitmap(resizedBM);
 	
 		//Set layout parameters of image view
-		carImg.setPadding(0,0, 0, 100);
+		carImg.setPadding(0,0, 0, Math.round(Conversions.dpToPixels(this, 50)));
 		carImg.setImageResource(R.drawable.test_car_image);
 		
 		//Set text values
