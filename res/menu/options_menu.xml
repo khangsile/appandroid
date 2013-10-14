@@ -6,6 +6,5 @@
         android:actionViewClass="com.actionbarsherlock.widget.SearchView"
         android:title="@string/search_title"
         android:icon="@drawable/ic_action_search_dark"
-        android:showAsAction="collapseActionView|ifRoom"/>
-
+        android:showAsAction="always"/>
 </menu>
