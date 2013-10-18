@@ -62,7 +62,8 @@
         <activity 
             android:name="com.llc.bumpr.SearchDrivers"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Sherlock" >
+            android:theme="@style/Theme.Sherlock"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity 
             android:name="com.llc.bumpr.UserProfile"

@@ -1,18 +1,23 @@
 package com.llc.bumpr;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 import com.llc.bumpr.R;
+import com.llc.bumpr.adapters.EndlessAdapter;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.internal.w;
 
 import com.actionbarsherlock.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -25,19 +30,26 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class SearchDrivers extends SherlockActivity {
+public class SearchDrivers extends SherlockActivity implements EndlessListView.EndlessListener {
 
 	com.actionbarsherlock.app.ActionBar actionBar;
 	private static final int RQS_GooglePlayServices = 1;
 	private SlidingMenu slidingMenu;
 	private LinearLayout map;
 	private LinearLayout driverLayout;
+	
+	private int page;
+	EndlessListView driverList;
+	EndlessAdapter endListAdp;
+	
+	int testCntr = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +70,12 @@ public class SearchDrivers extends SherlockActivity {
 		slidingMenu.setFadeDegree(0.35f);
 		slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 		slidingMenu.setMenu(R.layout.sliding_menu);
-
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		//Set up endless list view for driver list
+		driverList = (EndlessListView) findViewById(R.id.lv_drivers);
+		driverList.setLoadingView(R.layout.loading_layout);
+		driverList.setListener(this);
 	}
 
 	// If slidingMenu showing, back closes menu. Otherwise, calls parent back
@@ -128,7 +144,7 @@ public class SearchDrivers extends SherlockActivity {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 
-		SearchView searchView = (SearchView) menu.findItem(R.id.it_search_bar).getActionView();
+		final SearchView searchView = (SearchView) menu.findItem(R.id.it_search_bar).getActionView();
 		searchView.setQueryHint("Enter destination here...");
 		searchView.setIconifiedByDefault(false);
 
@@ -145,6 +161,18 @@ public class SearchDrivers extends SherlockActivity {
 				LinearLayout.LayoutParams driverPars = (LinearLayout.LayoutParams)driverLayout.getLayoutParams();
 				driverPars.weight = 0.5f;
 				driverLayout.setLayoutParams(driverPars);
+				
+				if(endListAdp == null){
+					endListAdp = new EndlessAdapter(getApplicationContext(), createItems(), R.layout.driver_row);
+					driverList.setAdapter(endListAdp);
+				}
+				else
+					newSearch(); //Reset endless list with new data
+				
+				//Hide keyboard when enter pressed
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+				
 				return true;
 			}
 
@@ -158,6 +186,56 @@ public class SearchDrivers extends SherlockActivity {
 
 		return true;
 
+	}
+	
+	//Added by KJC to clear data and add new search results for each search
+	public void newSearch(){
+		//Reset counter for new search (Set to 1)
+		testCntr = 1;
+		//Clear the list and add the new search results
+		driverList.resetData(createItems());
+	}
+	
+	//Files needed for implementing/testing endless list view
+	private class FakeNetLoader extends AsyncTask<String, Void, List<String>> {
+
+		@Override
+		protected List<String> doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+			try{
+				Thread.sleep(4000);
+			} catch(InterruptedException e){
+				e.printStackTrace();
+			}
+			return createItems();
+		}
+		
+		@Override
+		protected void onPostExecute(List<String> result){
+			super.onPostExecute(result);
+			driverList.addNewData(result);
+		}
+		
+	}
+
+	@Override
+	public void loadData() {
+		// TODO Auto-generated method stub
+		Log.w("com.llc.bumpr", "Adding new data!");
+		testCntr += 10;
+		//Load more data
+		FakeNetLoader f1 = new FakeNetLoader();
+		f1.execute(new String[]{});
+		
+	}
+	
+	private List<String> createItems() {
+		// TODO Auto-generated method stub
+		List<String> items = new ArrayList<String>();
+		
+		for (int i = testCntr; i <testCntr+10; i++)
+			items.add("Driver " + i);
+		return items;
 	}
 
 }

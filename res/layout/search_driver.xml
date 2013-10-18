@@ -23,11 +23,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
          android:layout_weight="0" >
-    <ListView
+    <com.llc.bumpr.EndlessListView
         android:id="@+id/lv_drivers"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
+        android:layout_height="match_parent" />
     </LinearLayout>
 
 </LinearLayout>
