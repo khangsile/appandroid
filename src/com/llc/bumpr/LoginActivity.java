@@ -14,6 +14,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.llc.bumpr.R;
 import com.llc.bumpr.sdk.models.Session;
@@ -59,8 +60,6 @@ public class LoginActivity extends Activity {
 	}
 
 	public void authenticate() {
-		// Fill in authentication process
-		// Call toSearch if successful!
 		String email = ((EditText) findViewById(R.id.et_email)).getText().toString();
 		String password = ((EditText) findViewById(R.id.et_password)).getText().toString();
 		
@@ -70,8 +69,7 @@ public class LoginActivity extends Activity {
 			@Override
 			public void failure(RetrofitError arg0) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(), RegistrationActivity.class);
-				startActivity(i);
+				Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -83,17 +81,14 @@ public class LoginActivity extends Activity {
 			
 		});
 	}
+	
+	public void login(View v) {
+		authenticate();
+	}
 
 	public void toRegistration(View v) {
 		Intent i = new Intent(this, RegistrationActivity.class);
 		startActivity(i);
-	}
-
-	public void toSearch(View v) {
-		authenticate();
-		
-		//Intent i = new Intent(this, SearchDrivers.class);
-		//startActivity(i);
 	}
 
 	// Kyle Test
@@ -103,8 +98,7 @@ public class LoginActivity extends Activity {
 	}
 
 	public void loginWithFacebook(View v) {
-		//Intent i = new Intent(this, SearchDrivers.class);
-		//startActivity(i);
-		toSearch(v);
+		Intent i = new Intent(this, SearchDrivers.class);
+		startActivity(i);
 	}
 }
