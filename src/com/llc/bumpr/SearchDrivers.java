@@ -76,7 +76,7 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 		//Setup menu to be used by sliding menu
 		menuList = new ArrayList<HashMap<String,String>>();
 		initList();
-		menuAdpt = new SimpleAdapter(this, menuList, R.layout.sliding_menu_row, new String[] {"Section1"}, new int[] {R.id.tv_sliding_menu_text});
+		menuAdpt = new SimpleAdapter(this, menuList, R.layout.sliding_menu_row_text, new String[] {"Section1"}, new int[] {R.id.tv_sliding_menu_text});
 		lvMenu.setAdapter(menuAdpt);
 		
 		// Set up sliding menu
