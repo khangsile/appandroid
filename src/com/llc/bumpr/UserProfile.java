@@ -35,7 +35,7 @@ public class UserProfile extends Activity {
 		TextView carRate = (TextView) findViewById(R.id.tv_car_rate);
 		
 		//Set images
-		float imageSize = Conversions.dpToPixels(this, 100); //**TO DO - Change to pixel size based on dp value of phone. Use chris allen lib.
+		float imageSize = Conversions.dpToPixels(this, 100);
 		GraphicsUtil imageHelper = new GraphicsUtil();
 		Bitmap bm = imageHelper.getCircleBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.test_image), 16);
 		//Resize image to the desired size

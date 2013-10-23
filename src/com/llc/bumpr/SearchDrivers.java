@@ -1,13 +1,16 @@
 package com.llc.bumpr;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 import com.llc.bumpr.R;
 import com.llc.bumpr.adapters.EndlessAdapter;
+import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -17,6 +20,7 @@ import com.google.android.gms.internal.w;
 import com.actionbarsherlock.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import com.actionbarsherlock.view.Menu;
@@ -28,27 +32,34 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.util.Pair;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class SearchDrivers extends SherlockActivity implements EndlessListView.EndlessListener {
 
-	com.actionbarsherlock.app.ActionBar actionBar;
+	private com.actionbarsherlock.app.ActionBar actionBar;
 	private static final int RQS_GooglePlayServices = 1;
 	private SlidingMenu slidingMenu;
 	private LinearLayout map;
 	private LinearLayout driverLayout;
 	
 	private int page;
-	EndlessListView driverList;
-	EndlessAdapter endListAdp;
+	private EndlessListView driverList;
+	private EndlessAdapter endListAdp;
 	
+	private ListView lvMenu;
+	private List<Pair<String, Object>> menuList;
+	private SlidingMenuListAdapter menuAdpt;
 	int testCntr = 1;
 
 	@Override
@@ -59,7 +70,18 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 		actionBar = getSupportActionBar();
 		map = (LinearLayout) findViewById(R.id.ll_map_container);
 		driverLayout = (LinearLayout) findViewById(R.id.ll_driver_list);
+		
+		//Inflate listview view
+		View slMenu = LayoutInflater.from(getApplication()).inflate(R.layout.sliding_menu, null);
+		lvMenu = (ListView) slMenu.findViewById(R.id.menu_list);
 
+		//Setup menu to be used by sliding menu
+		menuList = new ArrayList<Pair<String,Object>>();
+		initList();
+		
+		menuAdpt = new SlidingMenuListAdapter(this, menuList);
+		lvMenu.setAdapter(menuAdpt);
+		
 		// Set up sliding menu
 		slidingMenu = new SlidingMenu(this);
 		slidingMenu.setMode(SlidingMenu.LEFT);
@@ -69,7 +91,7 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 		slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		slidingMenu.setFadeDegree(0.35f);
 		slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		slidingMenu.setMenu(R.layout.sliding_menu);
+		slidingMenu.setMenu(slMenu);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		//Set up endless list view for driver list
@@ -77,6 +99,14 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 		driverList.setLoadingView(R.layout.loading_layout);
 		driverList.setListener(this);
 	}
+	
+	private void initList() {
+    	menuList.add(new Pair<String, Object>("Image", "Kyle Cooper"));//Pass User Object in future
+    	menuList.add(new Pair<String, Object>("Text", "Home"));
+    	menuList.add(new Pair<String, Object>("Text", "Profile"));
+    	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
+    	menuList.add(new Pair<String, Object>("Text", "Logout"));
+    }
 
 	// If slidingMenu showing, back closes menu. Otherwise, calls parent back
 	// action
@@ -170,6 +200,7 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 					newSearch(); //Reset endless list with new data
 				
 				//Hide keyboard when enter pressed
+				//searchView.clearFocus(); //***Clearing focus has ugly animation, can we disable this animation?? ***//
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 				

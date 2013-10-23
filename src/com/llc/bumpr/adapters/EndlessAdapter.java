@@ -69,9 +69,6 @@ public class EndlessAdapter extends ArrayAdapter<String> {
                 
                 return result;
 
-        }
-        
-
-        
+        }        
 
 }
