@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/tv_sl_menu_driver_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:textColor="#000"
+        android:textSize="18sp" />
+
+    <!-- Change this toggle button to dberm22 custom on/off switch saved in favs -->
+
+    <ToggleButton
+        android:id="@+id/tb_togglebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:textOff="Off"
+        android:textOn="On" />
+
+</RelativeLayout>

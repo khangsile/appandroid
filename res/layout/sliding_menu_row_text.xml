@@ -11,8 +11,8 @@ android:orientation="vertical" >
     android:textColor="#000"
     android:textSize="18sp"
     android:gravity="center_vertical"
-    android:paddingStart="8dip"
-    android:paddingEnd="8dip"
-    android:minHeight="48dip" />
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:minHeight="48dp" />
 
 </LinearLayout>

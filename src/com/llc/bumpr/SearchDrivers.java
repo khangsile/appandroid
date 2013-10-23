@@ -10,6 +10,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 import com.llc.bumpr.R;
 import com.llc.bumpr.adapters.EndlessAdapter;
+import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -31,6 +32,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,8 +58,10 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 	private EndlessAdapter endListAdp;
 	
 	private ListView lvMenu;
-	private List<HashMap<String, String>> menuList;
-	private SimpleAdapter menuAdpt;
+	//private List<HashMap<String, Object>> menuList;
+	private List<Pair<String, Object>> menuList;
+	//private SimpleAdapter menuAdpt;
+	private SlidingMenuListAdapter menuAdpt;
 	int testCntr = 1;
 
 	@Override
@@ -74,9 +78,11 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 		lvMenu = (ListView) slMenu.findViewById(R.id.menu_list);
 
 		//Setup menu to be used by sliding menu
-		menuList = new ArrayList<HashMap<String,String>>();
+		menuList = new ArrayList<Pair<String,Object>>();
 		initList();
-		menuAdpt = new SimpleAdapter(this, menuList, R.layout.sliding_menu_row_text, new String[] {"Section1"}, new int[] {R.id.tv_sliding_menu_text});
+		
+		//menuAdpt = new SimpleAdapter(this, menuList, R.layout.sliding_menu_row_text, new String[] {"Section1"}, new int[] {R.id.tv_sliding_menu_text});
+		menuAdpt = new SlidingMenuListAdapter(this, menuList);
 		lvMenu.setAdapter(menuAdpt);
 		
 		// Set up sliding menu
@@ -97,16 +103,24 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 		driverList.setListener(this);
 	}
 	
-    private void initList() {
-    	menuList.add(putData("Section1", "Test 0"));
-    	menuList.add(putData("Section1", "Test 1"));
-    	menuList.add(putData("Section1", "Test 2"));
-    	menuList.add(putData("Section1", "Test 3"));
-    	menuList.add(putData("Section1", "Test 4"));
+	private void initList() {
+    	menuList.add(new Pair<String, Object>("Image", "Kyle Cooper"));//Pass User Object in future
+    	menuList.add(new Pair<String, Object>("Text", "Home"));
+    	menuList.add(new Pair<String, Object>("Text", "Profile"));
+    	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
+    	menuList.add(new Pair<String, Object>("Text", "Logout"));
     }
+	
+	/*private void initList() {
+    	menuList.add(putData("Image", "Kyle Cooper"));//Pass User Object in future
+    	menuList.add(putData("Text", "Home"));
+    	menuList.add(putData("Text", "Profile"));
+    	menuList.add(putData("Switch", "Driver Mode"));
+    	menuList.add(putData("Text", "Logout"));
+    }*/
     
-    private HashMap<String, String> putData(String key, String name){
-    	HashMap <String, String> data = new HashMap<String, String>();
+    private HashMap<String, Object> putData(String key, Object name){
+    	HashMap <String, Object> data = new HashMap<String, Object>();
     	data.put(key, name);
     	return data;
     }
