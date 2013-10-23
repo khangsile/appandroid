@@ -46,9 +46,9 @@ public class RegistrationActivity extends Activity {
 			public void failure(RetrofitError arg0) {
 				// TODO Auto-generated method stub
 				try {
-					String error = BumprError.errorToBumprError(arg0);
+					BumprError error = BumprError.errorToBumprError(arg0);
 					Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-					log.info(error);
+					log.info(error.getMessage());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
