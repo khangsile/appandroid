@@ -18,7 +18,12 @@ public class UserProfile extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_profile);
 		
-		User user = (User) savedInstanceState.getParcelable("key");
+		Bundle bundle = getIntent().getExtras();
+		User user = (User) bundle.getParcelable("user");
+		
+		if (user == null) {
+			throw new NullPointerException("Instance ('user') cannot be null");
+		}
 		
 		//Retrieve views
 		ImageView profPic = (ImageView) findViewById(R.id.iv_profile_pic);
@@ -42,7 +47,7 @@ public class UserProfile extends Activity {
 		carImg.setImageResource(R.drawable.test_car_image);
 		
 		//Set text values
-		userName.setText(user.getFirstName() + user.getLastName());
+		userName.setText(user.getFirstName() + " " + user.getLastName());
 		userLoc.setText(user.getCity() + ", " + user.getState());
 		userCar.setText("Car: 2013 Camry Hybrid XLE");
 		numSeats.setText("Seats: 4");
