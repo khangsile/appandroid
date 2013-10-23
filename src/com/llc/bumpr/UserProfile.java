@@ -1,16 +1,14 @@
 package com.llc.bumpr;
 
-import com.androidtools.Conversions;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.androidtools.Conversions;
+import com.llc.bumpr.sdk.models.User;
 
 public class UserProfile extends Activity {
 
@@ -19,6 +17,13 @@ public class UserProfile extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_profile);
+		
+		Bundle bundle = getIntent().getExtras();
+		User user = (User) bundle.getParcelable("user");
+		
+		if (user == null) {
+			throw new NullPointerException("Instance ('user') cannot be null");
+		}
 		
 		//Retrieve views
 		ImageView profPic = (ImageView) findViewById(R.id.iv_profile_pic);
@@ -42,8 +47,8 @@ public class UserProfile extends Activity {
 		carImg.setImageResource(R.drawable.test_car_image);
 		
 		//Set text values
-		userName.setText("Kyle Cooper");
-		userLoc.setText("Lexington, KY");
+		userName.setText(user.getFirstName() + " " + user.getLastName());
+		userLoc.setText(user.getCity() + ", " + user.getState());
 		userCar.setText("Car: 2013 Camry Hybrid XLE");
 		numSeats.setText("Seats: 4");
 		carRate.setText("Rate: $2.25/mi");

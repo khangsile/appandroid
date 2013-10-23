@@ -39,7 +39,7 @@
             android:layout_below="@id/et_password"
             android:layout_marginTop="5dp"
             android:background="#e6e6fa"
-            android:onClick="toUser"
+            android:onClick="login"
             android:text="@string/login" />
 		<Button android:id="@+id/btn_register"
             android:layout_width="300dp"
