@@ -13,24 +13,14 @@ import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.internal.w;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 
 import com.actionbarsherlock.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import com.actionbarsherlock.view.Menu;
@@ -55,9 +45,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SearchDrivers extends SherlockFragmentActivity implements EndlessListView.EndlessListener,
-		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener {
+public class SearchDrivers extends SherlockActivity implements EndlessListView.EndlessListener {
 
 	private com.actionbarsherlock.app.ActionBar actionBar;
 	private static final int RQS_GooglePlayServices = 1;
@@ -73,21 +61,15 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	private List<Pair<String, Object>> menuList;
 	private SlidingMenuListAdapter menuAdpt;
 	int testCntr = 1;
-	
-	private GoogleMap gMap;
-	private LocationClient mLocationClient;
-	
-	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_driver);
-		driverLayout = (LinearLayout) findViewById(R.id.ll_driver_list);
 		actionBar = getSupportActionBar();
 		map = (LinearLayout) findViewById(R.id.ll_map_container);
-		gMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+		driverLayout = (LinearLayout) findViewById(R.id.ll_driver_list);
 		
 		//Inflate listview view
 		View slMenu = LayoutInflater.from(getApplication()).inflate(R.layout.sliding_menu, null);
@@ -116,39 +98,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		driverList = (EndlessListView) findViewById(R.id.lv_drivers);
 		driverList.setLoadingView(R.layout.loading_layout);
 		driverList.setListener(this);
-		
-		//Create new location client.
-		mLocationClient = new LocationClient(this, this, this);
-		gMap.setMyLocationEnabled(true);
-		
 	}
 	
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-		
-		if(isGooglePlayServicesAvailable())
-			mLocationClient.connect();
-	}
-	
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		//Disconnect from client
-		mLocationClient.disconnect();
-		super.onStop();
-	}
-	
-	//Handle results returned to the FragmentActivity by Google Play services
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if(requestCode==CONNECTION_FAILURE_RESOLUTION_REQUEST && resultCode==Activity.RESULT_OK)
-	       //Attempt to reconnect if is result is ok!
-	    	mLocationClient.connect();
-	}
-
-
 	private void initList() {
     	menuList.add(new Pair<String, Object>("Image", "Kyle Cooper"));//Pass User Object in future
     	menuList.add(new Pair<String, Object>("Text", "Home"));
@@ -199,21 +150,20 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		}
 	}
 
-	private boolean isGooglePlayServicesAvailable() {
+	@Override
+	protected void onResume() {
 		// TODO Auto-generated method stub
+		super.onResume();
+
 		// Verify user has good version of google play services. Necessary for
 		// maps
 		int retCode = GooglePlayServicesUtil
 				.isGooglePlayServicesAvailable(getApplicationContext());
-		// If successful, carry on.
-		if (ConnectionResult.SUCCESS == retCode)
-			return true;
-		//Otherwise, request them to download GP Services
-		else {
+		// If successful, carry on. Otherwise, request them to download GP
+		// Services
+		if (retCode != ConnectionResult.SUCCESS)
 			GooglePlayServicesUtil.getErrorDialog(retCode, this,
 					RQS_GooglePlayServices).show();
-			return false;
-		}
 	}
 
 	@Override
@@ -317,36 +267,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		for (int i = testCntr; i <testCntr+10; i++)
 			items.add("Driver " + i);
 		return items;
-	}
-
-	@Override
-	public void onConnectionFailed(ConnectionResult connResult) {
-		// TODO Auto-generated method stub
-		//If Google Play Services can resolve the errors, allow it to resolve the errors!
-		if(connResult.hasResolution())
-			try{
-				//Start activity that tries to resolve the error
-				connResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-			}catch(IntentSender.SendIntentException e){
-				//Thrown if Google Play Services canceled the original PendingIntent
-				e.printStackTrace();
-			}
-	}
-
-	//Connection to location services completed.  Get current location now
-	@Override
-	public void onConnected(Bundle arg0) {
-		// TODO Auto-generated method stub
-		Location loc = mLocationClient.getLastLocation();
-		LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng,10);
-		gMap.animateCamera(camUpdate);
-	}
-
-	@Override
-	public void onDisconnected() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
