@@ -22,6 +22,7 @@ public class GraphicsUtil {
 	 * large
 	 */
 	public Bitmap getCircleBitmap(Bitmap bitmap, int pixels) {
+		//Commented out lines below to improve performance		
 		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
 				bitmap.getHeight(), Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
@@ -29,18 +30,18 @@ public class GraphicsUtil {
 		final int color = 0xffff0000;
 		final Paint paint = new Paint();
 		final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-		final RectF rectF = new RectF(rect);
+		//final RectF rectF = new RectF(rect);
 
 		paint.setAntiAlias(true);
-		paint.setDither(true);
-		paint.setFilterBitmap(true);
+		//paint.setDither(true);
+		//paint.setFilterBitmap(true);
 		canvas.drawARGB(0, 0, 0, 0);
 		paint.setColor(color);
-		canvas.drawOval(rectF, paint);
+		canvas.drawCircle(bitmap.getWidth()/2, bitmap.getHeight()/2, bitmap.getWidth()/2, paint);
+		//canvas.drawOval(rectF, paint);
 
-		//paint.setColor(Color.BLUE);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth((float) 4);
+		//paint.setStyle(Paint.Style.STROKE);
+		//paint.setStrokeWidth((float) 4);
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bitmap, rect, rect, paint);
 

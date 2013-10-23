@@ -1,12 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-    	<TextView 
-    	    android:id="@+id/tv_driver_name"
-    	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content" />    
+    android:layout_height="match_parent" >
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/iv_driver_prof_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:id="@+id/tv_driver_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_driver_prof_pic"
+        android:paddingLeft="5dp"
+        android:textColor="#000"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_driver_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_driver_prof_pic"
+        android:layout_below="@id/tv_driver_name"
+        android:paddingLeft="5dp"
+        android:textColor="#000"
+        android:textSize="12sp" />
+    
+    <RatingBar
+        android:id="@+id/rb_user_rating"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:clickable="false" />
+
+</RelativeLayout>

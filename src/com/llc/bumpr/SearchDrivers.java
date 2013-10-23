@@ -1,59 +1,41 @@
 package com.llc.bumpr;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
-import com.llc.bumpr.R;
-import com.llc.bumpr.adapters.EndlessAdapter;
-import com.llc.bumpr.adapters.SlidingMenuListAdapter;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.internal.w;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-
-import com.actionbarsherlock.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.widget.SearchView;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.llc.bumpr.adapters.EndlessAdapter;
+import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 
 public class SearchDrivers extends SherlockFragmentActivity implements EndlessListView.EndlessListener,
 		GooglePlayServicesClient.ConnectionCallbacks,
@@ -234,6 +216,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				// TODO Auto-generated method stub
+				//Hide keyboard when enter pressed
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+				searchView.clearFocus(); //***Clearing focus has ugly animation, can we disable this animation?? ***//
+				
 				LinearLayout.LayoutParams mapPars = (LinearLayout.LayoutParams)map.getLayoutParams();
 				mapPars.weight = 0.5f;
 				map.setLayoutParams(mapPars);
@@ -248,11 +235,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				}
 				else
 					newSearch(); //Reset endless list with new data
-				
-				//Hide keyboard when enter pressed
-				//searchView.clearFocus(); //***Clearing focus has ugly animation, can we disable this animation?? ***//
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 				
 				return true;
 			}
@@ -278,13 +260,13 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	}
 	
 	//Files needed for implementing/testing endless list view
-	private class FakeNetLoader extends AsyncTask<String, Void, List<String>> {
+	private class FakeNetLoader extends AsyncTask<String, Void, List<Object>> {
 
 		@Override
-		protected List<String> doInBackground(String... arg0) {
+		protected List<Object> doInBackground(String... arg0) {
 			// TODO Auto-generated method stub
 			try{
-				Thread.sleep(4000);
+				Thread.sleep(1500);
 			} catch(InterruptedException e){
 				e.printStackTrace();
 			}
@@ -292,7 +274,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		}
 		
 		@Override
-		protected void onPostExecute(List<String> result){
+		protected void onPostExecute(List<Object> result){
 			super.onPostExecute(result);
 			driverList.addNewData(result);
 		}
@@ -310,9 +292,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		
 	}
 	
-	private List<String> createItems() {
+	private List<Object> createItems() {
 		// TODO Auto-generated method stub
-		List<String> items = new ArrayList<String>();
+		List<Object> items = new ArrayList<Object>();
 		
 		for (int i = testCntr; i <testCntr+10; i++)
 			items.add("Driver " + i);

@@ -92,7 +92,7 @@ public class EndlessListView extends ListView implements OnScrollListener {
         }
 
         
-        public void addNewData(List<String> data) {
+        public void addNewData(List<Object> data) {
                 this.removeFooterView(footer);
                 
                 adapter.addAll(data);
@@ -101,7 +101,7 @@ public class EndlessListView extends ListView implements OnScrollListener {
         }
         
         //Added by KJC to clear listview and add new data in for each new search
-        public void resetData(List<String> data){
+        public void resetData(List<Object> data){
         	adapter.clear();
         	adapter.addAll(data);
         	adapter.notifyDataSetChanged();
