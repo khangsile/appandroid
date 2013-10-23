@@ -58,9 +58,7 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 	private EndlessAdapter endListAdp;
 	
 	private ListView lvMenu;
-	//private List<HashMap<String, Object>> menuList;
 	private List<Pair<String, Object>> menuList;
-	//private SimpleAdapter menuAdpt;
 	private SlidingMenuListAdapter menuAdpt;
 	int testCntr = 1;
 
@@ -81,7 +79,6 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 		menuList = new ArrayList<Pair<String,Object>>();
 		initList();
 		
-		//menuAdpt = new SimpleAdapter(this, menuList, R.layout.sliding_menu_row_text, new String[] {"Section1"}, new int[] {R.id.tv_sliding_menu_text});
 		menuAdpt = new SlidingMenuListAdapter(this, menuList);
 		lvMenu.setAdapter(menuAdpt);
 		
@@ -109,20 +106,6 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
     	menuList.add(new Pair<String, Object>("Text", "Profile"));
     	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
     	menuList.add(new Pair<String, Object>("Text", "Logout"));
-    }
-	
-	/*private void initList() {
-    	menuList.add(putData("Image", "Kyle Cooper"));//Pass User Object in future
-    	menuList.add(putData("Text", "Home"));
-    	menuList.add(putData("Text", "Profile"));
-    	menuList.add(putData("Switch", "Driver Mode"));
-    	menuList.add(putData("Text", "Logout"));
-    }*/
-    
-    private HashMap<String, Object> putData(String key, Object name){
-    	HashMap <String, Object> data = new HashMap<String, Object>();
-    	data.put(key, name);
-    	return data;
     }
 
 	// If slidingMenu showing, back closes menu. Otherwise, calls parent back
@@ -217,6 +200,7 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 					newSearch(); //Reset endless list with new data
 				
 				//Hide keyboard when enter pressed
+				//searchView.clearFocus(); //***Clearing focus has ugly animation, can we disable this animation?? ***//
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 				

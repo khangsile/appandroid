@@ -2,6 +2,8 @@ package com.llc.bumpr.adapters;
 
 import java.util.List;
 
+import org.jraf.android.backport.switchwidget.Switch;
+
 import com.androidtools.Conversions;
 import com.llc.bumpr.GraphicsUtil;
 import com.llc.bumpr.R;
@@ -113,7 +115,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 				// subviews
 				holder = new SwitchViewHolder(
 						(TextView) vGroup.findViewById(R.id.tv_sl_menu_driver_mode),
-						(ToggleButton) vGroup.findViewById(R.id.tb_togglebutton));
+						(Switch) vGroup.findViewById(R.id.tb_sl_menu_switch));
 				vGroup.setTag(holder);
 
 				view = vGroup;
@@ -175,9 +177,9 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 	private static class SwitchViewHolder { // Used to hold views per row in the
 											// List
 		final TextView textView;
-		final ToggleButton switchView;
+		final Switch switchView;
 
-		private SwitchViewHolder(TextView textView, ToggleButton switchView) {
+		private SwitchViewHolder(TextView textView, Switch switchView) {
 			this.textView = textView;
 			this.switchView = switchView;
 		}

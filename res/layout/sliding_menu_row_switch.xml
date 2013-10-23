@@ -17,13 +17,11 @@
 
     <!-- Change this toggle button to dberm22 custom on/off switch saved in favs -->
 
-    <ToggleButton
-        android:id="@+id/tb_togglebutton"
+    <org.jraf.android.backport.switchwidget.Switch
+        android:id="@+id/tb_sl_menu_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:textOff="Off"
-        android:textOn="On" />
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>
