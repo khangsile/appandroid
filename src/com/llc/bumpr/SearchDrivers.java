@@ -1,49 +1,38 @@
 package com.llc.bumpr;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
-import com.llc.bumpr.R;
-import com.llc.bumpr.adapters.EndlessAdapter;
-import com.llc.bumpr.adapters.SlidingMenuListAdapter;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.internal.w;
-
-import com.actionbarsherlock.app.ActionBar;
-import android.app.Activity;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.widget.SearchView;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.llc.bumpr.adapters.EndlessAdapter;
+import com.llc.bumpr.adapters.SlidingMenuListAdapter;
+import com.llc.bumpr.sdk.models.Session;
+import com.llc.bumpr.sdk.models.User;
 
 public class SearchDrivers extends SherlockActivity implements EndlessListView.EndlessListener {
 
@@ -81,6 +70,7 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 		
 		menuAdpt = new SlidingMenuListAdapter(this, menuList);
 		lvMenu.setAdapter(menuAdpt);
+		setMenuOnClickListener();
 		
 		// Set up sliding menu
 		slidingMenu = new SlidingMenu(this);
@@ -102,7 +92,7 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 	
 	private void initList() {
     	menuList.add(new Pair<String, Object>("Image", "Kyle Cooper"));//Pass User Object in future
-    	menuList.add(new Pair<String, Object>("Text", "Home"));
+    	menuList.add(new Pair<String, Object>("Text", "Create Review"));
     	menuList.add(new Pair<String, Object>("Text", "Profile"));
     	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
     	menuList.add(new Pair<String, Object>("Text", "Logout"));
@@ -267,6 +257,53 @@ public class SearchDrivers extends SherlockActivity implements EndlessListView.E
 		for (int i = testCntr; i <testCntr+10; i++)
 			items.add("Driver " + i);
 		return items;
+	}
+	
+	/**
+	 * Creates the listener for the onClick of the sliding menu
+	 */
+	private void setMenuOnClickListener() {
+		lvMenu.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				Intent i = null;
+				switch (position) {
+				case 0:
+					i = new Intent(getApplicationContext(), UserProfile.class);
+					i.putExtra("user", User.getActiveUser());
+					break;
+				case 1:
+					i = new Intent(getApplicationContext(), CreateReviewActivity.class);
+					i.putExtra("user", User.getActiveUser());
+					break;
+				case 4:
+					i = new Intent(getApplicationContext(), LoginActivity.class);
+					//clear history and shit
+					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					Session session = Session.getSession();
+					session.logout(new Callback<Response>() {
+
+						@Override
+						public void failure(RetrofitError arg0) {
+							// TODO Auto-generated method stub
+						}
+
+						@Override
+						public void success(Response arg0, Response arg1) {
+							// TODO Auto-generated method stub
+						}
+						
+					});
+				default:
+					break;
+				}
+				
+				if (i != null) {
+					startActivity(i);
+				}
+			}
+		});
 	}
 
 }

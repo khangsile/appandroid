@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <com.llc.bumpr.lib.CircularImageView android:id="@+id/img_user"
+    	android:layout_width="150dp"
+    	android:layout_height="150dp"
+    	android:layout_marginTop="30dp"
+    	android:layout_centerHorizontal="true"
+    	android:src="@drawable/test_image"/>
+    
+    <TextView android:id="@+id/tv_driver_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/img_user"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:text="Driver Rating" />
+    <RatingBar android:id="@+id/rb_driver_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_driver_rating"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="5dp"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:rating="1"
+        android:stepSize="1" />
+    
+    <TextView android:id="@+id/tv_overall_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/rb_driver_rating"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:text="Overall Experience" />
+    <RatingBar android:id="@+id/rb_overall_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_overall_rating"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="5dp"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:rating="1"
+        android:stepSize="1" />
+    
+     <Button android:id="@+id/btn_create_review"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rb_overall_rating"
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true"
+            android:background="#e6e6fa"
+            android:text="Rate This Experience!"
+            android:textSize="16dp"
+            android:onClick="createReview" />
+
+
+</RelativeLayout>
