@@ -1,5 +1,10 @@
 package com.llc.bumpr;
 
+import java.util.logging.Logger;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +16,11 @@ import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.llc.bumpr.R;
+import com.llc.bumpr.sdk.lib.BumprError;
+import com.llc.bumpr.sdk.models.Session;
+import com.llc.bumpr.sdk.models.User;
 
 public class LoginActivity extends Activity {
 
@@ -29,24 +37,18 @@ public class LoginActivity extends Activity {
 					public void onGlobalLayout() {
 						int heightDiff = activityRootView.getRootView()
 								.getHeight() - activityRootView.getHeight();
-						if (heightDiff > 100) { // if more than 100 pixels, its
-												// probably a keyboard...
-							activityRootView
-									.setOnTouchListener(new OnTouchListener() {
-										@Override
-										// set OnTouchListener to entire screen
-										// to grab touch events
-										public boolean onTouch(View arg0,
-												MotionEvent arg1) {
-											// close keyboard
-											final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-											imm.hideSoftInputFromWindow(
-													activityRootView
-															.getWindowToken(),
-													0);
-											return false;
-										}
-									});
+						if (heightDiff > 100) { // if more than 100 pixels, its probably a keyboard...
+							activityRootView.setOnTouchListener(new OnTouchListener() {
+								@Override
+								// set OnTouchListener to entire screen
+								// to grab touch events
+								public boolean onTouch(View arg0, MotionEvent arg1) {
+									// close keyboard
+									final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+									imm.hideSoftInputFromWindow(activityRootView.getWindowToken(),0);
+									return false;
+								}
+							});
 						}
 					}
 				});
@@ -59,18 +61,35 @@ public class LoginActivity extends Activity {
 		return true;
 	}
 
-	public void authenticate() {
-		// Fill in authentication process
-		// Call toSearch if successful!
+	public void authenticate(Callback<User> cb) {
+		String email = ((EditText) findViewById(R.id.et_email)).getText().toString();
+		String password = ((EditText) findViewById(R.id.et_password)).getText().toString();
+		
+		Session session = Session.getSession();
+		session.login(email, password, cb);
+	}
+	
+	public void login(View v) {
+		authenticate(new Callback<User>() {
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void success(User arg0, Response arg1) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+				startActivity(i);
+			}
+			
+		});
 	}
 
 	public void toRegistration(View v) {
 		Intent i = new Intent(this, RegistrationActivity.class);
-		startActivity(i);
-	}
-
-	public void toSearch(View v) {
-		Intent i = new Intent(this, SearchDrivers.class);
 		startActivity(i);
 	}
 
@@ -80,8 +99,32 @@ public class LoginActivity extends Activity {
 		startActivity(i);
 	}
 
+	/**
+	 * @author Khang Le
+	 * Test user profile 
+	 */
 	public void loginWithFacebook(View v) {
-		Intent i = new Intent(this, SearchDrivers.class);
-		startActivity(i);
+		authenticate(new Callback<User>() {
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_LONG).show();
+				Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+				log.info(arg0.getMessage());
+			}
+
+			@Override
+			public void success(final User user, Response arg1) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(getApplicationContext(), UserProfile.class);
+				Bundle bundle = new Bundle();
+				bundle.putParcelable("user", user);
+				i.putExtras(bundle);
+				startActivity(i);
+			}
+			
+		});
 	}
 }
+
