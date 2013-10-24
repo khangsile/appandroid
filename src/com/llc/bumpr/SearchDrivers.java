@@ -69,6 +69,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		driverLayout = (LinearLayout) findViewById(R.id.ll_driver_list);
 		actionBar = getSupportActionBar();
 		map = (LinearLayout) findViewById(R.id.ll_map_container);
+		map.setFocusable(true); //Needed to remove focus from ABS searchView
 		gMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		
 		//Inflate listview view
@@ -219,7 +220,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				//Hide keyboard when enter pressed
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-				searchView.clearFocus(); //***Clearing focus has ugly animation, can we disable this animation?? ***//
+				map.requestFocus();
 				
 				LinearLayout.LayoutParams mapPars = (LinearLayout.LayoutParams)map.getLayoutParams();
 				mapPars.weight = 0.5f;
