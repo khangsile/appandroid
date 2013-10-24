@@ -18,8 +18,6 @@ public class CreateReviewActivity extends SherlockActivity {
 		Bundle bundle = getIntent().getExtras();
 		User user = (User) bundle.getParcelable("user");
 		
-		CircularImageView imageView = (CircularImageView) findViewById(R.id.img_user);
-		imageView.setImageResource(R.drawable.test_car_image);
 		
 		if (user == null) {
 			throw new NullPointerException("Instance ('user') cannot be null");
