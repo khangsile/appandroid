@@ -16,6 +16,7 @@ public class CircularImageView extends ImageView {
 
 	private int borderWidth = 4;
 	private int outerBorderWidth = 1;
+	private float shadowWidth = 3.0f;
 	private int viewWidth;
 	private int viewHeight;
 	private Bitmap image;
@@ -47,10 +48,12 @@ public class CircularImageView extends ImageView {
 		
 		paintBorder = new Paint();
 		setBorderColor(Color.WHITE);
-		paintBorder.setAntiAlias(true);	
+		paintBorder.setAntiAlias(true);
 		outerPaintBorder = new Paint();
 		setOuterBorderColor(Color.GRAY);
 		outerPaintBorder.setAntiAlias(true);
+		outerPaintBorder.setShadowLayer(shadowWidth, 0f, 0f, Color.BLACK);
+
 	}
 	
 	public void setBorderWidth(int borderWidth)
@@ -65,6 +68,13 @@ public class CircularImageView extends ImageView {
 		this.invalidate();
 	}
 	
+	public void setShadowWidth(float borderWidth)
+	{
+		this.shadowWidth = borderWidth;
+		outerPaintBorder.setShadowLayer(shadowWidth, 0f, 0f, Color.BLACK);
+		this.invalidate();
+	}
+	
 	public void setBorderColor(int borderColor)
 	{		
 		if(paintBorder != null)
@@ -72,7 +82,7 @@ public class CircularImageView extends ImageView {
 		
 		this.invalidate();
 	}
-	
+		
 	public void setOuterBorderColor(int outerBorderColor) {
 		if(outerPaintBorder != null)
 			outerPaintBorder.setColor(outerBorderColor);
@@ -105,9 +115,9 @@ public class CircularImageView extends ImageView {
 			// circleCenter is the x or y of the view's center
 			// radius is the radius in pixels of the cirle to be drawn
 			// paint contains the shader that will texture the shape
-			canvas.drawCircle(circleCenter + borderWidth + outerBorderWidth, circleCenter + borderWidth + outerBorderWidth, circleCenter + borderWidth + outerBorderWidth, outerPaintBorder);
-			canvas.drawCircle(circleCenter + borderWidth + outerBorderWidth, circleCenter + borderWidth + outerBorderWidth, circleCenter + borderWidth, paintBorder);
-			canvas.drawCircle(circleCenter + borderWidth + outerBorderWidth, circleCenter + borderWidth + outerBorderWidth, circleCenter, paint);
+			canvas.drawCircle(circleCenter + borderWidth + outerBorderWidth, circleCenter + borderWidth + outerBorderWidth, circleCenter + borderWidth + outerBorderWidth - shadowWidth, outerPaintBorder);
+			canvas.drawCircle(circleCenter + borderWidth + outerBorderWidth, circleCenter + borderWidth + outerBorderWidth, circleCenter + borderWidth - shadowWidth, paintBorder);
+			canvas.drawCircle(circleCenter + borderWidth + outerBorderWidth, circleCenter + borderWidth + outerBorderWidth, circleCenter - shadowWidth, paint);
 		}		
 	}
 	

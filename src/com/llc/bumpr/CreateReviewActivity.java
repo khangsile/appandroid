@@ -1,11 +1,10 @@
 package com.llc.bumpr;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.sdk.models.User;
 
 public class CreateReviewActivity extends SherlockActivity {
@@ -22,6 +21,9 @@ public class CreateReviewActivity extends SherlockActivity {
 		if (user == null) {
 			throw new NullPointerException("Instance ('user') cannot be null");
 		}
+		
+		TextView userName = (TextView) findViewById(R.id.tv_user_name);
+		userName.setText(user.getFirstName() + " " + user.getLastName());
 		
 	}
 	
