@@ -8,26 +8,32 @@
         android:id="@+id/tv_edit_prof_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:minHeight="32dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
+        android:text="Car Image:"
         android:textColor="#000"
         android:textSize="15sp" />
-    
-    <EditText 
-        android:id="@+id/et_edit_prof_value"
-        android:layout_width="125dp"
+
+    <ImageView
+        android:id="@+id/iv_edit_prof_icon"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignBottom="@id/tv_edit_prof_text"
-        android:minHeight="32dp"
-        android:paddingRight="5dp"
-        android:paddingLeft="5dp"
-        android:textColor="#000"
-        android:textSize="15sp"
-        android:maxLines="1"
-       	android:inputType="textCapWords"
-       	android:background="@android:color/transparent" />
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_arrow_right" />
+
+    <com.llc.bumpr.lib.DynamicImageView
+        android:id="@+id/iv_car_pic"
+        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:scaleType="centerCrop"
+        android:layout_toLeftOf="@id/iv_edit_prof_icon"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="3dp"
+        />
+
 </RelativeLayout>

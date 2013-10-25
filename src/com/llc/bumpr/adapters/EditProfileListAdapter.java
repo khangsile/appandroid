@@ -3,6 +3,7 @@ package com.llc.bumpr.adapters;
 import java.util.List;
 
 import android.content.Context;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.llc.bumpr.R;
+import com.llc.bumpr.lib.DynamicImageView;
 import com.llc.bumpr.sdk.models.User;
 
 public class EditProfileListAdapter extends BaseAdapter {
@@ -31,16 +33,18 @@ public class EditProfileListAdapter extends BaseAdapter {
 		@Override
 		public int getItemViewType(int position) {
 			// TODO Auto-generated method stub
-			if (position != data.size()-1)
+			if (!(data.get(position).equals("Password")) && !(data.get(position).equals("Car Image")))
 				return 0; //EditText Row
-			else
+			else if (data.get(position).equals("Password"))
 				return 1; //Password row -- Take to a new activity
+			else
+				return 2; //Car Image row
 		}
 
 		@Override
 		public int getViewTypeCount() {
 			// TODO Auto-generated method stub
-			return 2; // Three different view types used
+			return 3; // two different view types used
 		}
 
 		@Override
@@ -52,7 +56,7 @@ public class EditProfileListAdapter extends BaseAdapter {
 		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
-			return position;
+			return data.get(position);
 		}
 
 		@Override
@@ -66,7 +70,7 @@ public class EditProfileListAdapter extends BaseAdapter {
 			// TODO Auto-generated method stub
 			View view;
 
-			if (position != data.size()-1) { // Create TextView Row
+			if (!(data.get(position).equals("Password")) && !(data.get(position).equals("Car Image"))) { // Create TextView Row
 				TextViewHolder holder;
 
 				if (convertView == null) {
@@ -86,28 +90,49 @@ public class EditProfileListAdapter extends BaseAdapter {
 					holder = (TextViewHolder) convertView.getTag();
 					view = convertView;
 				}
-				switch(position){
-				case 1:
-					holder.textView.setText("First Name:");
+				holder.textView.setText(data.get(position) + ":");
+				
+				if(data.get(position).equals("First Name")) {
 					holder.editText.setText(user.getFirstName());
-					break;
-				case 2:
-					holder.textView.setText("Last Name:");
+					holder.editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+				}
+				else if (data.get(position).equals("Last Name")) {
 					holder.editText.setText(user.getLastName());
-					break;
-				case 3:
-					holder.textView.setText("Phone:");
+					holder.editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+				}
+				else if (data.get(position).equals("Phone")){
 					holder.editText.setText(user.getPhoneNumber());
-					break;
-				case 4:
-					holder.textView.setText("Email:");
+					holder.editText.setInputType(InputType.TYPE_CLASS_PHONE);
+				}
+				else {//if (data.get(position).equals("Email"))
 					holder.editText.setText(user.getEmail());
-					break;
+					holder.editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 				}
 			} 
-			else { 
+			else if (data.get(position).equals("Password")) { 
 				ViewGroup vGroup = (ViewGroup) inflater.inflate(R.layout.edit_profile_activity_row, null);
 				view = vGroup;
+			}
+			else{//Create Car Image Row
+				ImageViewHolder holder;
+
+				if (convertView == null) {
+					ViewGroup vGroup = (ViewGroup) inflater.inflate(
+							R.layout.edit_profile_car_image_row, null);
+
+					// Use the view holder pattern to save already looked up
+					// subviews
+					holder = new ImageViewHolder(
+							(DynamicImageView) vGroup.findViewById(R.id.iv_car_pic));
+					vGroup.setTag(holder);
+
+					view = vGroup;
+				} else {// If convert view exists!
+					// get the holder back
+					holder = (ImageViewHolder) convertView.getTag();
+					view = convertView;
+				}
+				holder.carImg.setImageResource(R.drawable.test_car_image);
 			}
 			return view; // Return view to display
 		}
@@ -121,5 +146,14 @@ public class EditProfileListAdapter extends BaseAdapter {
 				this.textView = textView;
 				this.editText = editText;
 			}
-		}	
+		}
+		
+		private static class ImageViewHolder { // Used to hold views per row in the
+			// List
+			final DynamicImageView carImg;
+			
+			private ImageViewHolder(DynamicImageView carImg) {
+			this.carImg = carImg;
+			}
+		}
 }

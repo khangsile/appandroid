@@ -3,53 +3,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <EditText android:id="@+id/et_email"
+
+    <EditText
+        android:id="@+id/et_email"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:layout_centerHorizontal="true"
-		android:maxLines="1"
-		android:inputType="textEmailAddress"
-        android:hint="@string/email" />
-    <EditText android:id="@+id/et_password"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/et_password"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_below="@id/et_email"
         android:layout_centerHorizontal="true"
-		android:layout_below="@id/et_email"
-		android:maxLines="1"
-		android:inputType="textPassword"
-		android:hint="@string/password" />
-    <EditText android:id="@+id/et_password_confirmation"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/et_password"
-        android:maxLines="1"
+        android:hint="@string/password"
         android:inputType="textPassword"
-        android:hint="@string/password" />
-    <EditText android:id="@+id/et_firstname"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/et_password_confirmation"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_below="@id/et_password"
         android:layout_centerHorizontal="true"
-		android:layout_below="@id/et_password_confirmation"
-		android:maxLines="1"
-		android:hint="@string/first_name" />
-    <EditText android:id="@+id/et_lastname"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/et_firstname"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_below="@id/et_password_confirmation"
         android:layout_centerHorizontal="true"
-		android:layout_below="@id/et_firstname"
-		android:maxLines="1"
-		android:hint="@string/last_name" />
-    <Button android:id="@+id/btn_register"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/et_lastname"
-            android:layout_marginTop="10dp"
-            android:background="#e6e6fa"
-            android:text="@string/register"
-            android:onClick="register" />
-    
+        android:hint="@string/first_name"
+        android:inputType="textCapWords"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/et_lastname"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_firstname"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/last_name"
+        android:inputType="textCapWords"
+        android:maxLines="1" />
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_lastname"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="#e6e6fa"
+        android:onClick="register"
+        android:text="@string/register" />
+
 </RelativeLayout>

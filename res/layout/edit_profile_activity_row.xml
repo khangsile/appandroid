@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#e6e6fa" >
     
     <TextView
         android:id="@+id/tv_edit_prof_text"
@@ -13,7 +14,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:textColor="#000"
-        android:textSize="12sp"
+        android:textSize="15sp"
         android:text="Password:" />
     
     <ImageView
@@ -32,10 +33,9 @@
         android:gravity="center_vertical"
         android:minHeight="32dp"
         android:layout_toLeftOf="@id/iv_edit_prof_icon"
-        android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:textColor="#000"
-        android:textSize="12sp"
+        android:textSize="15sp"
         android:password="true"
         android:text="password" />
     
