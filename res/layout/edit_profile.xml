@@ -4,5 +4,42 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-
+    <com.llc.bumpr.lib.CircularImageView
+        android:id="@+id/iv_profile_pic"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp" />
+    
+    <com.llc.bumpr.lib.DynamicImageView
+        android:id="@+id/iv_car_pic"
+        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        />
+    
+    <View android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/iv_profile_pic"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#cccccc" />
+    
+    <ListView 
+        android:id="@+id/lv_settings_list"
+        android:layout_below="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        />
 </RelativeLayout>

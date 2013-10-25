@@ -9,6 +9,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true" />
+    
+    <!--  
+    	<com.llc.bumpr.lib.DynamicImageView
+        android:id="@+id/iv_car_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true" />
+    -->
 
     <com.llc.bumpr.lib.CircularImageView
         android:id="@+id/iv_profile_pic"

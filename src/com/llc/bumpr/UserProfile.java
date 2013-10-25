@@ -1,14 +1,13 @@
 package com.llc.bumpr;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidtools.Conversions;
 import com.llc.bumpr.lib.CircularImageView;
+import com.llc.bumpr.lib.DynamicImageView;
 import com.llc.bumpr.sdk.models.User;
 
 public class UserProfile extends Activity {

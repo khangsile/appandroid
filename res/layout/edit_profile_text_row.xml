@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/tv_edit_prof_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_alignParentLeft="true"
+        android:minHeight="32dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textColor="#000"
+        android:textSize="12sp" />
+    
+    <EditText 
+        android:id="@+id/et_edit_prof_value"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:textColor="#000"
+        android:textSize="12sp" />
+        "
+
+</RelativeLayout>
