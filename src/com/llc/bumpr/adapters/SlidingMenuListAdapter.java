@@ -7,6 +7,7 @@ import org.jraf.android.backport.switchwidget.Switch;
 import com.androidtools.Conversions;
 import com.llc.bumpr.GraphicsUtil;
 import com.llc.bumpr.R;
+import com.llc.bumpr.lib.CircularImageView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -84,7 +85,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 				// Use the view holder pattern to save already looked up
 				// subviews
 				holder = new ImageViewHolder(
-						(ImageView) vGroup.findViewById(R.id.iv_sl_menu_prof_pic),
+						(CircularImageView) vGroup.findViewById(R.id.iv_sl_menu_prof_pic),
 						(TextView) vGroup.findViewById(R.id.tv_sl_menu_username));
 				vGroup.setTag(holder);
 
@@ -97,12 +98,13 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 			holder.textView.setText("Welcome, " + dataObj.toString() + "!");
 			
 			//Change size of image here
-			float imageSize = Conversions.dpToPixels(context, 75);
+			/*float imageSize = Conversions.dpToPixels(context, 75);
 			GraphicsUtil imageHelper = new GraphicsUtil();
 			Bitmap bm = imageHelper.getCircleBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.test_image), 16);
 			//Resize image to the desired size
 			Bitmap resizedBM = Bitmap.createScaledBitmap(bm, Math.round(imageSize), Math.round(imageSize), false);
-			holder.imageView.setImageBitmap(resizedBM);
+			holder.imageView.setImageBitmap(resizedBM);*/
+			holder.imageView.setImageResource(R.drawable.test_image);
 		} 
 		else if (data.get(position).first == "Switch") { // Create Switch Row
 			SwitchViewHolder holder;
@@ -156,10 +158,10 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 	/**View holders to improve performance of adapter! **/
 	private static class ImageViewHolder { // Used to hold views per row in the
 											// List
-		final ImageView imageView;
+		final CircularImageView imageView;
 		final TextView textView;
 
-		private ImageViewHolder(ImageView imageView, TextView textView) {
+		private ImageViewHolder(CircularImageView imageView, TextView textView) {
 			this.imageView = imageView;
 			this.textView = textView;
 		}
