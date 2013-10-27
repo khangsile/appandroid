@@ -14,10 +14,9 @@
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.Sherlock.Light">
 		<item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
 		<item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
-		
         
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:windowBackground">@color/ghost_white</item>
@@ -28,6 +27,11 @@
     <style name="Widget.Styled.ActionBar" parent="@style/Widget.Sherlock.ActionBar.Solid">
          <item name="background">@color/ghost_white</item>
        	 <item name="android:background">@color/ghost_white</item>
+    </style>
+    
+    <style name = "TextAppearance.ActionBar.SearchViewStyle" parent="@style/Widget.Sherlock.Light.SearchAutoCompleteTextView">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="Button" parent="@android:style/Widget.Button">

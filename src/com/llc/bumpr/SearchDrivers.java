@@ -53,6 +53,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	private SlidingMenu slidingMenu;
 	private LinearLayout map;
 	private LinearLayout driverLayout;
+	private SearchView searchView;
 	
 	private int page;
 	private EndlessListView driverList;
@@ -75,7 +76,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		setContentView(R.layout.search_driver);
 		actionBar = getSupportActionBar();
 		map = (LinearLayout) findViewById(R.id.ll_map_container);
-		map.setFocusable(true); //Needed to remove focus from ABS searchView
+		//map.setFocusable(true); //Needed to remove focus from ABS searchView
 		gMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		driverLayout = (LinearLayout) findViewById(R.id.ll_driver_list);
 		
@@ -110,7 +111,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		
 		//Create new location client.
         mLocationClient = new LocationClient(this, this, this);
-        gMap.setMyLocationEnabled(true);
 	}
 	
 	 @Override
@@ -118,8 +118,10 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
              // TODO Auto-generated method stub
              super.onStart();
              
-             if(isGooglePlayServicesAvailable())
+             if(isGooglePlayServicesAvailable()){
                      mLocationClient.connect();
+                     gMap.setMyLocationEnabled(true);
+             }
      }
      
      @Override
@@ -242,7 +244,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 
-		final SearchView searchView = (SearchView) menu.findItem(R.id.it_search_bar).getActionView();
+		searchView = (SearchView) menu.findItem(R.id.it_search_bar).getActionView();
 		searchView.setQueryHint("Enter destination here...");
 		searchView.setIconifiedByDefault(false);
 
@@ -255,7 +257,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				//Hide keyboard when enter pressed
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-				map.requestFocus();
+				//searchView.clearFocus();
 				
 				LinearLayout.LayoutParams mapPars = (LinearLayout.LayoutParams)map.getLayoutParams();
 				mapPars.weight = 0.5f;
@@ -352,7 +354,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 					i.putExtra("user", User.getActiveUser());
 					break;
 				case 1:
-					i = new Intent(getApplicationContext(), CreateReviewActivity.class);
+					//i = new Intent(getApplicationContext(), CreateReviewActivity.class);
+					//i.putExtra("user", User.getActiveUser());
+					i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
 				case 4:

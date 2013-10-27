@@ -15,8 +15,6 @@
         android:textColor="#000"
         android:textSize="18sp" />
 
-    <!-- Change this toggle button to dberm22 custom on/off switch saved in favs -->
-
     <org.jraf.android.backport.switchwidget.Switch
         android:id="@+id/tb_sl_menu_switch"
         android:layout_width="wrap_content"
