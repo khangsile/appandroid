@@ -22,11 +22,17 @@ import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.sdk.models.User;
 
 public class EditProfileActivity extends SherlockActivity {
+	/** List to hold the profile details that can be edited */
 	private List<String> settingList;
+	/** Reference to the profile picture UI element */
 	private CircularImageView profPic;
+	
 	//private DynamicImageView carImage;
+	/** Reference to the List View UI element that holds the profile settings information */
 	private ListView profSettings;
+	/** Reference to the join date UI text element */
 	private TextView joinDate;
+	/**A reference to the current context to be used in inner classes */
 	final private Context context = this;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,10 @@ public class EditProfileActivity extends SherlockActivity {
 		initOnClickListener();
 	}
 
+	/**
+	 * A method that sets up the item click listener for the settings menu.  Defines the actions that should take place
+	 * depending on which item was clicked.
+	 */
 	private void initOnClickListener() {
 		// TODO Auto-generated method stub
 		profSettings.setOnItemClickListener(new OnItemClickListener() {
@@ -104,6 +114,9 @@ public class EditProfileActivity extends SherlockActivity {
 		});
 	}
 
+	/**
+	 * A method that fills the settingList element with the ordering and information to display in the list view UI element.
+	 */
 	private void initList(){
 		settingList.add("First Name");
 		settingList.add("Last Name");

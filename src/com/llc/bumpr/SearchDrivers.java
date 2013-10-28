@@ -41,32 +41,49 @@ import com.google.android.gms.maps.model.LatLng;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
+import com.llc.bumpr.lib.EndlessListView;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
 public class SearchDrivers extends SherlockFragmentActivity implements EndlessListView.EndlessListener,
 				GooglePlayServicesClient.ConnectionCallbacks,
 				GooglePlayServicesClient.OnConnectionFailedListener{
-
+	
+	/** Reference to the ActionBarSherlock action bar */
 	private com.actionbarsherlock.app.ActionBar actionBar;
+	/** Request value to allow Google Maps to display */
 	private static final int RQS_GooglePlayServices = 1;
+	/** Reference to the sliding menu UI element */
 	private SlidingMenu slidingMenu;
+	/** Reference to the Layout object holding the map fragment */ 
 	private LinearLayout map;
+	/** Reference to the Layout object holding the endless list view */
 	private LinearLayout driverLayout;
+	/** Reference to the search bar in the action bar */
 	private SearchView searchView;
 	
+	/** The next page of data to load from the database into the endless list view of drivers */
 	private int page;
+	/** Reference the endless list view holding the list of available drivers */
 	private EndlessListView driverList;
+	/** Reference to the adapter that will populate the endless list */
 	private EndlessAdapter endListAdp;
 	
+	/** Reference to the list view that will hold the sliding menu information */
 	private ListView lvMenu;
+	/** List that will hold the data to fill the sliding menu */
 	private List<Pair<String, Object>> menuList;
+	/** Reference to the adapter that will populate the sliding menu with it's data */
 	private SlidingMenuListAdapter menuAdpt;
+	
 	int testCntr = 1;
 	
+	/** Reference to the map UI element */
 	private GoogleMap gMap;
+	/** Reference to the location client (Allows use of GPS) */
     private LocationClient mLocationClient;
     
+    /** Request value to get current location (Using GPS) */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
 	@Override
@@ -93,6 +110,31 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		setMenuOnClickListener();
 		
 		// Set up sliding menu
+		initSlidingMenu(slMenu);
+		/*slidingMenu = new SlidingMenu(this);
+		slidingMenu.setMode(SlidingMenu.LEFT);
+		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		slidingMenu.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
+		slidingMenu.setShadowDrawable(R.drawable.shadow);
+		slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+		slidingMenu.setFadeDegree(0.35f);
+		slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+		slidingMenu.setMenu(slMenu);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+		
+		//Set up endless list view for driver list
+		driverList = (EndlessListView) findViewById(R.id.lv_drivers);
+		driverList.setLoadingView(R.layout.loading_layout);
+		driverList.setListener(this);
+		
+		//Create new location client.
+        mLocationClient = new LocationClient(this, this, this);
+	}
+	/**
+	 * Initializes and configures the sliding menu
+	 * @param slMenu View reference that holds the sliding menu
+	 */
+	private void initSlidingMenu(View slMenu){
 		slidingMenu = new SlidingMenu(this);
 		slidingMenu.setMode(SlidingMenu.LEFT);
 		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
@@ -103,14 +145,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 		slidingMenu.setMenu(slMenu);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		//Set up endless list view for driver list
-		driverList = (EndlessListView) findViewById(R.id.lv_drivers);
-		driverList.setLoadingView(R.layout.loading_layout);
-		driverList.setListener(this);
-		
-		//Create new location client.
-        mLocationClient = new LocationClient(this, this, this);
 	}
 	
 	 @Override
@@ -136,10 +170,14 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
      @Override
      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
          if(requestCode==CONNECTION_FAILURE_RESOLUTION_REQUEST && resultCode==Activity.RESULT_OK)
-            //Attempt to reconnect if is result is ok!
+            //Attempt to reconnect if result is ok!
                  mLocationClient.connect();
      }
      
+     /**
+      * Verifies the user has Google Maps installed.  If not, it requests them to install Google Maps
+      * @return Boolean value signifying if Google Maps is available
+      */
      private boolean isGooglePlayServicesAvailable() {
          // TODO Auto-generated method stub
          // Verify user has good version of google play services. Necessary for
@@ -156,7 +194,10 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
                  return false;
          }
     }
-     
+     /**
+      * Connection to GPS failed. Attempt to resolve it.  Otherwise, catch the exception
+      * @param connResult Result from the connection attempt
+      */
      @Override
      public void onConnectionFailed(ConnectionResult connResult) {
              // TODO Auto-generated method stub
@@ -172,8 +213,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
      }
 
      //Connection to location services completed.  Get current location now
+     /**
+      * Connected to GPS successfully.  Update current location and display marker on the map.
+      */
      @Override
-     public void onConnected(Bundle arg0) {
+     public void onConnected(Bundle bundle) {
              // TODO Auto-generated method stub
              Location loc = mLocationClient.getLastLocation();
              LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
@@ -187,6 +231,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
              
      } 
 	
+     /**
+      * Fills menu list object with the information to display in the sliding menu
+      */
 	private void initList() {
     	menuList.add(new Pair<String, Object>("Image", "Kyle Cooper"));//Pass User Object in future
     	menuList.add(new Pair<String, Object>("Text", "Create Review"));
@@ -290,6 +337,10 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	}
 	
 	//Added by KJC to clear data and add new search results for each search
+	/**
+	 * Called when a new location is entered in the destination search box.  Reset
+	 * information in the endless list view and begin displaying new results!
+	 */
 	public void newSearch(){
 		//Reset counter for new search (Set to 1)
 		testCntr = 1;
@@ -298,6 +349,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	}
 	
 	//Files needed for implementing/testing endless list view
+	/**
+	 * Class to asynchronously load driver data from database and display it in the endless list view
+	 */
 	private class FakeNetLoader extends AsyncTask<String, Void, List<Object>> {
 
 		@Override
@@ -319,6 +373,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		
 	}
 
+	/**
+	 * Loads new data from the database and adds it to the endless list view
+	 */
 	@Override
 	public void loadData() {
 		// TODO Auto-generated method stub
@@ -330,6 +387,10 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		
 	}
 	
+	/**
+	 * Adds new data to the list of current data in the endless list.
+	 * @return Updated list of data to display in the endless list
+	 */
 	private List<Object> createItems() {
 		// TODO Auto-generated method stub
 		List<Object> items = new ArrayList<Object>();

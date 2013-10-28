@@ -1,4 +1,4 @@
-package com.llc.bumpr;
+package com.llc.bumpr.lib;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,10 +14,9 @@ import android.graphics.Rect;
  */
 public class GraphicsUtil {
 
-	/*
-	 * Draw image in circular shape
-	 * Note: change the pixel size if you want image small or
-	 * large
+	/**
+	 * Draw original image in circular shape.
+	 * @param bitmap The original image source to turn into a circular image
 	 */
 	public Bitmap getCircleBitmap(Bitmap bitmap, int pixels) {
 		//Commented out lines below to improve performance		
