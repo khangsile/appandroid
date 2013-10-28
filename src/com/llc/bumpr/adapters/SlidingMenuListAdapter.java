@@ -5,9 +5,9 @@ import java.util.List;
 import org.jraf.android.backport.switchwidget.Switch;
 
 import com.androidtools.Conversions;
-import com.llc.bumpr.GraphicsUtil;
 import com.llc.bumpr.R;
 import com.llc.bumpr.lib.CircularImageView;
+import com.llc.bumpr.lib.GraphicsUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;

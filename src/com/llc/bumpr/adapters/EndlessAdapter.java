@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Random;
 
 import com.androidtools.Conversions;
-import com.llc.bumpr.GraphicsUtil;
 import com.llc.bumpr.R;
+import com.llc.bumpr.lib.GraphicsUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;

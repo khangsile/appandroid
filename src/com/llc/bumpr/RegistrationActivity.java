@@ -24,6 +24,10 @@ public class RegistrationActivity extends Activity {
         setContentView(R.layout.registration);
 	}	
 	
+	/**
+	 * Submit information to the application server to create a new user with the supplied information.
+	 * @param v
+	 */
 	public void register(View v) {
 		String firstname = ((EditText)findViewById(R.id.et_firstname)).getText().toString().trim();
 		String lastname = ((EditText)findViewById(R.id.et_lastname)).getText().toString().trim();

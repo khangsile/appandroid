@@ -1,4 +1,4 @@
-package com.llc.bumpr;
+package com.llc.bumpr.lib;
 
 /*
  * Copyright (C) 2012 Surviving with Android (http://www.survivingwithandroid.com)
@@ -99,8 +99,12 @@ public class EndlessListView extends ListView implements OnScrollListener {
                 adapter.notifyDataSetChanged();
                 isLoading = false;
         }
-        
-        //Added by KJC to clear listview and add new data in for each new search
+
+        /**
+    	 * A method that clears the data in the endless list and adds in the new data. This is needed
+    	 * when the user enters a new destination and a new set of drivers should populate the list.
+    	 * @param data List of new information to populate the endless list.
+    	 */
         public void resetData(List<Object> data){
         	adapter.clear();
         	adapter.addAll(data);

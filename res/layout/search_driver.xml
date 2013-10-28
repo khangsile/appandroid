@@ -41,7 +41,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp" >
 
-        <com.llc.bumpr.EndlessListView
+        <com.llc.bumpr.lib.EndlessListView
             android:id="@+id/lv_drivers"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
