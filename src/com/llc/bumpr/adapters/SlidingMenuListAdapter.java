@@ -4,14 +4,10 @@ import java.util.List;
 
 import org.jraf.android.backport.switchwidget.Switch;
 
-<<<<<<< HEAD
-=======
 import com.androidtools.Conversions;
 import com.llc.bumpr.R;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.GraphicsUtil;
-
->>>>>>> 1f8d27d9977d274c2d904e3d6891d8b74358cb50
 import android.content.Context;
 import android.util.Pair;
 import android.view.LayoutInflater;
