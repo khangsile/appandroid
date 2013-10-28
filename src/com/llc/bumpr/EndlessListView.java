@@ -18,16 +18,15 @@ package com.llc.bumpr;
 
 import java.util.List;
 
-import com.llc.bumpr.adapters.EndlessAdapter;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.ListView;
+
+import com.llc.bumpr.adapters.EndlessAdapter;
 
 public class EndlessListView extends ListView implements OnScrollListener {
         

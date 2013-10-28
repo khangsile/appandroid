@@ -7,11 +7,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -21,7 +19,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.llc.bumpr.adapters.EditProfileListAdapter;
 import com.llc.bumpr.lib.CircularImageView;
-import com.llc.bumpr.lib.DynamicImageView;
 import com.llc.bumpr.sdk.models.User;
 
 public class EditProfileActivity extends SherlockActivity {

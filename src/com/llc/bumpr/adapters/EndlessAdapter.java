@@ -16,11 +16,6 @@ package com.llc.bumpr.adapters;
  */
 
 import java.util.List;
-import java.util.Random;
-
-import com.androidtools.Conversions;
-import com.llc.bumpr.GraphicsUtil;
-import com.llc.bumpr.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -33,6 +28,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.androidtools.Conversions;
+import com.llc.bumpr.GraphicsUtil;
+import com.llc.bumpr.R;
 
 public class EndlessAdapter extends ArrayAdapter<Object> {
         

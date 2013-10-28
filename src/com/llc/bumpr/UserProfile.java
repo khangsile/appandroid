@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.androidtools.Conversions;
 import com.llc.bumpr.lib.CircularImageView;
-import com.llc.bumpr.lib.DynamicImageView;
 import com.llc.bumpr.sdk.models.User;
 
 public class UserProfile extends Activity {
