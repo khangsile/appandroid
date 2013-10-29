@@ -420,6 +420,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 					//i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
+				case 2:
+					i = new Intent(getApplicationContext(), MyRequests.class);
+					//i = new Intent(getApplicationContext(), EditProfileActivity.class);
+					i.putExtra("user", User.getActiveUser());
+					break;
 				case 5:
 					i = new Intent(getApplicationContext(), LoginActivity.class);
 					//clear history and shit

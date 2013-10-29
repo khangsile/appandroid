@@ -4,54 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <com.llc.bumpr.lib.CircularImageView
-        android:id="@+id/iv_profile_pic"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="10dp" />
-    
-    <TextView
-        android:id="@+id/tv_edit_prof_join_date_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/iv_profile_pic"
-        android:layout_toRightOf="@id/iv_profile_pic"
-        android:minHeight="32dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="30dp"
-        android:text="Join Date:"
-        android:textColor="#000"
-        android:textSize="15sp"
-        android:textStyle="bold" />
-    
-    <TextView
-        android:id="@+id/tv_edit_prof_join_date_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_edit_prof_join_date_title"
-        android:layout_alignLeft="@id/tv_edit_prof_join_date_title"
-        android:minHeight="32dp"
-        android:paddingLeft="20dp"
-        android:textColor="#000"
-        android:textSize="15sp" />
-    
-    <View android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/iv_profile_pic"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="#cccccc" />
-    
     <ListView 
         android:id="@+id/lv_my_requests"
-        android:layout_below="@id/divider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
