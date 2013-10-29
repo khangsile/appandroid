@@ -8,18 +8,16 @@ import com.androidtools.Conversions;
 import com.llc.bumpr.R;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.GraphicsUtil;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
+
+import com.llc.bumpr.R;
+import com.llc.bumpr.lib.CircularImageView;
 
 public class SlidingMenuListAdapter extends BaseAdapter {
 	private List<Pair<String, Object>> data;

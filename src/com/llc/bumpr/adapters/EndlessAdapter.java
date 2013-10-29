@@ -34,6 +34,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.androidtools.Conversions;
+import com.llc.bumpr.lib.GraphicsUtil;
+import com.llc.bumpr.R;
+
 public class EndlessAdapter extends ArrayAdapter<Object> {
         
         private List<Object> itemList;
