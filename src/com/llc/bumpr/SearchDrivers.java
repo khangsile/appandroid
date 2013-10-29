@@ -237,6 +237,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	private void initList() {
     	menuList.add(new Pair<String, Object>("Image", "Kyle Cooper"));//Pass User Object in future
     	menuList.add(new Pair<String, Object>("Text", "Create Review"));
+    	menuList.add(new Pair<String, Object>("Text", "My User Requests"));
+    	menuList.add(new Pair<String, Object>("Text", "My Driver Requests"));
     	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
     	menuList.add(new Pair<String, Object>("Text", "Logout"));
     }
@@ -302,9 +304,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 			public boolean onQueryTextSubmit(String query) {
 				// TODO Auto-generated method stub
 				//Hide keyboard when enter pressed
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-				//searchView.clearFocus();
+				searchView.clearFocus();
 				
 				LinearLayout.LayoutParams mapPars = (LinearLayout.LayoutParams)map.getLayoutParams();
 				mapPars.weight = 0.5f;
@@ -411,16 +411,16 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				Intent i = null;
 				switch (position) {
 				case 0:
-					i = new Intent(getApplicationContext(), UserProfile.class);
-					i.putExtra("user", User.getActiveUser());
-					break;
-				case 1:
-					//i = new Intent(getApplicationContext(), CreateReviewActivity.class);
-					//i.putExtra("user", User.getActiveUser());
+					//i = new Intent(getApplicationContext(), UserProfile.class);
 					i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
-				case 4:
+				case 1:
+					i = new Intent(getApplicationContext(), CreateReviewActivity.class);
+					//i = new Intent(getApplicationContext(), EditProfileActivity.class);
+					i.putExtra("user", User.getActiveUser());
+					break;
+				case 5:
 					i = new Intent(getApplicationContext(), LoginActivity.class);
 					//clear history and shit
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

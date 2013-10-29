@@ -66,7 +66,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@color/ghost_white"
-        android:dividerHeight="3dp"
+        android:dividerHeight="1dp"
         android:padding="8dp"
         android:descendantFocusability="beforeDescendants" />
+    
+    <Button
+        android:id="@+id/bt_submit_changes"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/submit" />
 </RelativeLayout>
