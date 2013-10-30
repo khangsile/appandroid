@@ -47,12 +47,12 @@ public class CreateReviewActivity extends SherlockActivity {
 		int rating = (int)ratingBar.getRating();
 
 		Review review = new Review.Builder()
-											.setDriverId(driver.getId())
-											.setUserId(User.getActiveUser().getId())
-											.setRequestId(request.getId())
-											.setDriverRating(rating)
-											.setDescription(description)
-											.build();
+			.setDriverId(driver.getId())
+			.setUserId(user.getId())
+			.setRequestId(request.getId())
+			.setDriverRating(rating)
+			.setDescription(description)
+			.build();
 
 	
 		Session session = Session.getSession();
