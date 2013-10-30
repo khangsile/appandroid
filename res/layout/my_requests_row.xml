@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <com.llc.bumpr.lib.CircularImageView
+        android:id="@+id/iv_profile_pic"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:layout_alignParentLeft="true" />
+    
+    <TextView
+        android:id="@+id/tv_distance_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/tv_price_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_distance_value"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/tv_distance_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/tv_distance_value"
+        android:layout_alignTop="@id/tv_distance_value"
+        android:layout_marginRight="5dp"
+        android:textSize="15sp"
+        android:text="Distance:" />
+    
+    <TextView
+        android:id="@+id/tv_price_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_distance_tag"
+        android:layout_alignTop="@id/tv_price_value"
+        android:layout_marginRight="5dp"
+        android:textSize="15sp"
+        android:text="Price:" />
+
+</RelativeLayout>

@@ -6,8 +6,10 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -22,7 +24,9 @@ import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
 public class LoginActivity extends Activity {
-
+	private ProgressDialog pd;
+	private Context context = this;
+	
 	// Test Git Push
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,7 @@ public class LoginActivity extends Activity {
 						}
 					}
 				});
-	}
+	}	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -69,22 +73,29 @@ public class LoginActivity extends Activity {
 	}
 	
 	public void login(View v) {
+		
+		//Start loading dialog to show action is taking place
+		final ProgressDialog dialog = ProgressDialog.show(LoginActivity.this, "Please Wait", "Logging in...", false, true);
 		authenticate(new Callback<User>() {
 
 			@Override
 			public void failure(RetrofitError arg0) {
 				// TODO Auto-generated method stub
+				dialog.dismiss();
 				Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void success(User arg0, Response arg1) {
 				// TODO Auto-generated method stub
+				dialog.dismiss();
 				Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//Remove Login from stack
 				startActivity(i);
 			}
 			
 		});
+		
 	}
 
 	public void toRegistration(View v) {

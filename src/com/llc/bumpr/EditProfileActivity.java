@@ -33,7 +33,6 @@ public class EditProfileActivity extends SherlockActivity {
 	/** Reference to the profile picture UI element */
 	private CircularImageView profPic;
 	
-	//private DynamicImageView carImage;
 	/** Reference to the List View UI element that holds the profile settings information */
 	private ListView profSettings;
 	/** Reference to the join date UI text element */
@@ -53,7 +52,6 @@ public class EditProfileActivity extends SherlockActivity {
 		joinDate.setText("October 25, 2013");
 		//Set image resources
 		profPic.setImageResource(R.drawable.test_image);
-		//carImage.setImageResource(R.drawable.test_car_image);
 		
 		settingList = new ArrayList<String>();
 		

@@ -94,14 +94,6 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 				view = convertView;
 			}
 			holder.textView.setText("Welcome, " + dataObj.toString() + "!");
-			
-			//Change size of image here
-			/*float imageSize = Conversions.dpToPixels(context, 75);
-			GraphicsUtil imageHelper = new GraphicsUtil();
-			Bitmap bm = imageHelper.getCircleBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.test_image), 16);
-			//Resize image to the desired size
-			Bitmap resizedBM = Bitmap.createScaledBitmap(bm, Math.round(imageSize), Math.round(imageSize), false);
-			holder.imageView.setImageBitmap(resizedBM);*/
 			holder.imageView.setImageResource(R.drawable.test_image);
 		} 
 		else if (data.get(position).first == "Switch") { // Create Switch Row

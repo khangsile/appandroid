@@ -34,14 +34,6 @@ public class UserProfile extends Activity {
 		TextView carRate = (TextView) findViewById(R.id.tv_car_rate);
 		
 		profPic.setImageResource(R.drawable.test_image);
-		
-		//Set images
-		/*float imageSize = Conversions.dpToPixels(this, 100);
-		GraphicsUtil imageHelper = new GraphicsUtil();
-		Bitmap bm = imageHelper.getCircleBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.test_image), 16);
-		//Resize image to the desired size
-		Bitmap resizedBM = Bitmap.createScaledBitmap(bm, Math.round(imageSize), Math.round(imageSize), false);
-		profPic.setImageBitmap(resizedBM);*/
 	
 		//Set layout parameters of image view
 		carImg.setPadding(0,0, 0, Math.round(Conversions.dpToPixels(this, 50)));

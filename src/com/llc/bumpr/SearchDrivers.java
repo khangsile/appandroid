@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -111,21 +112,13 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		
 		// Set up sliding menu
 		initSlidingMenu(slMenu);
-		/*slidingMenu = new SlidingMenu(this);
-		slidingMenu.setMode(SlidingMenu.LEFT);
-		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		slidingMenu.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
-		slidingMenu.setShadowDrawable(R.drawable.shadow);
-		slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		slidingMenu.setFadeDegree(0.35f);
-		slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		slidingMenu.setMenu(slMenu);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
 		
 		//Set up endless list view for driver list
 		driverList = (EndlessListView) findViewById(R.id.lv_drivers);
 		driverList.setLoadingView(R.layout.loading_layout);
 		driverList.setListener(this);
+		
+		setEndlessListOnClickListener();
 		
 		//Create new location client.
         mLocationClient = new LocationClient(this, this, this);
@@ -154,7 +147,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
              
              if(isGooglePlayServicesAvailable()){
                      mLocationClient.connect();
-                     gMap.setMyLocationEnabled(true);
+                     //gMap.setMyLocationEnabled(true);
              }
      }
      
@@ -221,7 +214,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
              // TODO Auto-generated method stub
              Location loc = mLocationClient.getLastLocation();
              LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-             CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng,10);
+             CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng,15);
              gMap.animateCamera(camUpdate);
      }
 
@@ -237,6 +230,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	private void initList() {
     	menuList.add(new Pair<String, Object>("Image", "Kyle Cooper"));//Pass User Object in future
     	menuList.add(new Pair<String, Object>("Text", "Create Review"));
+    	menuList.add(new Pair<String, Object>("Text", "My Sent Requests"));
+    	menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
     	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
     	menuList.add(new Pair<String, Object>("Text", "Logout"));
     }
@@ -302,9 +297,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 			public boolean onQueryTextSubmit(String query) {
 				// TODO Auto-generated method stub
 				//Hide keyboard when enter pressed
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-				//searchView.clearFocus();
+				searchView.clearFocus();
 				
 				LinearLayout.LayoutParams mapPars = (LinearLayout.LayoutParams)map.getLayoutParams();
 				mapPars.weight = 0.5f;
@@ -411,7 +404,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				Intent i = null;
 				switch (position) {
 				case 0:
-					i = new Intent(getApplicationContext(), UserProfile.class);
+					i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
 				case 1:
@@ -420,7 +413,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 					//i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					//i.putExtra("user", User.getActiveUser());
 					break;
-				case 4:
+				case 2:
+					i = new Intent(getApplicationContext(), MyRequests.class);
+					i.putExtra("user", User.getActiveUser());
+					break;
+				case 5:
 					i = new Intent(getApplicationContext(), LoginActivity.class);
 					//clear history and shit
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -449,6 +446,23 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		});
 	}
 	
-	
+	private void setEndlessListOnClickListener(){
+		final LatLng startLoc = gMap.getCameraPosition().target;
+		if (startLoc != null)
+			Toast.makeText(getApplicationContext(), startLoc.toString(), Toast.LENGTH_SHORT).show();
+		driverList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				// TODO Auto-generated method stub
+				//Get data at position selected
+				Object user = (Object)parent.getItemAtPosition(position);
+				
+				Toast.makeText(getApplicationContext(), user.toString() + gMap.getCameraPosition().target.toString(), Toast.LENGTH_SHORT).show();
+			}
+			
+		});
+	}
 
 }

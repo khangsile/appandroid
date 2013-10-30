@@ -28,16 +28,17 @@
     
     <TextView
         android:id="@+id/tv_edit_prof_val"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="32dp"
-        android:layout_toLeftOf="@id/iv_edit_prof_icon"
         android:paddingRight="5dp"
         android:textColor="#000"
         android:textSize="15sp"
         android:password="true"
-        android:text="password" />
+        android:text="password"
+        android:layout_toLeftOf="@id/iv_edit_prof_icon" />
     
-
+		<!-- android:layout_centerHorizontal="true" -->
+    
 </RelativeLayout>

@@ -18,9 +18,8 @@
     
     <EditText 
         android:id="@+id/et_edit_prof_value"
-        android:layout_width="125dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignBottom="@id/tv_edit_prof_text"
         android:minHeight="32dp"
         android:paddingRight="5dp"
@@ -29,5 +28,8 @@
         android:textSize="15sp"
         android:maxLines="1"
        	android:inputType="textCapWords"
-       	android:background="@android:color/transparent" />
+       	android:background="@android:color/transparent"
+       	android:layout_alignParentRight="true" />
+    
+    <!-- android:layout_centerHorizontal="true" -->
 </RelativeLayout>
