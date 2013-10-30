@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -117,6 +118,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		driverList.setLoadingView(R.layout.loading_layout);
 		driverList.setListener(this);
 		
+		setEndlessListOnClickListener();
+		
 		//Create new location client.
         mLocationClient = new LocationClient(this, this, this);
 	}
@@ -144,7 +147,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
              
              if(isGooglePlayServicesAvailable()){
                      mLocationClient.connect();
-                     gMap.setMyLocationEnabled(true);
+                     //gMap.setMyLocationEnabled(true);
              }
      }
      
@@ -211,7 +214,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
              // TODO Auto-generated method stub
              Location loc = mLocationClient.getLastLocation();
              LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-             CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng,10);
+             CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng,15);
              gMap.animateCamera(camUpdate);
      }
 
@@ -441,6 +444,23 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		});
 	}
 	
-	
+	private void setEndlessListOnClickListener(){
+		final LatLng startLoc = gMap.getCameraPosition().target;
+		if (startLoc != null)
+			Toast.makeText(getApplicationContext(), startLoc.toString(), Toast.LENGTH_SHORT).show();
+		driverList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				// TODO Auto-generated method stub
+				//Get data at position selected
+				Object user = (Object)parent.getItemAtPosition(position);
+				
+				Toast.makeText(getApplicationContext(), user.toString() + gMap.getCameraPosition().target.toString(), Toast.LENGTH_SHORT).show();
+			}
+			
+		});
+	}
 
 }
