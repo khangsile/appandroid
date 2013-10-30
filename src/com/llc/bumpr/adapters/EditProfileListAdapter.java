@@ -104,10 +104,27 @@ public class EditProfileListAdapter extends BaseAdapter {
 					holder.editText.setText(user.getPhoneNumber());
 					holder.editText.setInputType(InputType.TYPE_CLASS_PHONE);
 				}
-				else {//if (data.get(position).equals("Email"))
+				else if (data.get(position).equals("Email")){
 					holder.editText.setText(user.getEmail());
 					holder.editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 				}
+				else if (data.get(position).equals("Make")){
+					holder.editText.setText("Toyota");
+					holder.editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+				}
+				else if (data.get(position).equals("Model")){
+					holder.editText.setText("Hybrid Camry");
+					holder.editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+				}
+				else if (data.get(position).equals("Year")){
+					holder.editText.setText("2013");
+					holder.editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+				}
+				else if (data.get(position).equals("Passenger Seats")){
+					holder.editText.setText("4");
+					holder.editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+				}
+				
 			} 
 			else if (data.get(position).equals("Password")) { 
 				ViewGroup vGroup = (ViewGroup) inflater.inflate(R.layout.edit_profile_activity_row, null);
