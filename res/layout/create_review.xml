@@ -3,65 +3,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <com.llc.bumpr.lib.CircularImageView android:id="@+id/img_user"
-    	android:layout_width="200dp"
-    	android:layout_height="200dp"
-    	android:layout_marginTop="5dp"
-    	android:layout_alignParentTop="true"
-    	android:layout_centerHorizontal="true"
-    	android:src="@drawable/test_image"/>
-    <TextView android:id="@+id/tv_user_name"
+
+    <com.llc.bumpr.lib.CircularImageView
+        android:id="@+id/img_user"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/test_image" />
+
+    <TextView
+        android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:layout_below="@id/img_user"
         android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:textSize="20dp" />
-    
-    <View android:id="@+id/divider"
+        android:layout_marginTop="5dp"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_below="@id/tv_user_name"
         android:layout_marginTop="8dp"
         android:background="#CCCCCC" />
-    
-    <EditText android:id="@+id/et_review_description"
+
+    <EditText
+        android:id="@+id/et_review_description"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/divider"
         android:layout_above="@+id/rb_driver_rating"
-        android:layout_marginTop="10dp"
+        android:layout_below="@id/divider"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:gravity="top"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit_text_border"
         android:capitalize="sentences"
-        android:background="@drawable/edit_text_border" />
-    
-    <RatingBar android:id="@+id/rb_driver_rating"
+        android:gravity="top" />
+
+    <RatingBar
+        android:id="@+id/rb_driver_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_above="@+id/btn_create_review"
-        android:layout_marginTop="3dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="3dp"
         android:isIndicator="false"
         android:numStars="5"
         android:rating="1"
         android:stepSize="1" />
-   
-     <Button android:id="@id/btn_create_review"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_centerHorizontal="true"
-            android:background="#e6e6fa"
-            android:text="Rate Your Experience!"
-            android:textSize="16dp"
-            android:onClick="createReview" />
 
+    <Button
+        android:id="@id/btn_create_review"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="#e6e6fa"
+        android:onClick="createReview"
+        android:text="Rate Your Experience!"
+        android:textSize="16dp" />
 
 </RelativeLayout>

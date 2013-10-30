@@ -1,8 +1,12 @@
 package com.llc.bumpr;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +23,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.llc.bumpr.adapters.EditProfileListAdapter;
 import com.llc.bumpr.lib.CircularImageView;
+import com.llc.bumpr.sdk.lib.ApiRequest;
+import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
 public class EditProfileActivity extends SherlockActivity {
@@ -122,6 +128,34 @@ public class EditProfileActivity extends SherlockActivity {
 		settingList.add("Email");
 		settingList.add("Password");
 		settingList.add("Car Image");
+	}
+	
+	public void update() {
+		HashMap<String, Object> user = new HashMap<String, Object>();
+		user.put("first_name", "");
+		user.put("last_name", "");
+		user.put("phone_number", "");
+		user.put("password", "");
+		
+		User activeUser = User.getActiveUser();
+		ApiRequest request = activeUser.getUpdateRequest(user, new Callback<User>() {
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				// TODO Auto-generated method stub
+				// Send alert
+			}
+
+			@Override
+			public void success(User arg0, Response arg1) {
+				// TODO Auto-generated method stub
+				// Update list;
+			}
+			
+		});
+		
+		Session session = Session.getSession();
+		session.sendRequest(request);
 	}
 	
 }
