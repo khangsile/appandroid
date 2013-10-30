@@ -445,9 +445,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	}
 	
 	private void setEndlessListOnClickListener(){
-		final LatLng startLoc = gMap.getCameraPosition().target;
+		/*final LatLng startLoc = gMap.getCameraPosition().target;
 		if (startLoc != null)
-			Toast.makeText(getApplicationContext(), startLoc.toString(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), startLoc.toString(), Toast.LENGTH_SHORT).show();*/
 		driverList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
