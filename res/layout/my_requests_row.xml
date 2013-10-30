@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="5dp"
         android:textSize="15sp" />
     
     <TextView
@@ -46,7 +46,6 @@
         android:layout_alignLeft="@id/tv_distance_tag"
         android:layout_alignTop="@id/tv_price_value"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="25dp"
         android:textSize="15sp"
         android:text="Price:" />
 

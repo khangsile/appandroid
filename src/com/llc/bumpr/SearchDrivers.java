@@ -111,16 +111,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		
 		// Set up sliding menu
 		initSlidingMenu(slMenu);
-		/*slidingMenu = new SlidingMenu(this);
-		slidingMenu.setMode(SlidingMenu.LEFT);
-		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		slidingMenu.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
-		slidingMenu.setShadowDrawable(R.drawable.shadow);
-		slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		slidingMenu.setFadeDegree(0.35f);
-		slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		slidingMenu.setMenu(slMenu);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
 		
 		//Set up endless list view for driver list
 		driverList = (EndlessListView) findViewById(R.id.lv_drivers);
@@ -237,8 +227,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	private void initList() {
     	menuList.add(new Pair<String, Object>("Image", "Kyle Cooper"));//Pass User Object in future
     	menuList.add(new Pair<String, Object>("Text", "Create Review"));
-    	menuList.add(new Pair<String, Object>("Text", "My User Requests"));
-    	menuList.add(new Pair<String, Object>("Text", "My Driver Requests"));
+    	menuList.add(new Pair<String, Object>("Text", "My Sent Requests"));
+    	menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
     	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
     	menuList.add(new Pair<String, Object>("Text", "Logout"));
     }
@@ -411,18 +401,15 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				Intent i = null;
 				switch (position) {
 				case 0:
-					//i = new Intent(getApplicationContext(), UserProfile.class);
 					i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
 				case 1:
 					i = new Intent(getApplicationContext(), CreateReviewActivity.class);
-					//i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
 				case 2:
 					i = new Intent(getApplicationContext(), MyRequests.class);
-					//i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
 				case 5:
