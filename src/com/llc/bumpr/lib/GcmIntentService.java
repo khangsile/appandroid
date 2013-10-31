@@ -14,12 +14,14 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.llc.bumpr.LoginActivity;
 import com.llc.bumpr.R;
 import com.llc.bumpr.R.drawable;
+import com.llc.bumpr.SearchDrivers;
 
 public class GcmIntentService extends IntentService {
 	
 	public static final int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
+	public static final String SENDER_ID = "130758040838";
 	
 	static final String TAG = "com.llc.bumpr GCM";
 
@@ -27,6 +29,11 @@ public class GcmIntentService extends IntentService {
 		super("GcmIntentService");
 		// TODO Auto-generated constructor stub
 	}
+	
+	/*public GcmIntentService(String senderId) {
+		super(senderId);
+		Log.e("GcmIntentService", senderId);
+	}*/
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
@@ -75,15 +82,16 @@ public class GcmIntentService extends IntentService {
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, LoginActivity.class), 0);
+                new Intent(this, SearchDrivers.class), 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)
-        .setContentTitle("GCM Notification")
+        .setContentTitle("Driving Request Received")
         .setStyle(new NotificationCompat.BigTextStyle()
         .bigText(msg))
-        .setContentText(msg);
+        .setContentText(msg)
+        .setAutoCancel(true);
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());

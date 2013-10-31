@@ -33,7 +33,7 @@
 	<!-- Google Cloud Messaging -->
 	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 	<uses-permission android:name="android.permissions.GET_ACCOUNTS"/>
-		<!-- Wake Lock not inlcuded at first. Add it later if we want it -->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<permission android:name="com.llc.bumpr.permission.C2D_MESSAGE"
 	    android:protectionLevel="signature"/>
 	<uses-permission android:name="com.llc.bumpr.permission.C2D_MESSAGE" />
