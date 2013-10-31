@@ -181,7 +181,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
          if (ConnectionResult.SUCCESS == retCode)
                  return true;
          //Otherwise, request them to download GP Services
-         else {
+         else { //If it can be resolved, fix it
+        	 if (GooglePlayServicesUtil.isUserRecoverableError(retCode))
                  GooglePlayServicesUtil.getErrorDialog(retCode, this,
                                  RQS_GooglePlayServices).show();
                  return false;
