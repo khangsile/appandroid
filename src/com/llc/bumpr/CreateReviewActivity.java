@@ -9,14 +9,12 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Review;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
-public class CreateReviewActivity extends SherlockActivity {
-	private User driver;
+public class CreateReviewActivity extends ProfileActivity {
 	private Request request;
 	
 	
@@ -24,31 +22,25 @@ public class CreateReviewActivity extends SherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_review);
-		
-		Bundle bundle = getIntent().getExtras();
-		driver = (User) bundle.getParcelable("user");
-		request = (Request) bundle.getParcelable("request");
-		
-		
-		if (driver == null) {
-			throw new NullPointerException("Instance ('driver') cannot be null");
-		}
-		
-		TextView userName = (TextView) findViewById(R.id.tv_user_name);
-		userName.setText(driver.getFirstName() + " " + driver.getLastName());
-		
+
+		initialize();
+	}
+	
+	@Override
+	protected void initialize() {
+		super.initialize();
 	}
 	
 	public void createReview(View v) {
-		User user = User.getActiveUser();
+		User activeUser = User.getActiveUser();
 
 		String description = ((EditText) findViewById(R.id.et_review_description)).getText().toString();
 		RatingBar ratingBar = (RatingBar) findViewById(R.id.rb_driver_rating);
 		int rating = (int)ratingBar.getRating();
 
 		Review review = new Review.Builder()
-			.setDriverId(driver.getId())
-			.setUserId(user.getId())
+			.setDriverId(user.getId())
+			.setUserId(activeUser.getId())
 			.setRequestId(request.getId())
 			.setDriverRating(rating)
 			.setDescription(description)

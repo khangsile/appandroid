@@ -4,37 +4,44 @@
     android:id="@+id/fl_map_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
     android:weightSum="1" >
 
     <LinearLayout
         android:id="@+id/ll_map_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1" >
 
         <!-- Fix for dat black shit over the sliding menu -->
         <FrameLayout
             android:id="@+id/frl_map_container"
-        	android:layout_width="match_parent"
-        	android:layout_height="match_parent">
-            <fragment class="com.google.android.gms.maps.SupportMapFragment"
-           		android:id="@+id/map"
-            	android:name="com.google.android.gms.maps.MapFragment"
-            	android:layout_width="match_parent"
-            	android:layout_height="match_parent"
-            	 />
-            
-            <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                class="com.google.android.gms.maps.SupportMapFragment" />
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:background="@android:color/transparent"
-                android:src="@drawable/center_location_indicator"
-                android:layout_gravity="center" />
+                android:src="@drawable/center_location_indicator" />
+
+            <!-- Don't remove. This is the fix. -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
+            
         </FrameLayout>
-        
     </LinearLayout>
 
     <LinearLayout
