@@ -14,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
+import android.widget.Toast;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.llc.bumpr.R;
@@ -98,6 +101,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 		} 
 		else if (data.get(position).first == "Switch") { // Create Switch Row
 			SwitchViewHolder holder;
+			Switch switchView;
 
 			if (convertView == null) {
 				ViewGroup vGroup = (ViewGroup) inflater.inflate(
@@ -109,15 +113,31 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 						(TextView) vGroup.findViewById(R.id.tv_sl_menu_driver_mode),
 						(Switch) vGroup.findViewById(R.id.tb_sl_menu_switch));
 				vGroup.setTag(holder);
+				
+				switchView = (Switch) vGroup.findViewById(R.id.tb_sl_menu_switch);
 
 				view = vGroup;
 			} else {// If convert view exists!
 				// get the holder back
 				holder = (SwitchViewHolder) convertView.getTag();
+				switchView = holder.getSwitch();
 				view = convertView;
 			}
 			holder.textView.setText(dataObj.toString());
 			holder.switchView.setChecked(false);
+			switchView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					// TODO Auto-generated method stub
+					//Set user to drive mode
+					if (isChecked)
+						Toast.makeText(context, "True!", Toast.LENGTH_SHORT).show();
+					else
+						Toast.makeText(context, "False!", Toast.LENGTH_SHORT).show();
+				}
+				
+			});
 		} 
 		else { // Create Text Row
 			TextViewHolder holder;
@@ -174,6 +194,10 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 		private SwitchViewHolder(TextView textView, Switch switchView) {
 			this.textView = textView;
 			this.switchView = switchView;
+		}
+		
+		private Switch getSwitch(){
+			return switchView;
 		}
 	}
 

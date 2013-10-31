@@ -4,20 +4,27 @@
     android:layout_height="wrap_content"
     android:background="@color/ghost_white" >
 
+    <!--
+         <ImageView
+        android:id="@+id/iv_car_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:adjustViewBounds="true" />
+    -->
+
     <ImageView
         android:id="@+id/iv_car_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true" />
-    
-    <!--  
+
+    <!--
     	<com.llc.bumpr.lib.DynamicImageView
         android:id="@+id/iv_car_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
-        android:adjustViewBounds="true" />
-    -->
+        android:adjustViewBounds="true" /> -->
 
     <com.llc.bumpr.lib.CircularImageView
         android:id="@+id/iv_profile_pic"
@@ -25,26 +32,26 @@
         android:layout_height="100dp"
         android:layout_alignBottom="@id/iv_car_image"
         android:layout_alignRight="@id/iv_car_image" />
-    
-    <!-- 
+
+    <!--
     <ImageView
         android:id="@+id/iv_profile_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/iv_car_image"
         android:layout_alignRight="@id/iv_car_image"
-        android:adjustViewBounds="true" />
-        -->
-    
-<!-- DO NOT DELETE. WE MAY WANT TO GO BACK TO THIS CODE, but include is buggy and is not performing margin/padding -->    
-<!--     <include  -->
-<!--         android:id="@+id/in_user_details" -->
-<!--         android:layout_width="wrap_content" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         layout="@layout/user_details" -->
-<!--         android:layout_alignBottom="@id/iv_car_image" -->
-<!--         android:layout_alignLeft="@id/iv_car_image" />  -->
-        
+        android:adjustViewBounds="true" /> -->
+
+
+    <!-- DO NOT DELETE. WE MAY WANT TO GO BACK TO THIS CODE, but include is buggy and is not performing margin/padding -->
+    <!-- <include -->
+    <!-- android:id="@+id/in_user_details" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- layout="@layout/user_details" -->
+    <!-- android:layout_alignBottom="@id/iv_car_image" -->
+    <!-- android:layout_alignLeft="@id/iv_car_image" /> -->
+
     <TextView
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
@@ -52,12 +59,12 @@
         android:layout_above="@+id/tv_user_loc"
         android:layout_alignLeft="@id/iv_car_image"
         android:clipToPadding="false"
+        android:gravity="top"
         android:maxLines="1"
         android:paddingLeft="5dp"
         android:textColor="#000"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:gravity="top"
         android:typeface="sans" />
 
     <TextView
@@ -67,7 +74,7 @@
         android:layout_alignBottom="@id/iv_car_image"
         android:layout_alignLeft="@id/iv_car_image"
         android:layout_marginTop="-4dp"
-		android:maxLines="1"
+        android:maxLines="1"
         android:paddingLeft="5dp"
         android:textColor="#000"
         android:textSize="18sp"
@@ -78,25 +85,25 @@
         style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_profile_pic"
         android:layout_alignRight="@id/iv_profile_pic"
-        android:layout_marginTop="3dp"
+        android:layout_below="@id/iv_profile_pic"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="3dp"
         android:clickable="false" />
-    
+
     <TextView
         android:id="@+id/tv_user_car"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/rb_user_rating"
-        android:maxLines="1"
         android:layout_marginTop="10dp"
+        android:maxLines="1"
         android:paddingLeft="5dp"
         android:textColor="#000"
         android:textSize="20sp"
         android:typeface="sans" />
-    
+
     <TextView
         android:id="@+id/tv_num_seats"
         android:layout_width="wrap_content"
@@ -109,7 +116,7 @@
         android:textColor="#000"
         android:textSize="20sp"
         android:typeface="sans" />
-    
+
     <TextView
         android:id="@+id/tv_car_rate"
         android:layout_width="wrap_content"

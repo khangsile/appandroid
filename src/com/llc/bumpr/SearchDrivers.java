@@ -235,6 +235,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
     	menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
     	menuList.add(new Pair<String, Object>("Text", "Request"));
     	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
+    	menuList.add(new Pair<String, Object>("Text", "Edit Driver Settings"));
     	menuList.add(new Pair<String, Object>("Text", "Logout"));
     }
 
@@ -415,10 +416,17 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 					break;
 				case 2:
 					i = new Intent(getApplicationContext(), MyRequests.class);
-					i.putExtra("user", User.getActiveUser());
+					i.putExtra("user", User.getActiveUser()); //Pass Incoming Requests
+					break;
+				case 3:
+					i = new Intent(getApplicationContext(), MyRequests.class);
+					i.putExtra("user", User.getActiveUser()); //Pass outgoing requests
 					break;
 				case 4:
 					i = new Intent(getApplicationContext(), RequestActivity.class);
+					break;
+				case 5:
+					i = new Intent(getApplicationContext(), EditDriverActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
 				case 6:
@@ -451,9 +459,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	}
 	
 	private void setEndlessListOnClickListener(){
-		final LatLng startLoc = gMap.getCameraPosition().target;
-		if (startLoc != null)
-			Toast.makeText(getApplicationContext(), startLoc.toString(), Toast.LENGTH_SHORT).show();
 		driverList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override

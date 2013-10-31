@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!--
+         <com.llc.bumpr.lib.DynamicImageView
+        android:id="@+id/iv_car_pic"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp" />
+    -->
+
+    <ImageView
+        android:id="@+id/iv_car_pic"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/tv_edit_prof_join_date_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_car_pic"
+        android:layout_toRightOf="@id/iv_car_pic"
+        android:minHeight="32dp"
+        android:paddingTop="30dp"
+        android:paddingLeft="5dp"
+        android:text="Driver Since:"
+        android:textColor="#000"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_edit_prof_join_date_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_edit_prof_join_date_title"
+        android:layout_below="@id/tv_edit_prof_join_date_title"
+        android:minHeight="32dp"
+        android:paddingLeft="20dp"
+        android:textColor="#000"
+        android:textSize="15sp" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/iv_car_pic"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:background="#cccccc" />
+
+    <ListView
+        android:id="@+id/lv_settings_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider"
+        android:descendantFocusability="beforeDescendants"
+        android:divider="@color/ghost_white"
+        android:dividerHeight="1dp"
+        android:padding="8dp" />
+
+    <Button
+        android:id="@+id/bt_submit_changes"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/submit" />
+
+</RelativeLayout>
