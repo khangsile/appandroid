@@ -266,7 +266,16 @@ public class LoginActivity extends Activity {
 		session.login(email, password, cb);
 	}
 	
+	/**
+	 * Reacts to the button press to log the user in
+	 * @param v The view that calls the method
+	 */
 	public void login(View v) {
+				
+		final View activityRootView = findViewById(R.id.root);
+		final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(activityRootView.getWindowToken(), 0);
+		
 		
 		//Start loading dialog to show action is taking place
 		final ProgressDialog dialog = ProgressDialog.show(LoginActivity.this, "Please Wait", "Logging in...", false, true);

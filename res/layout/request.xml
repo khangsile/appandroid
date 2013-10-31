@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/layout_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/profile" />
+
+    <TextView
+        android:id="@+id/tv_fromAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/layout_profile"
+        android:layout_marginLeft="5dp"
+        android:textSize="12dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_fromCityState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_fromAddress"
+        android:layout_below="@id/tv_fromAddress"
+        android:textSize="12dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_toAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/layout_profile"
+        android:layout_marginRight="5dp"
+        android:textSize="12dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_toCityState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/tv_toAddress"
+        android:layout_below="@id/tv_toAddress"
+        android:textSize="12dp"
+        android:textStyle="bold" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linear_layout_response"
+        android:layout_below="@id/tv_fromCityState"
+        android:layout_margin="10dp"
+        android:background="@drawable/edit_text_border" >
+
+        <fragment
+            android:id="@+id/map_request"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.SupportMapFragment" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_response"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/btn_accept"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2.5dp"
+            android:layout_weight="0.5"
+            android:background="#e6e6fa"
+            android:onClick="acceptRequest"
+            android:text="@string/accept" />
+
+        <Button
+            android:id="@+id/btn_decline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2.5dp"
+            android:layout_weight="0.5"
+            android:background="#e6e6fa"
+            android:onClick="declineRequest"
+            android:text="@string/decline" />
+    </LinearLayout>
+
+</RelativeLayout>

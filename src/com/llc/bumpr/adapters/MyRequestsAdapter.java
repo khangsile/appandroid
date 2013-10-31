@@ -2,17 +2,15 @@ package com.llc.bumpr.adapters;
 
 import java.util.List;
 
-import com.llc.bumpr.R;
-import com.llc.bumpr.lib.CircularImageView;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.llc.bumpr.R;
+import com.llc.bumpr.lib.CircularImageView;
 
 public class MyRequestsAdapter extends BaseAdapter {
 	private List<Object> data;

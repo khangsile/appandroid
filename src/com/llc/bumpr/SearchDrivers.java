@@ -94,6 +94,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		setContentView(R.layout.search_driver);
 		actionBar = getSupportActionBar();
 		map = (LinearLayout) findViewById(R.id.ll_map_container);
+		
 		//map.setFocusable(true); //Needed to remove focus from ABS searchView
 		gMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		driverLayout = (LinearLayout) findViewById(R.id.ll_driver_list);
@@ -233,6 +234,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
     	menuList.add(new Pair<String, Object>("Text", "Create Review"));
     	menuList.add(new Pair<String, Object>("Text", "My Sent Requests"));
     	menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
+    	menuList.add(new Pair<String, Object>("Text", "Request"));
     	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
     	menuList.add(new Pair<String, Object>("Text", "Edit Driver Settings"));
     	menuList.add(new Pair<String, Object>("Text", "Logout"));
@@ -412,8 +414,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				case 1:
 					i = new Intent(getApplicationContext(), CreateReviewActivity.class);
 					i.putExtra("user", User.getActiveUser());
-					//i = new Intent(getApplicationContext(), EditProfileActivity.class);
-					//i.putExtra("user", User.getActiveUser());
 					break;
 				case 2:
 					i = new Intent(getApplicationContext(), MyRequests.class);
@@ -422,6 +422,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				case 3:
 					i = new Intent(getApplicationContext(), MyRequests.class);
 					i.putExtra("user", User.getActiveUser()); //Pass outgoing requests
+					break;
+				case 4:
+					i = new Intent(getApplicationContext(), RequestActivity.class);
 					break;
 				case 5:
 					i = new Intent(getApplicationContext(), EditDriverActivity.class);
