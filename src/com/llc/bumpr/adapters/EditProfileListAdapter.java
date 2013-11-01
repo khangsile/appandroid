@@ -4,11 +4,13 @@ import java.util.List;
 
 import android.content.Context;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.llc.bumpr.R;
@@ -33,12 +35,12 @@ public class EditProfileListAdapter extends BaseAdapter {
 		@Override
 		public int getItemViewType(int position) {
 			// TODO Auto-generated method stub
-			if (!(data.get(position).equals("Password")) && !(data.get(position).equals("Car Image")))
+			if (!(data.get(position).equals("Password")) && !(data.get(position).equals("Driver Settings")))
 				return 0; //EditText Row
 			else if (data.get(position).equals("Password"))
-				return 1; //Password row -- Take to a new activity
+				return 1; //Password row -- Take to a new activity. 
 			else
-				return 2; //Car Image row
+				return 2; //Driver Settings Row, hide the password text view
 		}
 
 		@Override
@@ -70,7 +72,7 @@ public class EditProfileListAdapter extends BaseAdapter {
 			// TODO Auto-generated method stub
 			View view;
 
-			if (!(data.get(position).equals("Password")) && !(data.get(position).equals("Car Image"))) { // Create TextView Row
+			if (!(data.get(position).equals("Password")) && !(data.get(position).equals("Driver Settings"))) { // Create TextView Row
 				TextViewHolder holder;
 
 				if (convertView == null) {
@@ -131,25 +133,28 @@ public class EditProfileListAdapter extends BaseAdapter {
 				view = vGroup;
 			}
 			else{//Create Car Image Row
-				ImageViewHolder holder;
+				DriverSettingsViewHolder holder;
 
 				if (convertView == null) {
 					ViewGroup vGroup = (ViewGroup) inflater.inflate(
-							R.layout.edit_profile_car_image_row, null);
+							R.layout.edit_profile_activity_row, null);
 
 					// Use the view holder pattern to save already looked up
 					// subviews
-					holder = new ImageViewHolder(
-							(DynamicImageView) vGroup.findViewById(R.id.iv_car_pic));
+					holder = new DriverSettingsViewHolder(
+							(TextView) vGroup.findViewById(R.id.tv_edit_prof_text),
+							(TextView) vGroup.findViewById(R.id.tv_edit_prof_val),
+							(ImageView) vGroup.findViewById(R.id.iv_edit_prof_icon));
 					vGroup.setTag(holder);
 
 					view = vGroup;
 				} else {// If convert view exists!
 					// get the holder back
-					holder = (ImageViewHolder) convertView.getTag();
+					holder = (DriverSettingsViewHolder) convertView.getTag();
 					view = convertView;
 				}
-				holder.carImg.setImageResource(R.drawable.test_car_image);
+				holder.passTitle.setText("Driver Settings:");
+				holder.passText.setText("");
 			}
 			return view; // Return view to display
 		}
@@ -165,12 +170,15 @@ public class EditProfileListAdapter extends BaseAdapter {
 			}
 		}
 		
-		private static class ImageViewHolder { // Used to hold views per row in the
-			// List
-			final DynamicImageView carImg;
+		private static class DriverSettingsViewHolder {
+			final TextView passTitle;
+			final TextView passText;
+			ImageView icon;
 			
-			private ImageViewHolder(DynamicImageView carImg) {
-			this.carImg = carImg;
+			private DriverSettingsViewHolder(TextView passTitle, TextView passText, ImageView icon) {
+			this.passTitle = passTitle;
+			this.passText = passText;
+			this.icon = icon;
 			}
 		}
 }

@@ -96,7 +96,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 				holder = (ImageViewHolder) convertView.getTag();
 				view = convertView;
 			}
-			holder.textView.setText("Welcome, " + dataObj.toString() + "!");
+			holder.textView.setText(dataObj.toString());
 			holder.imageView.setImageResource(R.drawable.test_image);
 		} 
 		else if (data.get(position).first == "Switch") { // Create Switch Row

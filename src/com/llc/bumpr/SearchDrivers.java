@@ -236,7 +236,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
     	menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
     	menuList.add(new Pair<String, Object>("Text", "Request"));
     	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
-    	menuList.add(new Pair<String, Object>("Text", "Edit Driver Settings"));
     	menuList.add(new Pair<String, Object>("Text", "Logout"));
     }
 
@@ -427,10 +426,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 					i = new Intent(getApplicationContext(), RequestActivity.class);
 					break;
 				case 5:
-					i = new Intent(getApplicationContext(), EditDriverActivity.class);
-					i.putExtra("user", User.getActiveUser());
-					break;
-				case 6:
 					i = new Intent(getApplicationContext(), LoginActivity.class);
 					//clear history and shit
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -57,16 +57,6 @@ public class GcmIntentService extends IntentService {
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
 				sendNotification("Deleted messages on server: " + extras.toString());
 			}else if(GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-				// This loop represents the service doing some work.
-                for (int i=0; i<5; i++) {
-                    Log.i(TAG, "Working... " + (i+1)
-                            + "/5 @ " + SystemClock.elapsedRealtime());
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                    }
-                }
-                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
                 sendNotification("Received: " + extras.toString());
                 Log.i(TAG, "Received: " + extras.toString());
@@ -96,7 +86,8 @@ public class GcmIntentService extends IntentService {
         .setAutoCancel(true)
         .setOnlyAlertOnce(true)
         .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
-        .setLights(Color.rgb(0,0,128),1000,4000); //Flash blue light for 1 second on and 4 seconds off
+        .setLights(0xFF0000FF,500,3000) //Flash blue light for 1 second on and 4 seconds off
+        .setPriority(Notification.PRIORITY_DEFAULT);
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
