@@ -342,6 +342,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		//Reset counter for new search (Set to 1)
 		testCntr = 1;
 		//Clear the list and add the new search results
+		
+		
 		driverList.resetData(createItems());
 	}
 	
@@ -425,6 +427,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 					break;
 				case 4:
 					i = new Intent(getApplicationContext(), RequestActivity.class);
+					i.putExtra("user", User.getActiveUser());
 					break;
 				case 5:
 					i = new Intent(getApplicationContext(), EditDriverActivity.class);
