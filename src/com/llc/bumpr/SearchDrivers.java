@@ -244,8 +244,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	private void initList() {
     	menuList.add(new Pair<String, Object>("Image", "Kyle Cooper"));//Pass User Object in future
     	menuList.add(new Pair<String, Object>("Text", "Create Review"));
-    	menuList.add(new Pair<String, Object>("Text", "My Sent Requests"));
     	menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
+    	menuList.add(new Pair<String, Object>("Text", "My Sent Requests"));
     	menuList.add(new Pair<String, Object>("Text", "Request"));
     	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
     	menuList.add(new Pair<String, Object>("Text", "Logout"));
@@ -431,10 +431,12 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				case 2:
 					i = new Intent(getApplicationContext(), MyRequests.class);
 					i.putExtra("user", User.getActiveUser()); //Pass Incoming Requests
+					i.putExtra("requestType", "My Received Requests");
 					break;
 				case 3:
 					i = new Intent(getApplicationContext(), MyRequests.class);
 					i.putExtra("user", User.getActiveUser()); //Pass outgoing requests
+					i.putExtra("requestType", "My Sent Requests");
 					break;
 				case 4:
 					i = new Intent(getApplicationContext(), RequestActivity.class);
