@@ -47,6 +47,19 @@ public class LoginActivity extends Activity {
 	/** Tag used to log messages */
 	static final String TAG = "com.llc.bumpr GCM";
 	
+	/** Constant phrase to hold login details */
+	public static final String LOGIN_PREF = "bumprLogin";
+	
+	/** Reference to the SharedPreferences file with saved login details */
+	SharedPreferences savedLogin;
+	
+	/** Holds reference to the email edit text box in the layout*/
+	EditText email;
+	
+	/** Holds the reference to the password edit text box in the layout*/
+	EditText password;
+	
+	
 	GoogleCloudMessaging gcm;
 	AtomicInteger msgId = new AtomicInteger();
 	SharedPreferences prefs;
@@ -59,8 +72,13 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		context = getApplicationContext();
+		savedLogin = getSharedPreferences (LOGIN_PREF, 0);
 		
+		email = (EditText) findViewById(R.id.et_email);
+		password = (EditText) findViewById(R.id.et_password);
+		
+		context = getApplicationContext();
+
 		//Only allow the app to continue if Google Play Services is available!
 		if(checkPlayServices()){
 			//Google Cloud Messaging Registration
@@ -73,6 +91,8 @@ public class LoginActivity extends Activity {
 			if(TextUtils.isEmpty(regId)){
 				registerInBackground();
 			}
+			
+			checkSavedLogin();
 			
 			final View activityRootView = findViewById(R.id.root);
 			activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -101,6 +121,18 @@ public class LoginActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * Checks to see if a user login is saved. If so, automatically take the user to the searchDriver activity
+	 */
+	private void checkSavedLogin() {
+		// TODO Auto-generated method stub
+		if (!savedLogin.getString("email", "").contentEquals("") && !savedLogin.getString("password", "").contentEquals("")){
+			Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//Remove Login from stack
+			startActivity(i);
+		}
+	}
+
 	/**
 	 * Gets the current registration ID for application on GCM service.
 	 * <p>
@@ -289,6 +321,13 @@ public class LoginActivity extends Activity {
 			@Override
 			public void success(User arg0, Response arg1) {
 				// TODO Auto-generated method stub
+
+				//Add user details to shared preferences upon successful login
+				SharedPreferences.Editor loginEditor = savedLogin.edit();
+				loginEditor.putString("email", email.getText().toString());
+				loginEditor.putString("password", password.getText().toString());
+				loginEditor.commit();
+				
 				dialog.dismiss();
 				Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//Remove Login from stack

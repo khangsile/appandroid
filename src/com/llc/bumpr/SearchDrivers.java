@@ -10,6 +10,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -86,6 +88,10 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
     
     /** Request value to get current location (Using GPS) */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    
+    /** Constant phrase to hold login details */
+	public static final String LOGIN_PREF = "bumprLogin";
+    
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -432,6 +438,13 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 					break;
 				case 6:
 					i = new Intent(getApplicationContext(), LoginActivity.class);
+					//Remove saved email and password from shared preferences
+					SharedPreferences savedLogin = getSharedPreferences (LOGIN_PREF, 0);
+					Editor loginEditor = savedLogin.edit();
+					loginEditor.remove("email");
+					loginEditor.remove("password");
+					loginEditor.commit();
+					
 					//clear history and shit
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					Session session = Session.getSession();
