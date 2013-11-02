@@ -323,6 +323,10 @@ public class LoginActivity extends Activity {
 				// TODO Auto-generated method stub
 
 				//Add user details to shared preferences upon successful login
+				
+				/*
+				 * Issue with passing user to new intent.  Android doesn't allow SharedPrefs editor to putObjects 
+				 */
 				SharedPreferences.Editor loginEditor = savedLogin.edit();
 				loginEditor.putString("email", email.getText().toString());
 				loginEditor.putString("password", password.getText().toString());

@@ -77,5 +77,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="#e6e6fa"
-        android:text="@string/submit" />
+        android:text="@string/submit"
+        android:layout_marginBottom="10dp" />
 </RelativeLayout>

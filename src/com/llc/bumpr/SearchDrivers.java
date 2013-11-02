@@ -1,5 +1,6 @@
 package com.llc.bumpr;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,6 +48,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.lib.EndlessListView;
+import com.llc.bumpr.lib.GeocodeLocationTask;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
@@ -91,13 +95,17 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
     
     /** Constant phrase to hold login details */
 	public static final String LOGIN_PREF = "bumprLogin";
-    
+
+	/** Holds a reference to the current context */
+	private Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_driver);
+		context = getApplicationContext();
+		
 		actionBar = getSupportActionBar();
 		map = (LinearLayout) findViewById(R.id.ll_map_container);
 		
@@ -481,8 +489,21 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				// TODO Auto-generated method stub
 				//Get data at position selected
 				Object user = (Object)parent.getItemAtPosition(position);
+				//Get Latitude and Logitude values of current location
+				LatLng loc = gMap.getCameraPosition().target;
+				//Initialize address list to hold addresses of current location
+				List<Address> address = null;
 				
-				Toast.makeText(getApplicationContext(), user.toString() + gMap.getCameraPosition().target.toString(), Toast.LENGTH_SHORT).show();
+				Geocoder gCoder = new Geocoder(context);
+				try {
+					address = gCoder.getFromLocation(loc.latitude, loc.longitude, 3);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Toast.makeText(context, "IO Error getting address at pickup marker", Toast.LENGTH_SHORT).show();
+				}
+				Toast.makeText(context, address.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getApplicationContext(), user.toString() + gMap.getCameraPosition().target.toString(), Toast.LENGTH_SHORT).show();
 			}
 			
 		});
