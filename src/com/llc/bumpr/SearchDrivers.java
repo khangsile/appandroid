@@ -95,7 +95,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		actionBar = getSupportActionBar();
 		map = (LinearLayout) findViewById(R.id.ll_map_container);
 		
-		//map.setFocusable(true); //Needed to remove focus from ABS searchView
 		gMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		driverLayout = (LinearLayout) findViewById(R.id.ll_driver_list);
 		
@@ -207,7 +206,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
                      }
      }
 
-     //Connection to location services completed.  Get current location now
      /**
       * Connected to GPS successfully.  Update current location and display marker on the map.
       */

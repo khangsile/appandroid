@@ -67,8 +67,6 @@ public class LoginActivity extends Activity {
 			gcm = GoogleCloudMessaging.getInstance(this);
 			regId = getRegistrationId(context); //Retrieve user registration id
 			
-			//For testing purposes
-			Toast.makeText(getApplicationContext(), regId, Toast.LENGTH_LONG).show();
 			Log.e(TAG, regId);
 			
 			//if(regId.isEmpty()){ //If no registration id, register in the background!
