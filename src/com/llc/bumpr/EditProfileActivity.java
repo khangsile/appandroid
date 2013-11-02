@@ -10,6 +10,7 @@ import retrofit.client.Response;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,8 +114,12 @@ public class EditProfileActivity extends SherlockActivity {
 					changePassDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 					changePassDialog.show();
 				}
+				else if(position == 5) { //Edit Driver Settings Page
+					Intent i = new Intent(getApplicationContext(), EditDriverActivity.class);
+					i.putExtra("user", User.getActiveUser());
+					startActivity(i);
+				}
 			}
-			
 		});
 	}
 
@@ -127,7 +132,8 @@ public class EditProfileActivity extends SherlockActivity {
 		settingList.add("Phone");
 		settingList.add("Email");
 		settingList.add("Password");
-		settingList.add("Car Image");
+		//settingList.add("Car Image");
+		settingList.add("Driver Settings");
 	}
 	
 	public void update() {

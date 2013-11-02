@@ -236,7 +236,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
     	menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
     	menuList.add(new Pair<String, Object>("Text", "Request"));
     	menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
-    	menuList.add(new Pair<String, Object>("Text", "Edit Driver Settings"));
     	menuList.add(new Pair<String, Object>("Text", "Logout"));
     }
 
