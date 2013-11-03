@@ -23,7 +23,6 @@ import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
@@ -48,7 +47,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.lib.EndlessListView;
-import com.llc.bumpr.lib.GeocodeLocationTask;
+import com.llc.bumpr.lib.StringLocationTask;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
@@ -136,6 +135,24 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		
 		//Create new location client.
         mLocationClient = new LocationClient(this, this, this);
+        
+        String[] location = {"619 Braddock Ct. Edgewood KY"};
+        new StringLocationTask(this, new Callback<List<Address>>() {
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void success(List<Address> arg0, Response arg1) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext(), arg0.get(0).toString(), Toast.LENGTH_SHORT).show();
+			}
+        	
+        }).execute((Object) location);   
+        
 	}
 	/**
 	 * Initializes and configures the sliding menu
@@ -507,8 +524,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				Toast.makeText(context, address.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
 				//Toast.makeText(getApplicationContext(), user.toString() + gMap.getCameraPosition().target.toString(), Toast.LENGTH_SHORT).show();
 			}
-			
 		});
 	}
-
 }

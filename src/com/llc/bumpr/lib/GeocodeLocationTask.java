@@ -12,10 +12,15 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 
+/**
+ * Be fucking careful with the Object[] parameter...Cast correctly.
+ * @author KhangSiLe
+ *
+ */
 public abstract class GeocodeLocationTask extends AsyncTask<Object, Void, List<Address>> {
 
-	private Context context;
-	private Callback<List<Address>> callback;
+	protected Context context;
+	protected Callback<List<Address>> callback;
 	
 	// geocoder to process queries
     private Geocoder geocoder;
@@ -33,13 +38,20 @@ public abstract class GeocodeLocationTask extends AsyncTask<Object, Void, List<A
 		// TODO Auto-generated method stub
 		geocoder = new Geocoder(context, Locale.getDefault());
 		
-		List<Address> addressList = new ArrayList<Address>();
+		List<Address> addressList = null;
 		int responseCount = 0;
 		
 		//retry loop
 		while (addressList == null && responseCount <= RESPONSE_LIMIT) {
             
-			addressList = getAddressList(params);
+			try {
+                // populate address list from query and return
+                addressList = getAddressList(params);
+            } catch (SocketTimeoutException e) {
+                addressList = null;
+            }  catch (IOException e) {
+                addressList = null;
+            }
             // add to the response count until the response limit has been hit
             responseCount++;
         }
@@ -49,9 +61,8 @@ public abstract class GeocodeLocationTask extends AsyncTask<Object, Void, List<A
 	
 	@Override
 	protected void onPostExecute(List<Address> result){
-		super.onPostExecute(result);
 		callback.success(result, null);
 	}
 	
-	abstract protected List<Address> getAddressList(Object... params);
+	abstract protected List<Address> getAddressList(Object... params) throws SocketTimeoutException, IOException;
 }
