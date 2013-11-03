@@ -34,7 +34,7 @@
                 android:layout_gravity="center"
                 android:background="@android:color/transparent"
                 android:src="@drawable/center_location_indicator"
-                android:layout_marginBottom="20dp" />
+                android:layout_marginBottom="15dp" />
 
             <!-- Don't remove. This is the fix. -->
             <View
