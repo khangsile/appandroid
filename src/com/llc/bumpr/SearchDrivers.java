@@ -47,6 +47,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.lib.EndlessListView;
+import com.llc.bumpr.lib.LatLngLocationTask;
 import com.llc.bumpr.lib.StringLocationTask;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
@@ -513,16 +514,21 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				//Initialize address list to hold addresses of current location
 				List<Address> address = null;
 				
-				Geocoder gCoder = new Geocoder(context);
-				try {
-					address = gCoder.getFromLocation(loc.latitude, loc.longitude, 3);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					Toast.makeText(context, "IO Error getting address at pickup marker", Toast.LENGTH_SHORT).show();
-				}
-				Toast.makeText(context, address.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
-				//Toast.makeText(getApplicationContext(), user.toString() + gMap.getCameraPosition().target.toString(), Toast.LENGTH_SHORT).show();
+				new LatLngLocationTask(context, new Callback<List<Address>>() {
+
+					@Override
+					public void failure(RetrofitError arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void success(List<Address> arg0, Response arg1) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getApplicationContext(), arg0.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
+					}
+		        	
+		        }).execute(loc);  
 			}
 		});
 	}
