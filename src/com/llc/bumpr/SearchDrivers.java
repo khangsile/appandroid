@@ -151,7 +151,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				Toast.makeText(getApplicationContext(), arg0.get(0).toString(), Toast.LENGTH_SHORT).show();
 			}
         	
-        }).execute((Object) location);   
+        }).execute(location);   
         
 	}
 	/**

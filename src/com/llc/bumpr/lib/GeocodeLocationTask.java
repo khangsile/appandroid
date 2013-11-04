@@ -61,7 +61,10 @@ public abstract class GeocodeLocationTask extends AsyncTask<Object, Void, List<A
 	
 	@Override
 	protected void onPostExecute(List<Address> result){
-		callback.success(result, null);
+		if (result == null) 
+			callback.failure(null);
+		else 
+			callback.success(result, null);
 	}
 	
 	abstract protected List<Address> getAddressList(Object... params) throws SocketTimeoutException, IOException;

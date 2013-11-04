@@ -93,29 +93,6 @@ public class LoginActivity extends Activity {
 			}
 			
 			checkSavedLogin();
-			
-			final View activityRootView = findViewById(R.id.root);
-			activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(
-					new OnGlobalLayoutListener() {
-						@Override
-						public void onGlobalLayout() {
-							int heightDiff = activityRootView.getRootView()
-									.getHeight() - activityRootView.getHeight();
-							if (heightDiff > 100) { // if more than 100 pixels, its probably a keyboard...
-								activityRootView.setOnTouchListener(new OnTouchListener() {
-									@Override
-									// set OnTouchListener to entire screen
-									// to grab touch events
-									public boolean onTouch(View arg0, MotionEvent arg1) {
-										// close keyboard
-										final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-										imm.hideSoftInputFromWindow(activityRootView.getWindowToken(),0);
-										return false;
-									}
-								});
-							}
-						}
-					});
 		} else {
 			Log.i(TAG, "No valid Google Play Services APK found.");
 		}
@@ -125,11 +102,23 @@ public class LoginActivity extends Activity {
 	 * Checks to see if a user login is saved. If so, automatically take the user to the searchDriver activity
 	 */
 	private void checkSavedLogin() {
-		// TODO Auto-generated method stub
-		if (!savedLogin.getString("email", "").contentEquals("") && !savedLogin.getString("password", "").contentEquals("")){
-			Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
-			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//Remove Login from stack
-			startActivity(i);
+		//Temporary until we can find a better way to store the user state
+		if (!savedLogin.getString("email", "").contentEquals("") && !savedLogin.getString("password", "").contentEquals("")) {
+			String email = savedLogin.getString("email", "");
+			String password = savedLogin.getString("password", "");
+			Session.getSession().login(email, password, new Callback<User>() {
+
+				@Override
+				public void failure(RetrofitError arg0) { // Should not get here
+				}
+
+				@Override
+				public void success(User arg0, Response arg1) {
+					Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //Remove Login from stack
+					startActivity(i);	
+				}
+			});
 		}
 	}
 
@@ -306,27 +295,26 @@ public class LoginActivity extends Activity {
 		final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(activityRootView.getWindowToken(), 0);
 		
-		
 		//Start loading dialog to show action is taking place
 		final ProgressDialog dialog = ProgressDialog.show(LoginActivity.this, "Please Wait", "Logging in...", false, true);
 		authenticate(new Callback<User>() {
 
 			@Override
 			public void failure(RetrofitError arg0) {
-				// TODO Auto-generated method stub
 				dialog.dismiss();
 				Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
-			public void success(User arg0, Response arg1) {
-				// TODO Auto-generated method stub
+			public void success(User user, Response arg1) {
 
 				//Add user details to shared preferences upon successful login
 				
 				/*
 				 * Issue with passing user to new intent.  Android doesn't allow SharedPrefs editor to putObjects 
 				 */
+				
+				/* Leave this for the time being. Got to think of a better way to integrate this (with DriverProfile in mind). */
 				SharedPreferences.Editor loginEditor = savedLogin.edit();
 				loginEditor.putString("email", email.getText().toString());
 				loginEditor.putString("password", password.getText().toString());
