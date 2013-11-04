@@ -31,11 +31,6 @@ public class GcmIntentService extends IntentService {
 		super("GcmIntentService");
 		// TODO Auto-generated constructor stub
 	}
-	
-	/*public GcmIntentService(String senderId) {
-		super(senderId);
-		Log.e("GcmIntentService", senderId);
-	}*/
 
 	@Override
 	protected void onHandleIntent(Intent intent) {

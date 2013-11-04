@@ -85,7 +85,7 @@ public class LoginActivity extends Activity {
 			gcm = GoogleCloudMessaging.getInstance(this);
 			regId = getRegistrationId(context); //Retrieve user registration id
 			
-			Log.e(TAG, regId);
+			Log.i(TAG, regId);
 			
 			//if(regId.isEmpty()){ //If no registration id, register in the background!
 			if(TextUtils.isEmpty(regId)){
