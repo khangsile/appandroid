@@ -3,6 +3,9 @@ package com.llc.bumpr;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -48,6 +51,7 @@ import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.lib.EndlessListView;
 import com.llc.bumpr.lib.LatLngLocationTask;
 import com.llc.bumpr.lib.StringLocationTask;
+import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.SearchQuery;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
@@ -141,7 +145,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		//Create new location client.
         mLocationClient = new LocationClient(this, this, this);
         
-        String[] location = {"619 Braddock Ct. Edgewood KY"};
+        Object[] location = {"619 Braddock Ct. Edgewood KY"};
         new StringLocationTask(this, new Callback<List<Address>>() {
 
 			@Override
@@ -156,7 +160,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				Toast.makeText(getApplicationContext(), arg0.get(0).toString(), Toast.LENGTH_SHORT).show();
 			}
         	
-        }).execute((Object) location);   
+        }).execute(location);   
         
 	}
 	
@@ -445,9 +449,31 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	private List<Object> createItems() {
 		// TODO Auto-generated method stub
 		List<Object> items = new ArrayList<Object>();
+		JSONObject object = new JSONObject();
+		try {
+			object.put("id", 3);
+			object.put("fee", 2.55);
+			object.put("lat", 23.3);
+			object.put("lon", 23.4);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		for (int i = testCntr; i <testCntr+10; i++)
-			items.add("Driver " + i);
+		for (int i = testCntr; i <testCntr+10; i++) {
+			try {
+				User user = new User.Builder<User>(new User())
+						.setFirstName("Khang")
+						.setLastName("Le")
+						.setEmail("khangsile@gmail.com")
+						.setDriverProfile(new Driver(object))
+						.build();
+				items.add(user);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return items;
 	}
 	
@@ -527,7 +553,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 					loginEditor.remove("password");
 					loginEditor.commit();
 					
-					//clear history and shit
+					//clear history
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					Session session = Session.getSession();
 					session.logout(new Callback<Response>() {

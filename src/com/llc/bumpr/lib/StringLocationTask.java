@@ -23,7 +23,7 @@ public class StringLocationTask extends GeocodeLocationTask {
 		// TODO Auto-generated method stub
 		Geocoder geocoder = new Geocoder(context, Locale.getDefault());
 						
-		List<Address> list = geocoder.getFromLocationName((String) params[0],  10); 
+		List<Address> list = geocoder.getFromLocationName((String) (params[0]),  10); 
 		return list;
 	}
 

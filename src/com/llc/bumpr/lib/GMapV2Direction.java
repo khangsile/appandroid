@@ -42,6 +42,12 @@ import com.google.android.gms.maps.model.LatLng;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * From Stackoverflow (http://stackoverflow.com/questions/14444228/android-how-to-draw-route-directions-google-maps-api-v2-from-current-location-t?lq=1)
+ * Gets the directions from the Google directions api
+ * @author KhangSiLe
+ *
+ */
 public class GMapV2Direction {
 	public final static String MODE_DRIVING = "driving";
 	public final static String MODE_WALKING = "walking";

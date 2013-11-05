@@ -16,11 +16,6 @@ package com.llc.bumpr.adapters;
  */
 
 import java.util.List;
-import java.util.Random;
-
-import com.androidtools.Conversions;
-import com.llc.bumpr.R;
-import com.llc.bumpr.lib.GraphicsUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -35,8 +30,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.androidtools.Conversions;
-import com.llc.bumpr.lib.GraphicsUtil;
 import com.llc.bumpr.R;
+import com.llc.bumpr.lib.GraphicsUtil;
+import com.llc.bumpr.sdk.models.User;
 
 public class EndlessAdapter extends ArrayAdapter<Object> {
         
@@ -62,8 +58,8 @@ public class EndlessAdapter extends ArrayAdapter<Object> {
         }
 
         @Override
-        public String getItem(int position) {                
-                return itemList.get(position).toString();
+        public User getItem(int position) {                
+                return (User) itemList.get(position);
         }
 
         @Override
@@ -97,8 +93,10 @@ public class EndlessAdapter extends ArrayAdapter<Object> {
                 }
                 
                 // We should use class holder pattern
-                holder.drvName.setText(itemList.get(position).toString());
-                holder.drvRate.setText("$2.55/hr");
+                User user = (User) itemList.get(position);
+                
+                holder.drvName.setText(user.getFirstName() + " " + user.getLastName());
+                holder.drvRate.setText(user.getDriverProfile().getFee() + "");
                 holder.drvRtBar.setRating(3.2f);
                 
                 //Use AsyncTask to create circular images!

@@ -24,7 +24,7 @@ public class LatLngLocationTask extends GeocodeLocationTask {
 		// TODO Auto-generated method stub
 		Geocoder geocoder = new Geocoder(context, Locale.getDefault());
 						
-		LatLng location = (LatLng) params[0];
+		LatLng location = (LatLng) (params[0]);
 		List<Address> list = geocoder.getFromLocation(location.latitude, location.longitude, 10); 
 		return list;
 	}
