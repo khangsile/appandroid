@@ -22,10 +22,7 @@ public class StringLocationTask extends GeocodeLocationTask {
 	protected List<Address> getAddressList(Object... params) throws SocketTimeoutException, IOException {
 		// TODO Auto-generated method stub
 		Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-		
-		if(!(params[0] instanceof String))
-			throw new IllegalArgumentException("params[0] must be of instance String");
-		
+						
 		List<Address> list = geocoder.getFromLocationName((String) params[0],  10); 
 		return list;
 	}

@@ -23,10 +23,7 @@ public class LatLngLocationTask extends GeocodeLocationTask {
 	protected List<Address> getAddressList(Object... params) throws SocketTimeoutException, IOException {
 		// TODO Auto-generated method stub
 		Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-		
-		if (!(params[0] instanceof LatLng))
-			throw new IllegalArgumentException("params must be instanceof LatLng");
-		
+						
 		LatLng location = (LatLng) params[0];
 		List<Address> list = geocoder.getFromLocation(location.latitude, location.longitude, 10); 
 		return list;

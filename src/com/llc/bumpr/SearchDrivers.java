@@ -1,6 +1,5 @@
 package com.llc.bumpr;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,12 +41,14 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.lib.EndlessListView;
 import com.llc.bumpr.lib.LatLngLocationTask;
 import com.llc.bumpr.lib.StringLocationTask;
+import com.llc.bumpr.sdk.models.SearchQuery;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
@@ -156,7 +156,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				Toast.makeText(getApplicationContext(), arg0.get(0).toString(), Toast.LENGTH_SHORT).show();
 			}
         	
-        }).execute(location);   
+        }).execute((Object) location);   
         
 	}
 	
@@ -449,6 +449,37 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		for (int i = testCntr; i <testCntr+10; i++)
 			items.add("Driver " + i);
 		return items;
+	}
+	
+	/**
+	 * Gets the bounds of the map view
+	 * @return LatLngBoudnds object which contains the coordinates for the northeast corner
+	 * and the southwest corner of the map view 
+	 */
+	private LatLngBounds getMapBounds() {
+		return gMap.getProjection().getVisibleRegion().latLngBounds;
+	}
+	
+	private void searchDrivers(LatLng northeast, LatLng southwest) {
+		SearchQuery query = new SearchQuery.Builder<SearchQuery>(new SearchQuery())
+								.setBottom(southwest.longitude)
+								.setLeft(southwest.latitude)
+								.setTop(northeast.longitude)
+								.setRight(northeast.latitude)
+								.build();
+		User.searchDrivers(query, new Callback<List<User>>() {
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				//respond to failure - do nothing or retry
+			}
+
+			@Override
+			public void success(List<User> arg0, Response arg1) {
+				//Populate the listview and mapview
+			}
+			
+		});
 	}
 	
 	/**
