@@ -98,6 +98,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 
 	/** Holds a reference to the current context */
 	private Context context;
+	
+	/** A reference to the current user */
+	private User user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_driver);
 		context = getApplicationContext();
+		user = User.getActiveUser();
 		
 		actionBar = getSupportActionBar();
 		map = (LinearLayout) findViewById(R.id.ll_map_container);
@@ -155,6 +159,25 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
         }).execute(location);   
         
 	}
+	
+	
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		user = User.getActiveUser();
+		
+		//Reset menu
+		menuList.remove(0);
+		menuList.add(0, new Pair<String, Object>("Image", user.getFirstName() + " " + user.getLastName()));//Pass User Object in future
+		
+		menuAdpt = new SlidingMenuListAdapter(this, menuList);
+		lvMenu.setAdapter(menuAdpt);
+	}
+
+
+
 	/**
 	 * Initializes and configures the sliding menu
 	 * @param slMenu View reference that holds the sliding menu
@@ -260,7 +283,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
       * Fills menu list object with the information to display in the sliding menu
       */
 	private void initList() {
-    	menuList.add(new Pair<String, Object>("Image", "Kyle Cooper"));//Pass User Object in future
+    	menuList.add(new Pair<String, Object>("Image", user.getFirstName() + " " + user.getLastName()));//Pass User Object in future
     	menuList.add(new Pair<String, Object>("Text", "Create Review"));
     	menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
     	menuList.add(new Pair<String, Object>("Text", "My Sent Requests"));

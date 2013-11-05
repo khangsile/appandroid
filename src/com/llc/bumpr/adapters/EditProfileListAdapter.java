@@ -1,9 +1,12 @@
 package com.llc.bumpr.adapters;
 
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.llc.bumpr.R;
 import com.llc.bumpr.lib.DynamicImageView;
@@ -22,6 +26,7 @@ public class EditProfileListAdapter extends BaseAdapter {
 		private LayoutInflater inflater;
 		private Context context;
 		private User user;
+		private HashMap<String, Object> profileDetails;
 
 		public EditProfileListAdapter(Context context,
 				List<String> inData, User user) {
@@ -30,6 +35,11 @@ public class EditProfileListAdapter extends BaseAdapter {
 			this.user = user;
 			inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			profileDetails = new HashMap<String, Object>();
+			profileDetails.put("first_name", user.getFirstName());
+			profileDetails.put("last_name", user.getLastName());
+			profileDetails.put("phone_number", user.getPhoneNumber());
+			profileDetails.put("email", user.getEmail());	
 		}
 
 		@Override
@@ -73,7 +83,7 @@ public class EditProfileListAdapter extends BaseAdapter {
 			View view;
 
 			if (!(data.get(position).equals("Password")) && !(data.get(position).equals("Driver Settings"))) { // Create TextView Row
-				TextViewHolder holder;
+				final TextViewHolder holder;
 
 				if (convertView == null) {
 					ViewGroup vGroup = (ViewGroup) inflater.inflate(
@@ -159,7 +169,7 @@ public class EditProfileListAdapter extends BaseAdapter {
 			return view; // Return view to display
 		}
 
-		private static class TextViewHolder { // Used to hold views per row in the
+		public static class TextViewHolder { // Used to hold views per row in the
 												// List
 			final TextView textView;
 			final EditText editText;
@@ -167,6 +177,10 @@ public class EditProfileListAdapter extends BaseAdapter {
 			private TextViewHolder(TextView textView, EditText editText) {
 				this.textView = textView;
 				this.editText = editText;
+			}
+			
+			public EditText getEditText(){
+				return editText;
 			}
 		}
 		

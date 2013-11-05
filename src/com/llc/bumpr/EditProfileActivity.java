@@ -20,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.llc.bumpr.adapters.EditProfileListAdapter;
@@ -40,6 +41,8 @@ public class EditProfileActivity extends SherlockActivity {
 	private TextView joinDate;
 	/**A reference to the current context to be used in inner classes */
 	final private Context context = this;
+	/** A reference to the listview adapter */
+	private EditProfileListAdapter adt;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,7 +60,7 @@ public class EditProfileActivity extends SherlockActivity {
 		settingList = new ArrayList<String>();
 		
 		initList();
-		EditProfileListAdapter adt = new EditProfileListAdapter(this, settingList, User.getActiveUser());
+		adt = new EditProfileListAdapter(this, settingList, User.getActiveUser());
 		profSettings.setAdapter(adt);
 		
 		initOnClickListener();
@@ -132,16 +135,33 @@ public class EditProfileActivity extends SherlockActivity {
 		settingList.add("Phone");
 		settingList.add("Email");
 		settingList.add("Password");
-		//settingList.add("Car Image");
 		settingList.add("Driver Settings");
 	}
 	
-	public void update() {
-		HashMap<String, Object> user = new HashMap<String, Object>();
-		user.put("first_name", "");
-		user.put("last_name", "");
-		user.put("phone_number", "");
-		user.put("password", "");
+	public void update(View v) {
+		final HashMap<String, Object> user = new HashMap<String, Object>();
+		View v1;
+		Object val;
+		EditText et;
+		
+		for (int i=0; i< adt.getCount(); i++){
+			if(adt.getItemViewType(i)==0) {
+				v1 = profSettings.getChildAt(i);
+				et = (EditText) v1.findViewById(R.id.et_edit_prof_value);
+				val = (Object) et.getText().toString();
+				
+				if(adt.getItem(i).toString().equals("First Name"))
+					user.put("first_name", val);
+				if(adt.getItem(i).toString().equals("Last Name"))
+					user.put("last_name", val);
+				if(adt.getItem(i).toString().equals("Phone"))
+					user.put("phone_number", val);
+				if(adt.getItem(i).toString().equals("Email"))
+					user.put("email", val);
+			}
+		}
+		
+		Toast.makeText(getApplicationContext(), user.toString(), Toast.LENGTH_SHORT).show();
 		
 		User activeUser = User.getActiveUser();
 		ApiRequest request = activeUser.getUpdateRequest(user, new Callback<User>() {
@@ -150,12 +170,14 @@ public class EditProfileActivity extends SherlockActivity {
 			public void failure(RetrofitError arg0) {
 				// TODO Auto-generated method stub
 				// Send alert
+				Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void success(User arg0, Response arg1) {
 				// TODO Auto-generated method stub
 				// Update list;
+				finish();
 			}
 			
 		});

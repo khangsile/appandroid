@@ -78,5 +78,6 @@
         android:layout_centerHorizontal="true"
         android:background="#e6e6fa"
         android:text="@string/submit"
+        android:onClick="update"
         android:layout_marginBottom="10dp" />
 </RelativeLayout>
