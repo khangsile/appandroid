@@ -22,6 +22,8 @@ public class UserProfile extends Activity {
 		
 		if (user == null) {
 			throw new NullPointerException("Instance ('user') cannot be null");
+		} else if (user.getDriverProfile() == null) {
+			throw new NullPointerException("Instance ('driver') cannot be null");
 		}
 		
 		//Retrieve views
@@ -41,9 +43,9 @@ public class UserProfile extends Activity {
 		
 		//Set text values
 		userName.setText(user.getFirstName() + " " + user.getLastName());
-		userLoc.setText(user.getCity() + ", " + user.getState());
-		userCar.setText("Car: 2013 Camry Hybrid XLE");
-		numSeats.setText("Seats: 4");
-		carRate.setText("Rate: $2.25/mi");
+		//userLoc.setText(user.getCity() + ", " + user.getState());
+		//userCar.setText("Car: 2013 Camry Hybrid XLE");
+		//numSeats.setText("Seats: 4");
+		//carRate.setText("Rate: $" + user.getDriverProfile().getFee() + "per mile");
 	}
 }

@@ -150,8 +150,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 
 			@Override
 			public void failure(RetrofitError arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
@@ -577,7 +575,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				// TODO Auto-generated method stub
 				//Get data at position selected
 				final User user = (User) parent.getItemAtPosition(position);
 				//Get Latitude and Logitude values of current location
@@ -589,15 +586,12 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 
 					@Override
 					public void failure(RetrofitError arg0) {
-						// TODO Auto-generated method stub
-						
 					}
 
 					@Override
 					public void success(List<Address> arg0, Response arg1) {
-						// TODO Auto-generated method stub
 						//needs different request activity 
-						Intent intent = new Intent(context, RequestActivity.class);
+						Intent intent = new Intent(context, UserProfile.class);
 						intent.putExtra("user", user);
 						startActivity(intent);
 						Toast.makeText(getApplicationContext(), arg0.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
