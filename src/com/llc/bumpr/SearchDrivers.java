@@ -456,7 +456,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 			object.put("lat", 23.3);
 			object.put("lon", 23.4);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -470,7 +469,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 						.build();
 				items.add(user);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -486,26 +484,19 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		return gMap.getProjection().getVisibleRegion().latLngBounds;
 	}
 	
-	private void searchDrivers(LatLng northeast, LatLng southwest) {
+	/**
+	 * Method to search for drivers 
+	 * @param northeast The northeast corner of the boundary
+	 * @param southwest The southwest corner of the boundary
+	 */
+	private void searchDrivers(LatLng northeast, LatLng southwest, Callback<List<User>> cb) {
 		SearchQuery query = new SearchQuery.Builder<SearchQuery>(new SearchQuery())
 								.setBottom(southwest.longitude)
 								.setLeft(southwest.latitude)
 								.setTop(northeast.longitude)
 								.setRight(northeast.latitude)
 								.build();
-		User.searchDrivers(query, new Callback<List<User>>() {
-
-			@Override
-			public void failure(RetrofitError arg0) {
-				//respond to failure - do nothing or retry
-			}
-
-			@Override
-			public void success(List<User> arg0, Response arg1) {
-				//Populate the listview and mapview
-			}
-			
-		});
+		User.searchDrivers(query, cb);
 	}
 	
 	/**
@@ -588,7 +579,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 					long id) {
 				// TODO Auto-generated method stub
 				//Get data at position selected
-				Object user = (Object)parent.getItemAtPosition(position);
+				final User user = (User) parent.getItemAtPosition(position);
 				//Get Latitude and Logitude values of current location
 				LatLng loc = gMap.getCameraPosition().target;
 				//Initialize address list to hold addresses of current location
@@ -605,6 +596,10 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 					@Override
 					public void success(List<Address> arg0, Response arg1) {
 						// TODO Auto-generated method stub
+						//needs different request activity 
+						Intent intent = new Intent(context, RequestActivity.class);
+						intent.putExtra("user", user);
+						startActivity(intent);
 						Toast.makeText(getApplicationContext(), arg0.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
 					}
 		        	
