@@ -423,6 +423,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					@Override
 					public void failure(RetrofitError arg0) {
 						// TODO Auto-generated method stub
+						Log.i("Search Driver", (arg0 == null) ? "true" : "false");
 						Log.i("Search Driver", "Connection Failed");
 					}
 
@@ -523,7 +524,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 		/*Log.w("com.llc.bumpr", "Adding new data!");
 		testCntr += 10;
 		// Load more data
-		FakeNetLoader f1 = new FakeNetLoader();
+		FakeNetLoader f1 = new FakeNetLoader(); */
 	}
 
 	/**
@@ -621,16 +622,32 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 																// requests
 					i.putExtra("requestType", "My Sent Requests");
 					break;
-				case 4:
+				/*case 4:
 					i = new Intent(getApplicationContext(),
 							RequestActivity.class);
 					i.putExtra("user", User.getActiveUser());
-					break;
-				case 5:
-					i = new Intent(getApplicationContext(),
-							EditDriverActivity.class);
-					i.putExtra("user", User.getActiveUser());
-					break;
+					break; */
+				case 4:
+					ApiRequest api = User.getActiveUser().getDriverProfile().updateLocation(new Coordinate(-84.4, 38.05), new Callback<Response>() {
+
+						@Override
+						public void failure(RetrofitError arg0) {
+							// TODO Auto-generated method stub
+							Log.i("this", "there");
+							Log.i("this", arg0.getMessage());
+						}
+
+						@Override
+						public void success(Response arg0,
+								Response arg1) {
+							// TODO Auto-generated method stub
+							Log.i("this", "here");
+						}
+
+					});
+
+	Session.getSession().sendRequest(api);
+	break;
 				case 6:
 					i = new Intent(getApplicationContext(), LoginActivity.class);
 					// Remove saved email and password from shared preferences
