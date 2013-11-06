@@ -3,9 +3,6 @@ package com.llc.bumpr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -51,13 +48,12 @@ import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.lib.EndlessListView;
 import com.llc.bumpr.lib.LatLngLocationTask;
-import com.llc.bumpr.lib.StringLocationTask;
 import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.lib.Coordinate;
-import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.SearchQuery;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
+import com.llc.bumpr.services.DriverLocationService;
 
 public class SearchDrivers extends SherlockFragmentActivity implements
 		EndlessListView.EndlessListener,
@@ -163,44 +159,10 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 
 		// Create new location client.
 		mLocationClient = new LocationClient(this, this, this);
-
-		Object[] location = { "619 Braddock Ct. Edgewood KY" };
-		new StringLocationTask(this, new Callback<List<Address>>() {
-
-			@Override
-			public void failure(RetrofitError arg0) {
-			}
-
-			@Override
-			public void success(List<Address> arg0, Response arg1) {
-				// TODO Auto-generated method stub
-
-				ApiRequest api = User
-						.getActiveUser()
-						.getDriverProfile()
-						.updateLocation(new Coordinate(-84.4, 38.05),
-								new Callback<Response>() {
-
-									@Override
-									public void failure(RetrofitError arg0) {
-										// TODO Auto-generated method stub
-
-									}
-
-									@Override
-									public void success(Response arg0,
-											Response arg1) {
-										// TODO Auto-generated method stub
-
-									}
-
-								});
-
-				Session.getSession().sendRequest(api);
-			}
-
-		}).execute(location);
-
+		
+		Intent intent = new Intent(this, DriverLocationService.class);
+		intent.putExtra(DriverLocationService.DRIVER, User.getActiveUser().getDriverProfile());
+		startService(intent);
 	}
 
 	@Override
@@ -431,7 +393,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					public void success(List<User> users, Response arg1) {
 						// TODO Auto-generated method stub
 						drivers = users;
-						Log.i("Search Driver", drivers.get(0).getFirstName() + " " + drivers.get(0).getLastName() + " " + drivers.get(0).getDriverProfile().getPosition().toString());
+						//Log.i("Search Driver", drivers.get(0).getFirstName() + " " + drivers.get(0).getLastName() + " " + drivers.get(0).getDriverProfile().getPosition().toString());
 						LinearLayout.LayoutParams mapPars = (LinearLayout.LayoutParams)map.getLayoutParams();
 						mapPars.weight = 0.5f;
 						map.setLayoutParams(mapPars);
@@ -646,8 +608,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 
 					});
 
-	Session.getSession().sendRequest(api);
-	break;
+						Session.getSession().sendRequest(api);
+					break;
 				case 6:
 					i = new Intent(getApplicationContext(), LoginActivity.class);
 					// Remove saved email and password from shared preferences
