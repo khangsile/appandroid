@@ -72,6 +72,7 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		BumprClient.setBaseURL("http://192.168.1.200:3000/api/v1");
 		
 		BumprClient.setBaseURL("http://192.168.1.200:3000/api/v1");
 		
@@ -225,6 +226,7 @@ public class LoginActivity extends Activity {
 	 */
 	private void sendRegistrationIdToBackend() {
 		//Send reg id to Tony's DB to store in backend
+		
 	}
 	
 	/**

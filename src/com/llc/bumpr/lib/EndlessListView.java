@@ -27,6 +27,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
 import com.llc.bumpr.adapters.EndlessAdapter;
+import com.llc.bumpr.sdk.models.User;
 
 public class EndlessListView extends ListView implements OnScrollListener {
         
@@ -64,13 +65,15 @@ public class EndlessListView extends ListView implements OnScrollListener {
                 if (getAdapter().getCount() == 0)
                         return ;
                 
+        		//***Commented out until we will begin the endless list ***/
+                /*
                 int l = visibleItemCount + firstVisibleItem;
                 if (l >= totalItemCount && !isLoading) {
-                        // It is time to add new data. We call the listener
+                		// It is time to add new data. We call the listener
                         this.addFooterView(footer);
                         isLoading = true;
                         listener.loadData();
-                }
+                }*/
         }
 
         @Override
@@ -91,10 +94,10 @@ public class EndlessListView extends ListView implements OnScrollListener {
         }
 
         
-        public void addNewData(List<Object> data) {
+        public void addNewData(List<User> result) {
                 this.removeFooterView(footer);
                 
-                adapter.addAll(data);
+                adapter.addAll(result);
                 adapter.notifyDataSetChanged();
                 isLoading = false;
         }
@@ -104,7 +107,7 @@ public class EndlessListView extends ListView implements OnScrollListener {
     	 * when the user enters a new destination and a new set of drivers should populate the list.
     	 * @param data List of new information to populate the endless list.
     	 */
-        public void resetData(List<Object> data){
+        public void resetData(List<User> data){
         	adapter.clear();
         	adapter.addAll(data);
         	adapter.notifyDataSetChanged();
