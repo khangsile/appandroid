@@ -10,6 +10,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -79,6 +80,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	private EndlessListView driverList;
 	/** Reference to the adapter that will populate the endless list */
 	private EndlessAdapter endListAdp;
+	/** Reference to ArrayList to hold Drivers that are loaded into the endless list */
+	private List<User> drivers;
 	
 	/** Reference to the list view that will hold the sliding menu information */
 	private ListView lvMenu;
@@ -105,6 +108,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	
 	/** A reference to the current user */
 	private User user;
+	
+	/** Endless List work around for the current moment */
+	private List<User> emptyList = new ArrayList<User>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +142,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 		initSlidingMenu(slMenu);
 		
 		//Set up endless list view for driver list
+		drivers = new ArrayList<User>();
 		driverList = (EndlessListView) findViewById(R.id.lv_drivers);
 		driverList.setLoadingView(R.layout.loading_layout);
 		driverList.setListener(this);
@@ -355,23 +362,49 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 			public boolean onQueryTextSubmit(String query) {
 				// TODO Auto-generated method stub
 				//Hide keyboard when enter pressed
+				Log.i("Search Driver", "New Search Started");
 				searchView.clearFocus();
 				
-				LinearLayout.LayoutParams mapPars = (LinearLayout.LayoutParams)map.getLayoutParams();
-				mapPars.weight = 0.5f;
-				map.setLayoutParams(mapPars);
-				//Set Driver List weight
-				LinearLayout.LayoutParams driverPars = (LinearLayout.LayoutParams)driverLayout.getLayoutParams();
-				driverPars.weight = 0.5f;
-				driverLayout.setLayoutParams(driverPars);
-				
-				if(endListAdp == null){
-					endListAdp = new EndlessAdapter(getApplicationContext(), createItems(), R.layout.driver_row);
-					driverList.setAdapter(endListAdp);
-				}
-				else
-					newSearch(); //Reset endless list with new data
-				
+				//Start loading dialog to show action is taking place
+				final ProgressDialog dialog = ProgressDialog.show(SearchDrivers.this, "Please Wait", "Finding drivers near you...", false, true);
+				//Search for drivers
+				LatLngBounds bounds = getMapBounds();
+				searchDrivers(bounds.northeast, bounds.southwest, new Callback<List<User>>() {
+
+					@Override
+					public void failure(RetrofitError arg0) {
+						// TODO Auto-generated method stub
+						Log.i("Search Driver", "Connection Failed");
+					}
+
+					@Override
+					public void success(List<User> users, Response arg1) {
+						// TODO Auto-generated method stub
+						drivers = users;
+						Log.i("Search Driver", drivers.get(0).getFirstName() + " " + drivers.get(0).getLastName() + " " + drivers.get(0).getDriverProfile().getPosition().toString());
+						LinearLayout.LayoutParams mapPars = (LinearLayout.LayoutParams)map.getLayoutParams();
+						mapPars.weight = 0.5f;
+						map.setLayoutParams(mapPars);
+						//Set Driver List weight
+						LinearLayout.LayoutParams driverPars = (LinearLayout.LayoutParams)driverLayout.getLayoutParams();
+						driverPars.weight = 0.5f;
+						driverLayout.setLayoutParams(driverPars);
+						
+						if(endListAdp == null){
+							Log.i("Search Driver", "List Adapter Set");
+							endListAdp = new EndlessAdapter(getApplicationContext(), createItems(drivers), R.layout.driver_row);
+							driverList.setAdapter(endListAdp);
+						}
+						else{
+							Log.i("Search Driver", "Reset Search");
+							newSearch(drivers); //Reset endless list with new data
+						}
+						
+						//Close Dialog
+						dialog.dismiss();
+					}
+					
+				});				
 				return true;
 			}
 
@@ -392,34 +425,36 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	 * Called when a new location is entered in the destination search box.  Reset
 	 * information in the endless list view and begin displaying new results!
 	 */
-	public void newSearch(){
+	public void newSearch(List<User> drivers){
 		//Reset counter for new search (Set to 1)
 		testCntr = 1;
 		//Clear the list and add the new search results
 		
 		
-		driverList.resetData(createItems());
+		driverList.resetData(createItems(drivers));
 	}
 	
 	//Files needed for implementing/testing endless list view
 	/**
 	 * Class to asynchronously load driver data from database and display it in the endless list view
 	 */
-	private class FakeNetLoader extends AsyncTask<String, Void, List<Object>> {
+	private class FakeNetLoader extends AsyncTask<String, Void, List<User>> {
 
 		@Override
-		protected List<Object> doInBackground(String... arg0) {
+		protected List<User> doInBackground(String... arg0) {
 			// TODO Auto-generated method stub
 			try{
+				//Load drivers from database
 				Thread.sleep(1500);
 			} catch(InterruptedException e){
 				e.printStackTrace();
 			}
-			return createItems();
+			List<User> drivers = new ArrayList<User>();
+			return createItems(drivers);
 		}
 		
 		@Override
-		protected void onPostExecute(List<Object> result){
+		protected void onPostExecute(List<User> result){
 			super.onPostExecute(result);
 			driverList.addNewData(result);
 		}
@@ -432,22 +467,24 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	@Override
 	public void loadData() {
 		// TODO Auto-generated method stub
-		Log.w("com.llc.bumpr", "Adding new data!");
+		
+		driverList.addNewData(emptyList);
+		//***Commenting out currently until endless list is used ***/
+		/*Log.w("com.llc.bumpr", "Adding new data!");
 		testCntr += 10;
 		//Load more data
 		FakeNetLoader f1 = new FakeNetLoader();
-		f1.execute(new String[]{});
-		
+		f1.execute(new String[]{});*/
 	}
 	
 	/**
 	 * Adds new data to the list of current data in the endless list.
 	 * @return Updated list of data to display in the endless list
 	 */
-	private List<Object> createItems() {
+	private List<User> createItems(List<User> drivers2) {
 		// TODO Auto-generated method stub
-		List<Object> items = new ArrayList<Object>();
-		JSONObject object = new JSONObject();
+		//List<User> items = new ArrayList<User>();
+		/*JSONObject object = new JSONObject();
 		try {
 			object.put("id", 3);
 			object.put("fee", 2.55);
@@ -469,8 +506,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-		}
-		return items;
+		}*/
+		return drivers2;
 	}
 	
 	/**
@@ -488,13 +525,15 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 	 * @param southwest The southwest corner of the boundary
 	 */
 	private void searchDrivers(LatLng northeast, LatLng southwest, Callback<List<User>> cb) {
+		Log.i("Search Driver", "Inside Search Drivers");
 		SearchQuery query = new SearchQuery.Builder<SearchQuery>(new SearchQuery())
-								.setBottom(southwest.longitude)
-								.setLeft(southwest.latitude)
-								.setTop(northeast.longitude)
-								.setRight(northeast.latitude)
+								.setBottom(southwest.latitude)
+								.setLeft(southwest.longitude)
+								.setTop(northeast.latitude)
+								.setRight(northeast.longitude)
 								.build();
-		User.searchDrivers(query, cb);
+		Session.getSession().sendRequest(User.searchDrivers(query, cb));
+		Log.i("Search Driver", "Completed Search Drivers");
 	}
 	
 	/**
@@ -585,7 +624,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements EndlessLi
 				new LatLngLocationTask(context, new Callback<List<Address>>() {
 
 					@Override
-					public void failure(RetrofitError arg0) {
+					public void failure(
+							RetrofitError arg0) {
 					}
 
 					@Override

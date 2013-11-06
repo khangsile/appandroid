@@ -34,15 +34,15 @@ import com.llc.bumpr.R;
 import com.llc.bumpr.lib.GraphicsUtil;
 import com.llc.bumpr.sdk.models.User;
 
-public class EndlessAdapter extends ArrayAdapter<Object> {
+public class EndlessAdapter extends ArrayAdapter<User> {
         
-        private List<Object> itemList;
+        private List<User> itemList;
         private Context ctx;
         private int layoutId;
         private float imageSize;
         private GraphicsUtil imageHelper;
         
-        public EndlessAdapter(Context ctx, List<Object> itemList, int layoutId) {
+        public EndlessAdapter(Context ctx, List<User> itemList, int layoutId) {
                 super(ctx, layoutId, itemList);
                 this.itemList = itemList;
                 this.ctx = ctx;

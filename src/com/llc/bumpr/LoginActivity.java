@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.llc.bumpr.sdk.lib.BumprClient;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
@@ -71,6 +72,7 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		BumprClient.setBaseURL("http://192.168.1.200:3000/api/v1");
 		
 		savedLogin = getSharedPreferences (LOGIN_PREF, 0);
 		
@@ -222,6 +224,7 @@ public class LoginActivity extends Activity {
 	 */
 	private void sendRegistrationIdToBackend() {
 		//Send reg id to Tony's DB to store in backend
+		
 	}
 	
 	/**
