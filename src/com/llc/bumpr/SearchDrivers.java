@@ -44,8 +44,11 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
@@ -448,6 +451,14 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 						else{
 							Log.i("Search Driver", "Reset Search");
 							newSearch(drivers); //Reset endless list with new data
+						}
+						
+						for (int i = 0; i < drivers.size(); i++){
+							//Display Marker
+							Marker marker = gMap.addMarker(new MarkerOptions()
+															.position(new LatLng(drivers.get(i).getDriverProfile().getPosition().lat, drivers.get(i).getDriverProfile().getPosition().lon))
+															.title("Driver " + (i+1))
+															.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 						}
 						
 						//Close Dialog
