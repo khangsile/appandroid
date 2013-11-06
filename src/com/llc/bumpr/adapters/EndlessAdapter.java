@@ -83,7 +83,8 @@ public class EndlessAdapter extends ArrayAdapter<User> {
                         ViewGroup vGroup = (ViewGroup) inflater.inflate(layoutId, null);
                         
                         holder = new ViewHolder((ImageView)vGroup.findViewById(R.id.iv_driver_prof_pic), (TextView)vGroup.findViewById(R.id.tv_driver_name), 
-                        				(TextView)vGroup.findViewById(R.id.tv_driver_rate), (RatingBar)vGroup.findViewById(R.id.rb_user_rating));
+                        				(TextView)vGroup.findViewById(R.id.tv_driver_rate), (RatingBar)vGroup.findViewById(R.id.rb_user_rating),
+                        				(TextView) vGroup.findViewById(R.id.tv_driver_cnt));
                         
                         vGroup.setTag(holder);
                         view = vGroup;
@@ -98,6 +99,7 @@ public class EndlessAdapter extends ArrayAdapter<User> {
                 holder.drvName.setText(user.getFirstName() + " " + user.getLastName());
                 holder.drvRate.setText(user.getDriverProfile().getFee() + "");
                 holder.drvRtBar.setRating(3.2f);
+                holder.driverCnt.setText(Integer.toString(position+1));
                 
                 //Use AsyncTask to create circular images!
                 new CircleImageAsyncTask().execute(holder);
@@ -140,14 +142,16 @@ public class EndlessAdapter extends ArrayAdapter<User> {
     		final TextView drvName;
     		final TextView drvRate;
     		final RatingBar drvRtBar;
+    		final TextView driverCnt;
     		
     		Bitmap imageBitmap; //Needed to hold the Bitmap of the AsyncTask
 
-    		private ViewHolder(ImageView imageView, TextView drvName, TextView drvRate, RatingBar drvRtBar) {
+    		private ViewHolder(ImageView imageView, TextView drvName, TextView drvRate, RatingBar drvRtBar, TextView driverCnt) {
     			this.imageView = imageView;
     			this.drvName = drvName;
     			this.drvRate = drvRate;
     			this.drvRtBar = drvRtBar;
+    			this.driverCnt = driverCnt;
     		}
     	}
 

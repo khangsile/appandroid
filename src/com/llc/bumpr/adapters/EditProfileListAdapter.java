@@ -26,7 +26,6 @@ public class EditProfileListAdapter extends BaseAdapter {
 		private LayoutInflater inflater;
 		private Context context;
 		private User user;
-		private HashMap<String, Object> profileDetails;
 
 		public EditProfileListAdapter(Context context,
 				List<String> inData, User user) {
@@ -34,12 +33,7 @@ public class EditProfileListAdapter extends BaseAdapter {
 			this.context = context;
 			this.user = user;
 			inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			profileDetails = new HashMap<String, Object>();
-			profileDetails.put("first_name", user.getFirstName());
-			profileDetails.put("last_name", user.getLastName());
-			profileDetails.put("phone_number", user.getPhoneNumber());
-			profileDetails.put("email", user.getEmail());	
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
 		}
 
 		@Override
@@ -135,6 +129,10 @@ public class EditProfileListAdapter extends BaseAdapter {
 				else if (data.get(position).equals("Passenger Seats")){
 					holder.editText.setText("4");
 					holder.editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+				}
+				else if (data.get(position).equals("Rate")){
+					holder.editText.setText("2.75");
+					holder.editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 				}
 				
 			} 

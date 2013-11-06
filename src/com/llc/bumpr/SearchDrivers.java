@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -27,8 +29,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -36,6 +41,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.androidtools.Conversions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -43,6 +49,10 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,6 +63,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.lib.EndlessListView;
+import com.llc.bumpr.lib.GraphicsUtil;
 import com.llc.bumpr.lib.LatLngLocationTask;
 import com.llc.bumpr.lib.StringLocationTask;
 import com.llc.bumpr.sdk.lib.ApiRequest;
@@ -109,6 +120,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 	private GoogleMap gMap;
 	/** Reference to the location client (Allows use of GPS) */
 	private LocationClient mLocationClient;
+	/** Reference to last marker clicked */
+	private Marker lastClicked = null;
 
 	/** Request value to get current location (Using GPS) */
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -166,6 +179,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 
 		// Create new location client.
 		mLocationClient = new LocationClient(this, this, this);
+		
+		setMapsInfoWindowAdapter();
+		setMapsOnClickListener();
 
 		Object[] location = { "619 Braddock Ct. Edgewood KY" };
 		new StringLocationTask(this, new Callback<List<Address>>() {
@@ -178,7 +194,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 			public void success(List<Address> arg0, Response arg1) {
 				// TODO Auto-generated method stub
 
-				ApiRequest api = User
+				/*ApiRequest api = User
 						.getActiveUser()
 						.getDriverProfile()
 						.updateLocation(new Coordinate(-84.4, 38.05),
@@ -199,11 +215,170 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 
 								});
 
-				Session.getSession().sendRequest(api);
+				Session.getSession().sendRequest(api);*/
 			}
 
 		}).execute(location);
 
+	}
+
+	private void setMapsInfoWindowAdapter() {
+		// TODO Auto-generated method stub
+		gMap.setInfoWindowAdapter(new InfoWindowAdapter() {
+
+			@Override
+			public View getInfoContents(Marker marker) {
+				// TODO Auto-generated method stub
+				//Get view for layout file
+				View v = getLayoutInflater().inflate(R.layout.driver_row, null);
+
+				//Get references to all fields
+				ImageView profImg = (ImageView)v.findViewById(R.id.iv_driver_prof_pic);
+				TextView drvName = (TextView)v.findViewById(R.id.tv_driver_name);
+				TextView drvRate = (TextView)v.findViewById(R.id.tv_driver_rate);
+				RatingBar drvRtg = (RatingBar)v.findViewById(R.id.rb_user_rating);
+				TextView drvCnt = (TextView) v.findViewById(R.id.tv_driver_cnt);
+				
+				//Get the driver position in the driver list adapter
+				int driverNum = Integer.parseInt(marker.getTitle().substring(7, marker.getTitle().length())) - 1;
+				// Get data at position selected and go to their request page
+				final User user = (User) endListAdp.getItem(driverNum);
+				
+				drvName.setText(user.getFirstName() + " " + user.getLastName());
+				drvRate.setText(user.getDriverProfile().getFee() + "");
+                drvRtg.setRating(3.2f);
+                drvCnt.setText(Integer.toString(driverNum+1));
+                
+                //Change this to the other image type
+                float imageSize = Conversions.dpToPixels(context, 50);
+    			GraphicsUtil imageHelper = new GraphicsUtil();
+                Bitmap bm = imageHelper.getCircleBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.test_image), 16);
+    			//Resize image to the desired size
+    			profImg.setImageBitmap(Bitmap.createScaledBitmap(bm, Math.round(imageSize), Math.round(imageSize), false));
+				return v;
+				//return null;
+			}
+
+			@Override
+			public View getInfoWindow(Marker marker) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		});
+	}
+
+	/**
+	 * Sets up three on click listeners for the google maps. It recognizes clicks to the map,
+	 * clicks to the info window, and clicks to the marker
+	 */
+	private void setMapsOnClickListener() {
+		// TODO Auto-generated method stub
+		gMap.setOnMapClickListener(new OnMapClickListener() {
+
+			@Override
+			public void onMapClick(LatLng point) {
+				// TODO Auto-generated method stub
+				lastClicked = null;
+			}
+			
+		});
+		
+		gMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+
+			@Override
+			public void onInfoWindowClick(Marker marker) {
+				// TODO Auto-generated method stub
+				//Get the driver position in the driver list adapter
+				int driverNum = Integer.parseInt(marker.getTitle().substring(7, marker.getTitle().length())) - 1;
+				// Get data at position selected and go to their request page
+				final User user = (User) endListAdp.getItem(driverNum);
+				Log.i("Marker Click", user.toString());
+				// Get Latitude and Logitude values of current location
+				LatLng loc = gMap.getCameraPosition().target;
+				// Initialize address list to hold addresses of current location
+				List<Address> address = null;
+
+				new LatLngLocationTask(context, new Callback<List<Address>>() {
+
+					@Override
+					public void failure(
+							RetrofitError arg0) {
+					}
+
+					@Override
+					public void success(List<Address> arg0, Response arg1) {
+						// needs different request activity
+						Intent intent = new Intent(context, UserProfile.class);
+						intent.putExtra("user", user);
+						startActivity(intent);
+						Toast.makeText(getApplicationContext(),
+								arg0.get(0).getAddressLine(0),
+								Toast.LENGTH_SHORT).show();
+					}
+
+				}).execute(loc);
+			}
+			
+		});
+		
+		gMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+				// TODO Auto-generated method stub
+				if(lastClicked != null){
+					//Close old info window
+					lastClicked.hideInfoWindow();
+					
+					if(lastClicked.equals(marker)){
+						//If same marker was clicked, Set last clicked to null and mark event handled
+						lastClicked = null;
+						int driverNum = Integer.parseInt(marker.getTitle().substring(7, marker.getTitle().length())) - 1;
+
+						// Get data at position selected and go to their request page
+						final User user = (User) endListAdp.getItem(driverNum);
+						Log.i("Marker Click", user.toString());
+						// Get Latitude and Logitude values of current location
+						LatLng loc = gMap.getCameraPosition().target;
+						// Initialize address list to hold addresses of current location
+						List<Address> address = null;
+
+						new LatLngLocationTask(context, new Callback<List<Address>>() {
+
+							@Override
+							public void failure(
+									RetrofitError arg0) {
+							}
+
+							@Override
+							public void success(List<Address> arg0, Response arg1) {
+								// needs different request activity
+								Intent intent = new Intent(context, UserProfile.class);
+								intent.putExtra("user", user);
+								startActivity(intent);
+								Toast.makeText(getApplicationContext(),
+										arg0.get(0).getAddressLine(0),
+										Toast.LENGTH_SHORT).show();
+							}
+
+						}).execute(loc);
+						
+						return true;
+					}
+					else{
+						//Show marker information box and mark this event handled
+						marker.showInfoWindow();
+						return true;
+					}
+				}
+				//Show the marker information and set the marker to last clicked
+				marker.showInfoWindow();
+				lastClicked = marker;
+				return true; //Event was handled
+			}
+			
+		});
 	}
 
 	@Override
@@ -428,6 +603,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 						// TODO Auto-generated method stub
 						Log.i("Search Driver", (arg0 == null) ? "true" : "false");
 						Log.i("Search Driver", "Connection Failed");
+						//Close dialog and make toast
+						dialog.dismiss();
+						Toast.makeText(getApplicationContext(),
+								"An error occurred searching for drivers...",
+								Toast.LENGTH_SHORT).show();
 					}
 
 					@Override
