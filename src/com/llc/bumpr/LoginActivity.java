@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.llc.bumpr.sdk.lib.BumprClient;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
@@ -72,6 +73,8 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
+		BumprClient.setBaseURL("http://192.168.1.200:3000/api/v1");
+		
 		savedLogin = getSharedPreferences (LOGIN_PREF, 0);
 		
 		email = (EditText) findViewById(R.id.et_email);
@@ -106,7 +109,7 @@ public class LoginActivity extends Activity {
 		if (!savedLogin.getString("email", "").contentEquals("") && !savedLogin.getString("password", "").contentEquals("")) {
 			String email = savedLogin.getString("email", "");
 			String password = savedLogin.getString("password", "");
-			Session.getSession().login(email, password, new Callback<User>() {
+			Session.getSession().login(email, password, getRegistrationId(this), new Callback<User>() {
 
 				@Override
 				public void failure(RetrofitError arg0) { // Should not get here
@@ -282,7 +285,7 @@ public class LoginActivity extends Activity {
 		String password = ((EditText) findViewById(R.id.et_password)).getText().toString();
 		
 		Session session = Session.getSession();
-		session.login(email, password, cb);
+		session.login(email, password, getRegistrationId(this), cb);
 	}
 	
 	/**

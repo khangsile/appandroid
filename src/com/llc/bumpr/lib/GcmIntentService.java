@@ -69,7 +69,7 @@ public class GcmIntentService extends IntentService {
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, SearchDrivers.class), 0);
+                new Intent(this, SearchDrivers.class), Intent.FLAG_ACTIVITY_NEW_TASK);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)

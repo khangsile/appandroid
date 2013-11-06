@@ -1,16 +1,26 @@
 package com.llc.bumpr;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidtools.Conversions;
 import com.llc.bumpr.lib.CircularImageView;
+import com.llc.bumpr.sdk.lib.Coordinate;
+import com.llc.bumpr.sdk.models.Request;
+import com.llc.bumpr.sdk.models.Session;
+import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
 public class UserProfile extends Activity {
 
+	private User user;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -18,7 +28,7 @@ public class UserProfile extends Activity {
 		setContentView(R.layout.user_profile);
 		
 		Bundle bundle = getIntent().getExtras();
-		User user = (User) bundle.getParcelable("user");
+		user = (User) bundle.getParcelable("user");
 		
 		if (user == null) {
 			throw new NullPointerException("Instance ('user') cannot be null");
@@ -47,5 +57,35 @@ public class UserProfile extends Activity {
 		//userCar.setText("Car: 2013 Camry Hybrid XLE");
 		//numSeats.setText("Seats: 4");
 		//carRate.setText("Rate: $" + user.getDriverProfile().getFee() + "per mile");
+	}
+	
+	public void request(View v) {
+		Trip t = new Trip.Builder()
+					.setStart(new Coordinate(36.6, 38.7))
+					.setEnd(new Coordinate(36.2, 38.6))
+					.build();
+		
+		Request r = new Request.Builder()
+						.setDriverId(1)
+						.setUserId(User.getActiveUser().getId())
+						.setTrip(t)
+						.build();
+		
+		Session session = Session.getSession();
+		session.sendRequest(r.getPostRequest(new Callback<Request>() {
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void success(Request arg0, Response arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		}));
 	}
 }
