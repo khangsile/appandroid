@@ -21,18 +21,21 @@ import android.widget.TextView;
 
 import com.llc.bumpr.R;
 import com.llc.bumpr.lib.CircularImageView;
+import com.llc.bumpr.sdk.models.User;
 
 public class SlidingMenuListAdapter extends BaseAdapter {
 	private List<Pair<String, Object>> data;
 	private LayoutInflater inflater;
 	private Context context;
+	private User user;
 
 	public SlidingMenuListAdapter(Context context,
-			List<Pair<String, Object>> inData) {
+			List<Pair<String, Object>> inData, User user) {
 		data = inData;
 		this.context = context; 
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.user = user;
 	}
 
 	@Override
@@ -100,8 +103,8 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 			holder.imageView.setImageResource(R.drawable.test_image);
 		} 
 		else if (data.get(position).first == "Switch") { // Create Switch Row
-			SwitchViewHolder holder;
-			Switch switchView;
+			final SwitchViewHolder holder;
+			final Switch switchView;
 
 			if (convertView == null) {
 				ViewGroup vGroup = (ViewGroup) inflater.inflate(
@@ -114,7 +117,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 						(Switch) vGroup.findViewById(R.id.tb_sl_menu_switch));
 				vGroup.setTag(holder);
 				
-				switchView = (Switch) vGroup.findViewById(R.id.tb_sl_menu_switch);
+				switchView = holder.getSwitch();
 
 				view = vGroup;
 			} else {// If convert view exists!
@@ -130,11 +133,25 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					// TODO Auto-generated method stub
-					//Set user to drive mode
-					if (isChecked)
-						Toast.makeText(context, "True!", Toast.LENGTH_SHORT).show();
-					else
-						Toast.makeText(context, "False!", Toast.LENGTH_SHORT).show();
+					//Verify the user is a registered driver
+					if (user.getDriverProfile() != null){
+						//Toggle driver mode
+						user.getDriverProfile().toggleStatus();
+						if (isChecked){
+							Toast.makeText(context, "True!", Toast.LENGTH_SHORT).show();
+						}
+						else{
+							Toast.makeText(context, "False!", Toast.LENGTH_SHORT).show();
+						}
+						
+						//Send user object update
+					} 
+					else{
+						if (isChecked){
+							switchView.setChecked(false); //Not working for some reason
+							Toast.makeText(context, "Please register as driver before using this feature", Toast.LENGTH_SHORT).show();
+						}
+					}
 				}
 				
 			});

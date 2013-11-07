@@ -40,6 +40,7 @@ public class MyRequestsAdapter extends BaseAdapter {
 	@Override
 	public Object getItem(int pos) {
 		// TODO Auto-generated method stub
+		//Return the driver so the correct user is reviewed!
 		return data.get(pos);
 	}
 	
@@ -60,7 +61,7 @@ public class MyRequestsAdapter extends BaseAdapter {
                 ViewGroup vGroup = (ViewGroup) inflater.inflate(layoutId, null);
                 
                 holder = new ViewHolder((CircularImageView)vGroup.findViewById(R.id.iv_profile_pic), (TextView)vGroup.findViewById(R.id.tv_distance_value), 
-                				(TextView)vGroup.findViewById(R.id.tv_price_value));
+                				(TextView)vGroup.findViewById(R.id.tv_price_value), (TextView)vGroup.findViewById(R.id.tv_driver_name));
                 
                 vGroup.setTag(holder);
                 view = vGroup;
@@ -73,9 +74,7 @@ public class MyRequestsAdapter extends BaseAdapter {
         holder.distView.setText(data.get(position).toString());
         holder.priceView.setText("$9.77");
         holder.imageView.setImageResource(R.drawable.test_image);
-        
-        //Use AsyncTask to create circular images!
-        //new CircleImageAsyncTask().execute(holder);
+        holder.userName.setText("Kyle Cooper");
         
         return view;
 	}
@@ -84,13 +83,15 @@ public class MyRequestsAdapter extends BaseAdapter {
 	private static class ViewHolder { // Used to hold views per row in the
 											// List
 		final CircularImageView imageView;
+		final TextView userName;
 		final TextView distView;
 		final TextView priceView;
 
-		private ViewHolder(CircularImageView imageView, TextView distView, TextView priceView) {
+		private ViewHolder(CircularImageView imageView, TextView distView, TextView priceView, TextView userName) {
 			this.imageView = imageView;
 			this.distView = distView;
 			this.priceView = priceView;
+			this.userName = userName;
 		}
 	}
 

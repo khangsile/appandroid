@@ -68,7 +68,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:clickable="false" />
+            android:clickable="false"
+            android:stepSize="0.1" />
+
     </RelativeLayout>
 
 </LinearLayout>

@@ -11,6 +11,15 @@
         android:layout_alignParentLeft="true" />
     
     <TextView
+            android:id="@+id/tv_driver_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/iv_profile_pic"
+            android:textColor="@android:color/black"
+            android:layout_centerVertical="true"
+            android:textSize="18sp" />
+    
+    <TextView
         android:id="@+id/tv_distance_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

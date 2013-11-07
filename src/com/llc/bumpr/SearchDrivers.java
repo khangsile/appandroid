@@ -135,6 +135,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 	
 	/** Endless List work around for the current moment */
 	private List<User> emptyList = new ArrayList<User>();
+	
+	/** Boolean object to identify if the activity has already been loaded yet or not */
+	private boolean alreadyLoaded;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +163,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 		menuList = new ArrayList<Pair<String, Object>>();
 		initList();
 
-		menuAdpt = new SlidingMenuListAdapter(this, menuList);
+		menuAdpt = new SlidingMenuListAdapter(this, menuList, user);
 		lvMenu.setAdapter(menuAdpt);
 		setMenuOnClickListener();
 
@@ -208,7 +211,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 				
 				drvName.setText(user.getFirstName() + " " + user.getLastName());
 				drvRate.setText(user.getDriverProfile().getFee() + "");
-                drvRtg.setRating(3.2f);
+                //float rating = user.getDriverProfile().getRating();
+				drvRtg.setRating(3.2f);
                 drvCnt.setText(Integer.toString(driverNum+1));
                 
                 //Change alignment of rating bar so the window doesn't take the entire screen
@@ -338,8 +342,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 		menuList.add(0, new Pair<String, Object>("Image", user.getFirstName()
 				+ " " + user.getLastName()));// Pass User Object in future
 
-		menuAdpt = new SlidingMenuListAdapter(this, menuList);
+		menuAdpt = new SlidingMenuListAdapter(this, menuList, user);
 		lvMenu.setAdapter(menuAdpt);
+		
+		//Clear points off map since they lost their reference.  New search required
+		gMap.clear();
 	}
 
 	/**
@@ -462,9 +469,9 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 	 */
 	private void initList() {
 		menuList.add(new Pair<String, Object>("Image", user.getFirstName()
-				+ " " + user.getLastName()));// Pass User Object in future
+				+ " " + user.getLastName()));
 		menuList.add(new Pair<String, Object>("Text", "Create Review"));
-		menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
+		//menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
 		menuList.add(new Pair<String, Object>("Text", "My Sent Requests"));
 		menuList.add(new Pair<String, Object>("Text", "Request"));
 		menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
@@ -747,12 +754,12 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 							CreateReviewActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
-				case 2:
+				/*case 2:
 					i = new Intent(getApplicationContext(), MyRequests.class);
 					i.putExtra("user", User.getActiveUser()); // Pass Incoming Requests
 					i.putExtra("requestType", "My Received Requests");
-					break;
-				case 3:
+					break;*/
+				case 2:
 					i = new Intent(getApplicationContext(), MyRequests.class);
 					i.putExtra("user", User.getActiveUser()); // Pass outgoing requests
 					i.putExtra("requestType", "My Sent Requests");
@@ -762,7 +769,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 							RequestActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break; */
-				case 4:
+				case 3: 
 					ApiRequest api = User.getActiveUser().getDriverProfile().updateLocation(new Coordinate(-84.4, 38.05), new Callback<Response>() {
 
 						@Override
@@ -783,7 +790,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 
 						Session.getSession().sendRequest(api);
 					break;
-				case 6:
+				case 5:
 					i = new Intent(getApplicationContext(), LoginActivity.class);
 					// Remove saved email and password from shared preferences
 					SharedPreferences savedLogin = getSharedPreferences(
