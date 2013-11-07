@@ -1,5 +1,9 @@
 package com.llc.bumpr.lib;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -16,7 +20,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.llc.bumpr.LoginActivity;
 import com.llc.bumpr.R;
 import com.llc.bumpr.R.drawable;
+import com.llc.bumpr.RequestActivity;
 import com.llc.bumpr.SearchDrivers;
+import com.llc.bumpr.UserProfile;
 
 public class GcmIntentService extends IntentService {
 	
@@ -51,12 +57,22 @@ public class GcmIntentService extends IntentService {
 			 * types you're not interested in, or that you don't recognize
 			 */
 			if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-				sendNotification("Send error: " + extras.toString());
+				Log.e(TAG, "Send error: " + extras.toString());
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-				sendNotification("Deleted messages on server: " + extras.toString());
+				Log.e(TAG, "Deleted messages on server: " + extras.toString());
 			}else if(GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
+                //sendNotification("Received: " + extras.toString());
+				try {
+					Log.i(TAG, extras.get("message").toString());
+					JSONObject json = new JSONObject(extras.get("message").toString());
+					Log.i(TAG, json.toString());
+					sendNotification(new PushNotification(json));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					Log.e(TAG, "JSON Exception Caught: " + e);
+					e.printStackTrace();
+				}
                 Log.i(TAG, "Received: " + extras.toString());
 			}
 		}
@@ -69,30 +85,92 @@ public class GcmIntentService extends IntentService {
     // a GCM message.
 	/**
 	 * Puts message into a notification and posts it to the users phone
-	 * @param msg Holds the message to the posted in the push notification
+	 * @param pushNotification Holds the message to the posted in the push notification
 	 */
-    private void sendNotification(String msg) {
+    private void sendNotification(PushNotification pushNotification) {
+    	/* Log Printing for testing */
+    	Log.i(TAG, pushNotification.getType());
+		Log.i(TAG, Integer.toString(pushNotification.getRequestId()));
+		Log.i(TAG, pushNotification.getMessage());
+		Log.i(TAG, pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName());
+    	/* Finished Printing */
+    	
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
+        
+        if (pushNotification.getType().equals("request")){
+        	Intent intent = new Intent(this, RequestActivity.class);
+        	PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                    intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+        	
+        	NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+            .setSmallIcon(R.drawable.ic_launcher)
+            .setContentTitle("Driving Request Received")
+            .setStyle(new NotificationCompat.BigTextStyle()
+            .bigText(pushNotification.getMessage()))
+            .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has request a ride.")
+            .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
+            .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
+            .setLights(0xFF0000FF,1000,2500) //Flash blue light for 1 second on and 2.5 seconds off
+            .setPriority(Notification.PRIORITY_DEFAULT);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, SearchDrivers.class), Intent.FLAG_ACTIVITY_NEW_TASK);
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        }
+        else if (pushNotification.getType().equals("response")){
+        	Log.i(TAG, Boolean.toString(pushNotification.getResponse()));
+        	if (pushNotification.getResponse()){
+        		//If the Driver accpeted the ride request
+        		/* Take the user to a Trip Summary page where they can mark the trip completed */
+        		Intent intent = new Intent(this, UserProfile.class);
+        		intent.putExtra("user", pushNotification.getUser());
+        		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                        intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-        .setSmallIcon(R.drawable.ic_launcher)
-        .setContentTitle("Driving Request Received")
-        .setStyle(new NotificationCompat.BigTextStyle()
-        .bigText(msg))
-        .setContentText(msg)
-        .setAutoCancel(true)
-        .setOnlyAlertOnce(true)
-        .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
-        .setLights(0xFF0000FF,1000,2500) //Flash blue light for 1 second on and 2.5 seconds off
-        .setPriority(Notification.PRIORITY_DEFAULT);
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("Driving Request Accepted")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(pushNotification.getMessage()))
+                .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has accepted your ride request!")
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
+                .setLights(0xFF0000FF,1000,2500) //Flash blue light for 1 second on and 2.5 seconds off
+                .setPriority(Notification.PRIORITY_DEFAULT);
 
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+                mBuilder.setContentIntent(contentIntent);
+                mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        	}
+        	else {
+        		//If the Driver rejected the ride request
+        		Intent intent = new Intent(this, SearchDrivers.class);
+        		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                        intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("Driving Request Rejected")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(pushNotification.getMessage()))
+                .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has rejected your ride request.")
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
+                .setLights(0xFF0000FF,1000,2500) //Flash blue light for 1 second on and 2.5 seconds off
+                .setPriority(Notification.PRIORITY_DEFAULT);
+
+                mBuilder.setContentIntent(contentIntent);
+                mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        	}
+        }
+        
+        //Otherwise, the Push Notification of any other type is not currently handled 
+        return;
     }
 
 }
