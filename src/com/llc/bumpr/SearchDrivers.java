@@ -175,15 +175,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 
 		// Create new location client.
 		mLocationClient = new LocationClient(this, this, this);
-		
-		Intent intent = new Intent(this, DriverLocationService.class);
-		intent.putExtra(DriverLocationService.DRIVER, User.getActiveUser().getDriverProfile());
-		startService(intent);
 
 		setMapsInfoWindowAdapter();
 		setMapsOnClickListener();
 	}
-
+	
 	private void setMapsInfoWindowAdapter() {
 		// TODO Auto-generated method stub
 		gMap.setInfoWindowAdapter(new InfoWindowAdapter() {
