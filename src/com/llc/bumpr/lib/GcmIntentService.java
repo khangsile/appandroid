@@ -88,7 +88,7 @@ public class GcmIntentService extends IntentService {
         .setAutoCancel(true)
         .setOnlyAlertOnce(true)
         .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
-        .setLights(0xFF0000FF,1000,1000) //Flash blue light for 1 second on and 4 seconds off
+        .setLights(0xFF0000FF,1000,2500) //Flash blue light for 1 second on and 2.5 seconds off
         .setPriority(Notification.PRIORITY_DEFAULT);
 
         mBuilder.setContentIntent(contentIntent);
