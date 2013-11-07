@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
+import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.EndlessListView;
 import com.llc.bumpr.lib.GraphicsUtil;
 import com.llc.bumpr.lib.LatLngLocationTask;
@@ -191,11 +193,13 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 				View v = getLayoutInflater().inflate(R.layout.driver_row, null);
 
 				//Get references to all fields
-				ImageView profImg = (ImageView)v.findViewById(R.id.iv_driver_prof_pic);
+				CircularImageView profImg = (CircularImageView)v.findViewById(R.id.iv_driver_prof_pic);
+				ImageView profImgFixed = (ImageView) v.findViewById(R.id.iv_driver_prof_pic_normal);
 				TextView drvName = (TextView)v.findViewById(R.id.tv_driver_name);
 				TextView drvRate = (TextView)v.findViewById(R.id.tv_driver_rate);
 				RatingBar drvRtg = (RatingBar)v.findViewById(R.id.rb_user_rating);
 				TextView drvCnt = (TextView) v.findViewById(R.id.tv_driver_cnt);
+				View blackSep = (View) v.findViewById(R.id.num_divider);
 				
 				//Get the driver position in the driver list adapter
 				int driverNum = Integer.parseInt(marker.getTitle().substring(7, marker.getTitle().length())) - 1;
@@ -207,14 +211,28 @@ public class SearchDrivers extends SherlockFragmentActivity implements
                 drvRtg.setRating(3.2f);
                 drvCnt.setText(Integer.toString(driverNum+1));
                 
+                //Change alignment of rating bar so the window doesn't take the entire screen
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)drvRtg.getLayoutParams();
+                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                params.addRule(RelativeLayout.RIGHT_OF, drvName.getId());
+                params.setMargins(15,0,0,0);
+                //Apply parameter changes
+                drvRtg.setLayoutParams(params);
+                
+                blackSep.getLayoutParams().height = profImg.getLayoutParams().height;
+                
+              //profImg.setImageResource(R.drawable.test_image);
+				profImg.setVisibility(View.INVISIBLE);
+				profImgFixed.setVisibility(View.VISIBLE);
+				
+				//Set up image values
+				float imageSize = Conversions.dpToPixels(context, 50);
                 //Change this to the other image type
-                float imageSize = Conversions.dpToPixels(context, 50);
     			GraphicsUtil imageHelper = new GraphicsUtil();
                 Bitmap bm = imageHelper.getCircleBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.test_image), 16);
     			//Resize image to the desired size
-    			profImg.setImageBitmap(Bitmap.createScaledBitmap(bm, Math.round(imageSize), Math.round(imageSize), false));
+                profImgFixed.setImageBitmap(Bitmap.createScaledBitmap(bm, Math.round(imageSize), Math.round(imageSize), false));
 				return v;
-				//return null;
 			}
 
 			@Override
@@ -292,7 +310,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					if(lastClicked.equals(marker)){
 						//If same marker was clicked, Set last clicked to null and mark event handled
 						lastClicked = null;
-						int driverNum = Integer.parseInt(marker.getTitle().substring(7, marker.getTitle().length())) - 1;
+						/*int driverNum = Integer.parseInt(marker.getTitle().substring(7, marker.getTitle().length())) - 1;
 
 						// Get data at position selected and go to their request page
 						final User user = (User) endListAdp.getItem(driverNum);
@@ -320,7 +338,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 										Toast.LENGTH_SHORT).show();
 							}
 
-						}).execute(loc);
+						}).execute(loc);*/
 						
 						return true;
 					}
@@ -458,7 +476,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 		// TODO Auto-generated method stub
 		Location loc = mLocationClient.getLastLocation();
 		LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
 		gMap.animateCamera(camUpdate);
 	}
 
@@ -572,7 +590,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					public void success(List<User> users, Response arg1) {
 						// TODO Auto-generated method stub
 						drivers = users;
-						//Log.i("Search Driver", drivers.get(0).getFirstName() + " " + drivers.get(0).getLastName() + " " + drivers.get(0).getDriverProfile().getPosition().toString());
 						LinearLayout.LayoutParams mapPars = (LinearLayout.LayoutParams)map.getLayoutParams();
 						mapPars.weight = 0.5f;
 						map.setLayoutParams(mapPars);
@@ -588,6 +605,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 						}
 						else{
 							Log.i("Search Driver", "Reset Search");
+							gMap.clear();
 							newSearch(drivers); //Reset endless list with new data
 						}
 						

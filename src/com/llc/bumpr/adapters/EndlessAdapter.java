@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 
 import com.androidtools.Conversions;
 import com.llc.bumpr.R;
+import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.GraphicsUtil;
 import com.llc.bumpr.sdk.models.User;
 
@@ -49,7 +51,7 @@ public class EndlessAdapter extends ArrayAdapter<User> {
                 this.layoutId = layoutId;
 
                 //Set up circular image preferences here
-                setCircleImagePrefs();
+                //setCircleImagePrefs();
         }
 
 		@Override
@@ -82,9 +84,9 @@ public class EndlessAdapter extends ArrayAdapter<User> {
                         LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         ViewGroup vGroup = (ViewGroup) inflater.inflate(layoutId, null);
                         
-                        holder = new ViewHolder((ImageView)vGroup.findViewById(R.id.iv_driver_prof_pic), (TextView)vGroup.findViewById(R.id.tv_driver_name), 
+                        holder = new ViewHolder((CircularImageView)vGroup.findViewById(R.id.iv_driver_prof_pic), (TextView)vGroup.findViewById(R.id.tv_driver_name), 
                         				(TextView)vGroup.findViewById(R.id.tv_driver_rate), (RatingBar)vGroup.findViewById(R.id.rb_user_rating),
-                        				(TextView) vGroup.findViewById(R.id.tv_driver_cnt));
+                        				(TextView) vGroup.findViewById(R.id.tv_driver_cnt), (View) vGroup.findViewById(R.id.num_divider));
                         
                         vGroup.setTag(holder);
                         view = vGroup;
@@ -100,9 +102,11 @@ public class EndlessAdapter extends ArrayAdapter<User> {
                 holder.drvRate.setText(user.getDriverProfile().getFee() + "");
                 holder.drvRtBar.setRating(3.2f);
                 holder.driverCnt.setText(Integer.toString(position+1));
+                holder.blackSep.getLayoutParams().height = holder.imageView.getLayoutParams().height;
+                holder.imageView.setImageResource(R.drawable.test_image);
                 
                 //Use AsyncTask to create circular images!
-                new CircleImageAsyncTask().execute(holder);
+                //new CircleImageAsyncTask().execute(holder);
                 
     			/*//Original way of loading circular images
     			Bitmap bm = imageHelper.getCircleBitmap(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.test_image), 16);
@@ -138,20 +142,23 @@ public class EndlessAdapter extends ArrayAdapter<User> {
     	/**View holders to improve performance of adapter! **/
     	private static class ViewHolder { // Used to hold views per row in the
     											// List
-    		final ImageView imageView;
+    		//final ImageView imageView;
+    		final CircularImageView imageView;
     		final TextView drvName;
     		final TextView drvRate;
     		final RatingBar drvRtBar;
     		final TextView driverCnt;
+    		final View blackSep;
     		
     		Bitmap imageBitmap; //Needed to hold the Bitmap of the AsyncTask
 
-    		private ViewHolder(ImageView imageView, TextView drvName, TextView drvRate, RatingBar drvRtBar, TextView driverCnt) {
+    		private ViewHolder(CircularImageView imageView, TextView drvName, TextView drvRate, RatingBar drvRtBar, TextView driverCnt, View blackSep) {
     			this.imageView = imageView;
     			this.drvName = drvName;
     			this.drvRate = drvRate;
     			this.drvRtBar = drvRtBar;
     			this.driverCnt = driverCnt;
+    			this.blackSep = blackSep;
     		}
     	}
 

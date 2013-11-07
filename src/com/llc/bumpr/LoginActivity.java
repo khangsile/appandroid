@@ -74,8 +74,6 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.main);
 		BumprClient.setBaseURL("http://192.168.1.200:3000/api/v1");
 		
-		BumprClient.setBaseURL("http://192.168.1.200:3000/api/v1");
-		
 		savedLogin = getSharedPreferences (LOGIN_PREF, 0);
 		
 		email = (EditText) findViewById(R.id.et_email);
