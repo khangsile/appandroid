@@ -309,37 +309,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					
 					if(lastClicked.equals(marker)){
 						//If same marker was clicked, Set last clicked to null and mark event handled
-						lastClicked = null;
-						/*int driverNum = Integer.parseInt(marker.getTitle().substring(7, marker.getTitle().length())) - 1;
-
-						// Get data at position selected and go to their request page
-						final User user = (User) endListAdp.getItem(driverNum);
-						Log.i("Marker Click", user.toString());
-						// Get Latitude and Logitude values of current location
-						LatLng loc = gMap.getCameraPosition().target;
-						// Initialize address list to hold addresses of current location
-						List<Address> address = null;
-
-						new LatLngLocationTask(context, new Callback<List<Address>>() {
-
-							@Override
-							public void failure(
-									RetrofitError arg0) {
-							}
-
-							@Override
-							public void success(List<Address> arg0, Response arg1) {
-								// needs different request activity
-								Intent intent = new Intent(context, UserProfile.class);
-								intent.putExtra("user", user);
-								startActivity(intent);
-								Toast.makeText(getApplicationContext(),
-										arg0.get(0).getAddressLine(0),
-										Toast.LENGTH_SHORT).show();
-							}
-
-						}).execute(loc);*/
-						
+						lastClicked = null;						
 						return true;
 					}
 					else{
@@ -779,14 +749,12 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					break;
 				case 2:
 					i = new Intent(getApplicationContext(), MyRequests.class);
-					i.putExtra("user", User.getActiveUser()); // Pass Incoming
-																// Requests
+					i.putExtra("user", User.getActiveUser()); // Pass Incoming Requests
 					i.putExtra("requestType", "My Received Requests");
 					break;
 				case 3:
 					i = new Intent(getApplicationContext(), MyRequests.class);
-					i.putExtra("user", User.getActiveUser()); // Pass outgoing
-																// requests
+					i.putExtra("user", User.getActiveUser()); // Pass outgoing requests
 					i.putExtra("requestType", "My Sent Requests");
 					break;
 				/*case 4:
