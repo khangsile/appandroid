@@ -27,6 +27,9 @@ public class GcmIntentService extends IntentService {
 	
 	static final String TAG = "com.llc.bumpr GCM";
 
+	/**
+	 * Create a new Intent Service
+	 */
 	public GcmIntentService() {
 		super("GcmIntentService");
 		// TODO Auto-generated constructor stub
@@ -64,6 +67,10 @@ public class GcmIntentService extends IntentService {
 	// Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
+	/**
+	 * Puts message into a notification and posts it to the users phone
+	 * @param msg Holds the message to the posted in the push notification
+	 */
     private void sendNotification(String msg) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -81,7 +88,7 @@ public class GcmIntentService extends IntentService {
         .setAutoCancel(true)
         .setOnlyAlertOnce(true)
         .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
-        .setLights(0xFF0000FF,500,3000) //Flash blue light for 1 second on and 4 seconds off
+        .setLights(0xFF0000FF,1000,1000) //Flash blue light for 1 second on and 4 seconds off
         .setPriority(Notification.PRIORITY_DEFAULT);
 
         mBuilder.setContentIntent(contentIntent);

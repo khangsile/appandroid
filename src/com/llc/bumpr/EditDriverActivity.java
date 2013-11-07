@@ -76,6 +76,7 @@ public class EditDriverActivity extends SherlockActivity {
 		settingList.add("Model");
 		settingList.add("Year");
 		settingList.add("Passenger Seats");
+		settingList.add("Rate");
 	}
 	
 	public void update() {
@@ -101,6 +102,8 @@ public class EditDriverActivity extends SherlockActivity {
 					user.put("phone_number", val);
 				if(adt.getItem(i).toString().equals("Passenger Seats"))
 					user.put("email", val);
+				if(adt.getItem(i).toString().equals("Rate"))
+					user.put("rate", val);
 			}
 		}*/
 		
