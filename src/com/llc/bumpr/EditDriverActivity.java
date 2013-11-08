@@ -101,7 +101,7 @@ public class EditDriverActivity extends SherlockActivity {
 		EditText et; //Reference to the edit text object in each row view
 
 		for (int i=0; i< adt.getCount(); i++){ //For all the detail in the list view
-			if(adt.getItemViewType(i)==0) { //Verify it is an edit text view
+			if(adt.getItemViewType(i)==0) { //Verify it is an edit text row
 				v1 = profSettings.getChildAt(i); //Get row view
 				et = (EditText) v1.findViewById(R.id.et_edit_prof_value); //Get edit text in that row
 				val = (Object) et.getText().toString(); //Grab value in edit text field
