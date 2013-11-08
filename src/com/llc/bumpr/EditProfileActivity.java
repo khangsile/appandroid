@@ -47,22 +47,23 @@ public class EditProfileActivity extends SherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_profile);
-		
+		//Get reference to the views in the layout
 		profPic = (CircularImageView) findViewById(R.id.iv_profile_pic);
 		profSettings = (ListView) findViewById(R.id.lv_settings_list);
 		joinDate = (TextView) findViewById(R.id.tv_edit_prof_join_date_text);
 		
-		//Set Join Date
+		//Set Join Date -- Use user details in the future
 		joinDate.setText("October 25, 2013");
 		//Set image resources
 		profPic.setImageResource(R.drawable.test_image);
 		
+		//Set up settings list, create edit profile adapter, and set the adapter
 		settingList = new ArrayList<String>();
-		
 		initList();
 		adt = new EditProfileListAdapter(this, settingList, User.getActiveUser());
 		profSettings.setAdapter(adt);
 		
+		//Initialize on click listener
 		initOnClickListener();
 	}
 
@@ -78,28 +79,31 @@ public class EditProfileActivity extends SherlockActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				// TODO Auto-generated method stub
-				
 				if (position == 4){ //Update Password dialog box!
+					//Inflate change password dialog
 					LayoutInflater li = LayoutInflater.from(context);
-					View changePassView = li.inflate(R.layout.change_password_dialog, null);
+					View changePassView = li.inflate(R.layout.change_password_dialog, null); 
 					
+					//Build alert dialog for current context and set title
 					AlertDialog.Builder changePassDialogBldr = new AlertDialog.Builder(context);
 					changePassDialogBldr.setTitle("Change Password");
 					
 					//Assign change password layout to dialog
 					changePassDialogBldr.setView(changePassView);
 					
+					//Get reference to the edit text views in the dialog
 					final EditText currPass = (EditText) changePassView.findViewById(R.id.et_curr_password);
 					final EditText newPass = (EditText) changePassView.findViewById(R.id.et_new_password);
 					final EditText confPass = (EditText) changePassView.findViewById(R.id.et_conf_password);
 					
+					//Apply settings to the change dialog builder
 					changePassDialogBldr
-						.setCancelable(true)
+						.setCancelable(true) //Allow dialog to be canceled
 						.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener(){
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								// TODO Auto-generated method stub
-								//Submit Password here!
+								//Submit Password here when API endpoint is in place
 							}
 						})
 						.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -108,7 +112,7 @@ public class EditProfileActivity extends SherlockActivity {
 							public void onClick(DialogInterface dialog,
 									int which) {
 								// TODO Auto-generated method stub
-								dialog.cancel();
+								dialog.cancel(); //Close dialog when cancel is pressed
 							}
 							
 						});
@@ -118,9 +122,10 @@ public class EditProfileActivity extends SherlockActivity {
 					changePassDialog.show();
 				}
 				else if(position == 5) { //Edit Driver Settings Page
+					//Create intent for edit driver activity
 					Intent i = new Intent(getApplicationContext(), EditDriverActivity.class);
-					i.putExtra("user", User.getActiveUser());
-					startActivity(i);
+					i.putExtra("user", User.getActiveUser()); //Pass the current active user
+					startActivity(i); //Start the activity
 				}
 			}
 		});
@@ -130,6 +135,7 @@ public class EditProfileActivity extends SherlockActivity {
 	 * A method that fills the settingList element with the ordering and information to display in the list view UI element.
 	 */
 	private void initList(){
+		//Fill edit profile list with details for a user
 		settingList.add("First Name");
 		settingList.add("Last Name");
 		settingList.add("Phone");
@@ -138,18 +144,24 @@ public class EditProfileActivity extends SherlockActivity {
 		settingList.add("Driver Settings");
 	}
 	
+	/**
+	 * Updates the active user with the edit text fields list view
+	 * @param v View reference that called this method on click
+	 */
 	public void update(View v) {
+		//Hash map to hold details to be updated
 		final HashMap<String, Object> user = new HashMap<String, Object>();
-		View v1;
-		Object val;
-		EditText et;
+		View v1; //Reference to hold row view
+		Object val; //Reference to hold updated values
+		EditText et; //Reference to the edit text object in each row view
 		
-		for (int i=0; i< adt.getCount(); i++){
-			if(adt.getItemViewType(i)==0) {
-				v1 = profSettings.getChildAt(i);
-				et = (EditText) v1.findViewById(R.id.et_edit_prof_value);
-				val = (Object) et.getText().toString();
+		for (int i=0; i< adt.getCount(); i++){ //For all details in list view
+			if(adt.getItemViewType(i)==0) { //If the row is an edit text row
+				v1 = profSettings.getChildAt(i); //Get row view
+				et = (EditText) v1.findViewById(R.id.et_edit_prof_value); //Get edit text in that row
+				val = (Object) et.getText().toString(); //Save the value in the edit text
 				
+				//Add each field to the hash map
 				if(adt.getItem(i).toString().equals("First Name"))
 					user.put("first_name", val);
 				if(adt.getItem(i).toString().equals("Last Name"))
@@ -160,28 +172,30 @@ public class EditProfileActivity extends SherlockActivity {
 					user.put("email", val);
 			}
 		}
-		
+		//For testing
 		Toast.makeText(getApplicationContext(), user.toString(), Toast.LENGTH_SHORT).show();
-		
+		//Get reference to active user to update
 		User activeUser = User.getActiveUser();
+		//Send request update
 		ApiRequest request = activeUser.getUpdateRequest(user, new Callback<User>() {
 
 			@Override
 			public void failure(RetrofitError arg0) {
 				// TODO Auto-generated method stub
-				// Send alert
+				//Display error alert
 				Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void success(User arg0, Response arg1) {
 				// TODO Auto-generated method stub
-				// Update list;
+				//End activity upon success
 				finish();
 			}
 			
 		});
 		
+		//Get active session and submit the request
 		Session session = Session.getSession();
 		session.sendRequest(request);
 	}

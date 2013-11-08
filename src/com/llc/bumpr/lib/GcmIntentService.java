@@ -23,6 +23,8 @@ import com.llc.bumpr.R.drawable;
 import com.llc.bumpr.RequestActivity;
 import com.llc.bumpr.SearchDrivers;
 import com.llc.bumpr.UserProfile;
+import com.llc.bumpr.sdk.models.Request;
+import com.llc.bumpr.sdk.models.User;
 
 public class GcmIntentService extends IntentService {
 	
@@ -62,12 +64,14 @@ public class GcmIntentService extends IntentService {
 				Log.e(TAG, "Deleted messages on server: " + extras.toString());
 			}else if(GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // Post notification of received message.
-                //sendNotification("Received: " + extras.toString());
 				try {
+					//Log message received
 					Log.i(TAG, extras.get("message").toString());
+					//Create JSON object from message received
 					JSONObject json = new JSONObject(extras.get("message").toString());
 					Log.i(TAG, json.toString());
-					sendNotification(new PushNotification(json));
+					//Create PushNotification object from JSON
+					sendNotification(new PushNotification(json)); 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					Log.e(TAG, "JSON Exception Caught: " + e);
@@ -94,32 +98,49 @@ public class GcmIntentService extends IntentService {
 		Log.i(TAG, pushNotification.getMessage());
 		Log.i(TAG, pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName());
     	/* Finished Printing */
-    	
+
+		//Create notification manager
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
         
+        //If type is request
         if (pushNotification.getType().equals("request")){
+        	//Create intent to handle this Notification
         	Intent intent = new Intent(this, RequestActivity.class);
+        	//Get objects to pass to the activity
+        	User rider = pushNotification.getUser();
+        	User activeUser = User.getActiveUser();
+        	Request request = new Request.Builder()
+        							.setDriverId(activeUser.getDriverProfile().getId())
+        							.setUserId(rider.getId())
+        							.setTrip(pushNotification.getTrip())
+        							.build();
+        	//attach objects to intent
+        	intent.putExtra("user", rider);
+        	intent.putExtra("request", request);
+        	//Sent intent as pending intent
         	PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                     intent, Intent.FLAG_ACTIVITY_NEW_TASK);
         	
+        	//Create notification
         	NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
             .setSmallIcon(R.drawable.ic_launcher)
             .setContentTitle("Driving Request Received")
             .setStyle(new NotificationCompat.BigTextStyle()
             .bigText(pushNotification.getMessage()))
-            .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has request a ride.")
+            .setContentText(rider.getFirstName() + " " + rider.getLastName() + " has request a ride.")
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
             .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
             .setLights(0xFF0000FF,1000,2500) //Flash blue light for 1 second on and 2.5 seconds off
             .setPriority(Notification.PRIORITY_DEFAULT);
 
+        	//Set pending intent to open upon click, and display notification to the phone
             mBuilder.setContentIntent(contentIntent);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         }
-        else if (pushNotification.getType().equals("response")){
+        else if (pushNotification.getType().equals("response")){ //If type is response
         	Log.i(TAG, Boolean.toString(pushNotification.getResponse()));
         	if (pushNotification.getResponse()){
         		//If the Driver accpeted the ride request

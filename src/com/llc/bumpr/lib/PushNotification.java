@@ -5,13 +5,14 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
 public class PushNotification {
 	/** String holding the type of push notification */
 	private String type;
 	
-	/** Integer to hold the request reqeust id */
+	/** Integer to hold the request request id */
 	private int requestId;
 	
 	/** Reference to the user who sent the notification */
@@ -19,6 +20,9 @@ public class PushNotification {
 	
 	/** String holding the text of the notification */
 	private String message;
+	
+	/** Trip object holding the trip information for the request*/
+	private Trip trip;
 	
 	/** Boolean holding whether a driver accepted or rejected a drive request (If 
 	 * the notification is of type response)
@@ -40,20 +44,20 @@ public class PushNotification {
 	 * @throws JSONException Exception thrown from invalid json representation
 	 */
 	public PushNotification (JSONObject json) throws JSONException{
-		type = json.getString("type");
-		requestId = json.getInt("request_id");
-		message = json.getString("message");
+		//Values is all types of requests
+		type = json.getString("type"); //Get Notification Type
+		requestId = json.getInt("request_id"); //Get Request id
+		message = json.getString("message"); //Get message text
 		
 		if (type.equals("request")) {
 			//Retrieve information for request type notification
-			Log.i("com.llc.bumpr GCM", "Getting User");
-			user = new User(json.getJSONObject("user"));
-			Log.i("com.llc.bumpr GCM", user.toString());
+			user = new User(json.getJSONObject("user")); //Get user requesting the trip
+			trip = new Trip(json.getJSONObject("trip")); //Get trip object for the request
 		}
 		else if (type.equals("response")){
 			//Retrieve information for response type notification
-			user = new User(json.getJSONObject("driver"));
-			response = json.getBoolean("response");
+			user = new User(json.getJSONObject("driver")); //Get driver who responded
+			response = json.getBoolean("response"); //Get response message
 		}
 	}
 	
@@ -90,5 +94,12 @@ public class PushNotification {
 	 */
 	public boolean getResponse() {
 		return response;
+	}
+	
+	/**
+	 * @return Reference to the trip being requested
+	 */
+	public Trip getTrip() {
+		return trip;
 	}
 }
