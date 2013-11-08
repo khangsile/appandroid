@@ -248,7 +248,7 @@ public class RequestActivity extends SherlockFragmentActivity implements
 	 * Sends a response to accept or decline the request
 	 * @param accept the answer to the request
 	 */
-	public void answerRequest(boolean accept) {
+	public void answerRequest(final boolean accept) {
 		ApiRequest apiRequest = request.respondTo(accept, new Callback<Response>() {
 
 			@Override
@@ -257,7 +257,12 @@ public class RequestActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void success(Response arg0, Response arg1) {
-				finish();
+				if (!accept) finish();
+				
+				Intent intent = new Intent(getApplicationContext(), CreateReviewActivity.class);
+				intent.putExtra("user", User.getActiveUser());
+				intent.putExtra("request", request);
+				startActivity(intent);
 			}
 			
 		});

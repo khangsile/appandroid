@@ -526,7 +526,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 		menuList.add(new Pair<String, Object>("Text", "Create Review"));
 		//menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
 		menuList.add(new Pair<String, Object>("Text", "My Sent Requests"));
-		menuList.add(new Pair<String, Object>("Text", "Request"));
 		menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
 		menuList.add(new Pair<String, Object>("Text", "Logout"));
 	}
@@ -824,12 +823,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 
 						Session.getSession().sendRequest(api);
 					break;
-				case 4:
-					i = new Intent(getApplicationContext(),
-							RequestActivity.class);
-					i.putExtra("user", User.getActiveUser());
-					break;
-				case 5: //Logout
+				case 4: //Logout
 					i = new Intent(getApplicationContext(), LoginActivity.class); //Create new intent
 					// Remove saved email and password from shared preferences and update shared preferences
 					SharedPreferences savedLogin = getSharedPreferences(

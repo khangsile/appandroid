@@ -29,6 +29,12 @@ public class CreateReviewActivity extends ProfileActivity {
 	@Override
 	protected void initialize() {
 		super.initialize();
+		
+		Bundle bundle = getIntent().getExtras();
+		request = bundle.getParcelable("request");
+		
+		if (user.getDriverProfile() == null) throw new NullPointerException("Instance 'driverProfile' cannot be null");
+		if (request == null) throw new NullPointerException("Instance ('request') cannot be null");
 	}
 	
 	/**
@@ -45,11 +51,10 @@ public class CreateReviewActivity extends ProfileActivity {
 
 		//Create review object
 		Review review = new Review.Builder()
-			.setDriverId(user.getId())
-			.setUserId(activeUser.getId())
+			.setDriverId(user.getDriverProfile().getId())
 			.setRequestId(request.getId())
-			.setDriverRating(rating)
-			.setDescription(description)
+			.setRating(rating)
+			.setContent(description)
 			.build();
 
 		//Get the active session and send the request to the server
@@ -58,13 +63,11 @@ public class CreateReviewActivity extends ProfileActivity {
 
 			@Override
 			public void failure(RetrofitError arg0) {
-				// TODO Auto-generated method stub
 				//do nothing
 			}
 
 			@Override
 			public void success(Response arg0, Response arg1) {
-				// TODO Auto-generated method stub
 				//do nothing
 			}
 			
