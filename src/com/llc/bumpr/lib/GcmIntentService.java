@@ -27,12 +27,13 @@ import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.User;
 
 public class GcmIntentService extends IntentService {
-	
+	//Constants needed for GCM (internal)
 	public static final int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
 	public static final String SENDER_ID = "130758040838";
 	
+	//Tag used for commenting (Internal)
 	static final String TAG = "com.llc.bumpr GCM";
 
 	/**
@@ -46,7 +47,9 @@ public class GcmIntentService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		// TODO Auto-generated method stub
+		//Get extra objects passed to this intent
 		Bundle extras = intent.getExtras();
+		//Create Google Cloud Messaging object
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 		//The getMessageType() intent parameter must be the intent you 
 		//received in your BroadcastReceiver
@@ -59,9 +62,9 @@ public class GcmIntentService extends IntentService {
 			 * types you're not interested in, or that you don't recognize
 			 */
 			if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-				Log.e(TAG, "Send error: " + extras.toString());
+				Log.e(TAG, "Send error: " + extras.toString()); //Log error
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-				Log.e(TAG, "Deleted messages on server: " + extras.toString());
+				Log.e(TAG, "Deleted messages on server: " + extras.toString()); //Log deleted message
 			}else if(GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // Post notification of received message.
 				try {
@@ -77,7 +80,7 @@ public class GcmIntentService extends IntentService {
 					Log.e(TAG, "JSON Exception Caught: " + e);
 					e.printStackTrace();
 				}
-                Log.i(TAG, "Received: " + extras.toString());
+                Log.i(TAG, "Received: " + extras.toString()); //Log message received
 			}
 		}
 		//Release the wake lock provided by the WakefulBroadcastReceiver
@@ -105,22 +108,29 @@ public class GcmIntentService extends IntentService {
         
         //If type is request
         if (pushNotification.getType().equals("request")){
+        	Log.i(TAG, "Inside request");
         	//Create intent to handle this Notification
         	Intent intent = new Intent(this, RequestActivity.class);
         	//Get objects to pass to the activity
         	User rider = pushNotification.getUser();
+        	Log.i(TAG, "1");
         	User activeUser = User.getActiveUser();
+        	Log.i(TAG, "2");
+        	//Create request object
         	Request request = new Request.Builder()
         							.setDriverId(activeUser.getDriverProfile().getId())
         							.setUserId(rider.getId())
         							.setTrip(pushNotification.getTrip())
         							.build();
+        	Log.i(TAG, "3");
         	//attach objects to intent
         	intent.putExtra("user", rider);
         	intent.putExtra("request", request);
+        	Log.i(TAG, "4");
         	//Sent intent as pending intent
         	PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                     intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+        	Log.i(TAG, "pending intent made");
         	
         	//Create notification
         	NotificationCompat.Builder mBuilder =
@@ -135,10 +145,12 @@ public class GcmIntentService extends IntentService {
             .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
             .setLights(0xFF0000FF,1000,2500) //Flash blue light for 1 second on and 2.5 seconds off
             .setPriority(Notification.PRIORITY_DEFAULT);
+        	Log.i(TAG, "made notification");
 
         	//Set pending intent to open upon click, and display notification to the phone
             mBuilder.setContentIntent(contentIntent);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+            Log.i(TAG, "Sent notification");
         }
         else if (pushNotification.getType().equals("response")){ //If type is response
         	Log.i(TAG, Boolean.toString(pushNotification.getResponse()));

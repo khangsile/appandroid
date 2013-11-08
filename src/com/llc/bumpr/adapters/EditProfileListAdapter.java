@@ -128,23 +128,23 @@ public class EditProfileListAdapter extends BaseAdapter {
 					holder.editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 				}
 				else if (data.get(position).equals("Make")){
-					holder.editText.setText("Toyota");
+					holder.editText.setText("");
 					holder.editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 				}
 				else if (data.get(position).equals("Model")){
-					holder.editText.setText("Hybrid Camry");
+					holder.editText.setText("");
 					holder.editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 				}
 				else if (data.get(position).equals("Year")){
-					holder.editText.setText("2013");
+					holder.editText.setText("");
 					holder.editText.setInputType(InputType.TYPE_CLASS_NUMBER);
 				}
 				else if (data.get(position).equals("Passenger Seats")){
-					holder.editText.setText("4");
+					holder.editText.setText("");
 					holder.editText.setInputType(InputType.TYPE_CLASS_NUMBER);
 				}
-				else if (data.get(position).equals("Rate")){
-					holder.editText.setText("2.75");
+				else if (data.get(position).equals("Fee")){
+					holder.editText.setText(Double.toString(user.getDriverProfile().getFee()));
 					holder.editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 				}
 				

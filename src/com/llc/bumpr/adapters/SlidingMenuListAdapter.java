@@ -29,11 +29,21 @@ import com.llc.bumpr.sdk.models.User;
 import com.llc.bumpr.services.DriverLocationService;
 
 public class SlidingMenuListAdapter extends BaseAdapter {
+	/** List holding data to be displayed in the list */
 	private List<Pair<String, Object>> data;
+	/** LayoutInflater to inflate the rows */
 	private LayoutInflater inflater;
+	/** Context of the application */
 	private Context context;
+	/** User whose profile is being edited */
 	private User user;
 
+	/**
+	 * Constructor to set up the adapter
+	 * @param context Application Context
+	 * @param inData List of data
+	 * @param user User who is being edited
+	 */
 	public SlidingMenuListAdapter(Context context,
 			List<Pair<String, Object>> inData, User user) {
 		data = inData;
@@ -82,38 +92,40 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		Object dataObj = data.get(position).second; // Get data for the row
-		View view;
+		View view; //Reference to row to be displayed
 
 		if (data.get(position).first == "Image") { // Create Image Row
 			ImageViewHolder holder;
 
-			if (convertView == null) {
+			if (convertView == null) { //New row being created
 				ViewGroup vGroup = (ViewGroup) inflater.inflate(
-						R.layout.sliding_menu_row_image, null);
+						R.layout.sliding_menu_row_image, null); //Inflate the row
 
 				// Use the view holder pattern to save already looked up
 				// subviews
 				holder = new ImageViewHolder(
 						(CircularImageView) vGroup.findViewById(R.id.iv_sl_menu_prof_pic),
 						(TextView) vGroup.findViewById(R.id.tv_sl_menu_username));
-				vGroup.setTag(holder);
+				vGroup.setTag(holder); //Set the tag
 
-				view = vGroup;
+				view = vGroup; //Assign view to view group
 			} else {// If convert view exists!
 				// get the holder back
-				holder = (ImageViewHolder) convertView.getTag();
-				view = convertView;
+				holder = (ImageViewHolder) convertView.getTag(); //Get holder from tag
+				view = convertView; //Assign view from convertview
 			}
+			//Set data in row
 			holder.textView.setText(dataObj.toString());
 			holder.imageView.setImageResource(R.drawable.test_image);
 		} 
 		else if (data.get(position).first == "Switch") { // Create Switch Row
+			//Reference to the view holder and the switch view
 			final SwitchViewHolder holder;
 			final Switch switchView;
 
-			if (convertView == null) {
+			if (convertView == null) { //If new row
 				ViewGroup vGroup = (ViewGroup) inflater.inflate(
-						R.layout.sliding_menu_row_switch, null);
+						R.layout.sliding_menu_row_switch, null); //Inflate row
 
 				// Use the view holder pattern to save already looked up
 				// subviews
@@ -122,17 +134,23 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 						(Switch) vGroup.findViewById(R.id.tb_sl_menu_switch));
 				vGroup.setTag(holder);
 				
-				switchView = holder.getSwitch();
+				switchView = holder.getSwitch(); //Assign switch reference for the row
 
 				view = vGroup;
 			} else {// If convert view exists!
 				// get the holder back
 				holder = (SwitchViewHolder) convertView.getTag();
+				//Assign the switch
 				switchView = holder.getSwitch();
 				view = convertView;
 			}
+			//Set the row text and check status
 			holder.textView.setText(dataObj.toString());
-			holder.switchView.setChecked(false);
+			if(user.getDriverProfile() == null) //If user is not driver, set checked to false
+				holder.switchView.setChecked(false);
+			else //Set initial switch value to current status 
+				holder.switchView.setChecked(user.getDriverProfile().getStatus());
+			
 			switchView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 				@Override
