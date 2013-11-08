@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidtools.Conversions;
 import com.google.android.gms.maps.model.LatLng;
@@ -148,10 +149,14 @@ public class UserProfile extends Activity {
 
 			@Override
 			public void failure(RetrofitError arg0) { // do nothing
+				Toast.makeText(getApplicationContext(),
+						"Error sending request",
+						Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void success(Request arg0, Response arg1) { // do nothing
+				finish();
 			}
 			
 		}));
