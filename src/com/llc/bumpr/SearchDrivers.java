@@ -228,8 +228,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 				//Display information in window above marker
 				drvName.setText(user.getFirstName() + " " + user.getLastName());
 				drvRate.setText(user.getDriverProfile().getFee() + "");
-                //float rating = user.getDriverProfile().getRating();
-				drvRtg.setRating(3.2f);
+				drvRtg.setRating((float)user.getDriverProfile().getRating());
                 drvCnt.setText(Integer.toString(driverNum+1));
                 
                 //Change alignment of rating bar so the window doesn't take the entire screen

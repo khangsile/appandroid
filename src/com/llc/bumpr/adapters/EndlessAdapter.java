@@ -107,7 +107,7 @@ public class EndlessAdapter extends ArrayAdapter<User> {
                 //Fill row with user data
                 holder.drvName.setText(user.getFirstName() + " " + user.getLastName());
                 holder.drvRate.setText(user.getDriverProfile().getFee() + "");
-                holder.drvRtBar.setRating(3.2f);
+                holder.drvRtBar.setRating((float)user.getDriverProfile().getRating());
                 holder.driverCnt.setText(Integer.toString(position+1));
                 holder.blackSep.getLayoutParams().height = holder.imageView.getLayoutParams().height;
                 holder.imageView.setImageResource(R.drawable.test_image);
