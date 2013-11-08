@@ -160,7 +160,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 					if (user.getDriverProfile() != null){
 						//Toggle driver mode
 						Log.i("Mein Tag", isChecked + " ");
-						
+						//Update driver status on toggle
 						ApiRequest request = user.getDriverProfile().toggleStatusRequest(isChecked, new Callback<Driver>() {
 
 							@Override
@@ -172,11 +172,12 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 							public void success(Driver driver, Response response) {
 								Log.i("SlidingMenuListAdapter", "Success response");
 
+								//Start sending location updates
 								if (driver.getStatus()) {
 									Intent intent = new Intent(context, DriverLocationService.class);
 									intent.putExtra(DriverLocationService.DRIVER, User.getActiveUser().getDriverProfile());
 									context.startService(intent);
-								} else {
+								} else { //Stop sending location updates
 									Intent intent = new Intent(context, DriverLocationService.class);
 									context.stopService(intent);
 								}
@@ -185,7 +186,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 						});
 						Session.getSession().sendRequest(request);
 					} 
-					else{
+					else{ //User is not a driver.  Set value to false and request they become a driver
 						switchView.setChecked(false); //Not working for some reason
 						Toast.makeText(context, "Please register as driver before using this feature", Toast.LENGTH_SHORT).show();
 					}
@@ -196,7 +197,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 		else { // Create Text Row
 			TextViewHolder holder;
 
-			if (convertView == null) {
+			if (convertView == null) {//If new row, inflate row
 				ViewGroup vGroup = (ViewGroup) inflater.inflate(
 						R.layout.sliding_menu_row_text, null);
 
@@ -207,12 +208,13 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 								.findViewById(R.id.tv_sliding_menu_text));
 				vGroup.setTag(holder);
 
-				view = vGroup;
+				view = vGroup; //Assign view to view group
 			} else {// If convert view exists!
 				// get the holder back
 				holder = (TextViewHolder) convertView.getTag();
 				view = convertView;
 			}
+			//Set text row to the value passed in 
 			holder.textView.setText(dataObj.toString());
 		}
 
