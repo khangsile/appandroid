@@ -49,7 +49,9 @@
             android:background="#e6e6fa"
             android:text="@string/register"
             android:onClick="toRegistration" />
-        <View android:id="@+id/left_divider"
+       
+		<!-- Hopefully can implement later
+		<View android:id="@+id/left_divider"
  			android:layout_width="130dp"
  			android:layout_height="1dp"
  			android:layout_alignParentLeft="true"
@@ -77,7 +79,7 @@
             android:layout_marginTop="5dp"
             android:background="#e6e6fa"
             android:text="@string/login_with_fb"
-            android:onClick="loginWithFacebook" />
+            android:onClick="loginWithFacebook" />  -->
     </RelativeLayout>
 
 </RelativeLayout>

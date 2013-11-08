@@ -161,13 +161,10 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 							
 						});
 						Session.getSession().sendRequest(request);
-						
 					} 
 					else{
-						if (isChecked){
-							switchView.setChecked(false); //Not working for some reason
-							Toast.makeText(context, "Please register as driver before using this feature", Toast.LENGTH_SHORT).show();
-						}
+						switchView.setChecked(false); //Not working for some reason
+						Toast.makeText(context, "Please register as driver before using this feature", Toast.LENGTH_SHORT).show();
 					}
 				}
 				

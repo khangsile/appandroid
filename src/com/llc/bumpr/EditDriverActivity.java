@@ -14,11 +14,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.llc.bumpr.adapters.EditProfileListAdapter;
 import com.llc.bumpr.lib.DynamicImageView;
 import com.llc.bumpr.sdk.lib.ApiRequest;
+import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
@@ -80,46 +82,74 @@ public class EditDriverActivity extends SherlockActivity {
 	}
 	
 	public void update() {
-		HashMap<String, Object> user = new HashMap<String, Object>();
+		HashMap<String, Object> driver = new HashMap<String, Object>();
+		User activeUser = User.getActiveUser();
 		
 		//Use this code, but change the 'put' details to implement this 
 		
-		/*View v1;
+		View v1;
 		Object val;
 		EditText et;
-		//EditProfileListAdapter.TextViewHolder holder;
+
 		for (int i=0; i< adt.getCount(); i++){
 			if(adt.getItemViewType(i)==0) {
 				v1 = profSettings.getChildAt(i);
 				et = (EditText) v1.findViewById(R.id.et_edit_prof_value);
 				val = (Object) et.getText().toString();
 				
-				if(adt.getItem(i).toString().equals("Make"))
-					user.put("first_name", val);
+				/*if(adt.getItem(i).toString().equals("Make"))
+					driver.put("first_name", val);
 				if(adt.getItem(i).toString().equals("Model"))
-					user.put("last_name", val);
+					driver.put("last_name", val);
 				if(adt.getItem(i).toString().equals("Year"))
-					user.put("phone_number", val);
+					driver.put("phone_number", val);
 				if(adt.getItem(i).toString().equals("Passenger Seats"))
-					user.put("email", val);
+					driver.put("email", val);*/
+				
+				//Only keep track of Rate at the moment
 				if(adt.getItem(i).toString().equals("Rate"))
-					user.put("rate", val);
+					driver.put("rate", val);
 			}
-		}*/
+		}
 		
-		User activeUser = User.getActiveUser();
-		ApiRequest request = activeUser.getUpdateRequest(user, new Callback<User>() {
+		Toast.makeText(getApplicationContext(), driver.toString(), Toast.LENGTH_SHORT).show();
+		
+		if (!((((String)driver.get("rate")).trim()).length() > 0)){
+			Toast.makeText(getApplicationContext(),
+					"To register as a driver, please provide the details above.",
+					Toast.LENGTH_SHORT).show();
+			return; //Do not advance
+		}
+		
+		if (activeUser.getDriverProfile() == null){
+			//Register as a driver
+			Toast.makeText(getApplicationContext(),
+					"You are not registered as a driver.",
+					Toast.LENGTH_SHORT).show();
+			return; //Do not advance
+		}
+		
+		//Update driver page
+		ApiRequest request = activeUser.getDriverProfile().getUpdateRequest(driver, new Callback<Driver>() {
 
 			@Override
 			public void failure(RetrofitError arg0) {
 				// TODO Auto-generated method stub
 				// Send alert
+				Toast.makeText(getApplicationContext(),
+						"Error updating driver page",
+						Toast.LENGTH_SHORT).show();
+				return;
 			}
 
 			@Override
-			public void success(User arg0, Response arg1) {
+			public void success(Driver arg0, Response arg1) {
 				// TODO Auto-generated method stub
 				// Update list;
+				Toast.makeText(getApplicationContext(),
+						"Driver details updated!",
+						Toast.LENGTH_SHORT).show();
+				finish();
 			}
 			
 		});
