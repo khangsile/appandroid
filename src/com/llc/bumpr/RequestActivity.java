@@ -36,7 +36,9 @@ public class RequestActivity extends SherlockFragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener {
 
+	/** Reference to the user asking for a ride */
 	private User user;
+	/** Refernce to the Request object sent by the user */
 	private Request request;
 
 	/** Reference to the Layout object holding the map fragment */
@@ -55,8 +57,9 @@ public class RequestActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.request);
+		setContentView(R.layout.request); //Set layout to show the request page
 
+		//Initialize the header by displaying the rider
 		initialize();
 
 		// Get map fragment!
@@ -66,11 +69,13 @@ public class RequestActivity extends SherlockFragmentActivity implements
 		// Create new location client.
 		mLocationClient = new LocationClient(this, this, this);
 		
+		// Set up list of points for trip to display route on the map
 		ArrayList<LatLng> points = new ArrayList<LatLng>();
 		points.add(new LatLng(34.3445, -84.2312));
 		points.add(new LatLng(34.3442, -84.231));
 		points.add(new LatLng(33.99, -84.212));
 		points.add(new LatLng(31.3, -83.1));
+		//Paint route on the map
 		GMapV2Painter painter = new GMapV2Painter(gMap, points);
 		painter.setWidth(8);
 		painter.paint();
@@ -80,7 +85,7 @@ public class RequestActivity extends SherlockFragmentActivity implements
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-
+		//Connect to the location client and get the current location of the user
 		if (isGooglePlayServicesAvailable()) {
 			mLocationClient.connect();
 			// gMap.setMyLocationEnabled(true);
@@ -90,7 +95,7 @@ public class RequestActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
-		// Disconnect from client
+		// Disconnect from client to stop getting user's location
 		mLocationClient.disconnect();
 		super.onStop();
 	}
@@ -156,9 +161,13 @@ public class RequestActivity extends SherlockFragmentActivity implements
 	 */
 	@Override
 	public void onConnected(Bundle bundle) {
+		//Get last location from user
 		Location loc = mLocationClient.getLastLocation();
+		//Create latlong from this location
 		LatLng latLng = new LatLng(34.3445, -84.2312);
+		//Set zoom level for the map
 		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+		//Move map to this location
 		gMap.animateCamera(camUpdate);
 	}
 
@@ -166,26 +175,38 @@ public class RequestActivity extends SherlockFragmentActivity implements
 	public void onDisconnected() {
 	}
 
+	/**
+	 * Set up the display header and other trip information
+	 */
 	protected void initialize() {
+		//Get objects passed to this activity
 		Bundle bundle = getIntent().getExtras();
 		request = (Request) bundle.getParcelable("request");
 		user = (User) bundle.getParcelable("user");
 
+		//If user is null or request is null, throw exception
 		if (user == null) {
 			throw new NullPointerException("Instance ('user') cannot be null");
 		}
+		
+		if(request == null) {
+			throw new NullPointerException("Instance ('request') cannot be null");
+		}
 
+		//Get references to the view objects in the layout and fill these in with user details
 		TextView userName = (TextView) findViewById(R.id.tv_user_name);
 		userName.setText(user.getFirstName() + " " + user.getLastName());
 
 		CircularImageView userPhoto = (CircularImageView) findViewById(R.id.img_user);
 		userPhoto.setImageResource(R.drawable.test_image);
 
+		//Get references to view objects in the layout that need request details
 		TextView toAddress = (TextView) findViewById(R.id.tv_toAddress);
 		TextView toCityState = (TextView) findViewById(R.id.tv_toCityState);
 		TextView fromAddress = (TextView) findViewById(R.id.tv_fromAddress);
 		TextView fromCityState = (TextView) findViewById(R.id.tv_fromCityState);
 
+		//Fill in request views with request information
 		toAddress.setText("619 Braddock Ct.");
 		toCityState.setText("Edgewood, KY 41017");
 		fromAddress.setText("557 Lone Oak Dr.");
