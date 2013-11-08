@@ -38,8 +38,9 @@ public class UserProfile extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.user_profile);
+		setContentView(R.layout.user_profile); //Display layout
 		
+		//Get user object passed to this activity
 		Bundle bundle = getIntent().getExtras();
 		user = (User) bundle.getParcelable("user");
 		
@@ -61,7 +62,8 @@ public class UserProfile extends Activity {
 		
 		//Make list view visible!
 		reviews.setVisibility(View.VISIBLE);
-		
+
+		//Set user profile picture -- Use test image for now
 		profPic.setImageResource(R.drawable.test_image);
 	
 		//Set layout parameters of image view
@@ -76,7 +78,8 @@ public class UserProfile extends Activity {
 		//carRate.setText("Rate: $" + user.getDriverProfile().getFee() + "per mile");
 		
 		//Get reviews and fill in review list view
-		initReviewList();
+		initReviewList(); //Initialize list of review objects
+		//Create review adapter and assign this adapter to the list view
 		reviewAdp = new MyReviewAdapter(getApplicationContext(), reviewList, R.layout.my_review_row);
 		reviews.setAdapter(reviewAdp);
 	}
@@ -86,6 +89,7 @@ public class UserProfile extends Activity {
 	 */
 	private void initReviewList() {
 		// TODO Auto-generated method stub
+		//Get reviews of this driver to be displayed in the list view
 		reviewList = new ArrayList<Object>();
 		reviewList.add("This is a very long ..................... text object to span" +
             		"multiple lines to test that the reviews are being set properly");
@@ -97,18 +101,24 @@ public class UserProfile extends Activity {
 		reviewList.add("I puked in his car");
 	}
 
+	/**
+	 * Method called when the user presses the request button
+	 * @param v Reference to the View which called this method on click 
+	 */
 	public void request(View v) {
+		//Create trip object for this request using coordinates
 		Trip t = new Trip.Builder()
 					.setStart(new Coordinate(36.6, 38.7))
 					.setEnd(new Coordinate(36.2, 38.6))
 					.build();
 		
+		//Create Request object for this request using user, driver, and trip details
 		Request r = new Request.Builder()
 						.setDriverId(1)
 						.setUserId(User.getActiveUser().getId())
 						.setTrip(t)
 						.build();
-		
+		//Get session and send up the request to the server 
 		Session session = Session.getSession();
 		session.sendRequest(r.postRequest(new Callback<Request>() {
 
