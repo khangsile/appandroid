@@ -64,6 +64,7 @@ import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.EndlessListView;
 import com.llc.bumpr.lib.GraphicsUtil;
 import com.llc.bumpr.lib.LatLngLocationTask;
+import com.llc.bumpr.lib.StringLocationTask;
 import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.lib.Coordinate;
 import com.llc.bumpr.sdk.models.SearchQuery;
@@ -730,29 +731,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 	 * @return Updated list of data to display in the endless list
 	 */
 	private List<User> createItems(List<User> drivers2) {
-		// TODO Auto-generated method stub
-		//List<User> items = new ArrayList<User>();
-		/*JSONObject object = new JSONObject();
-		try {
-			object.put("id", 3);
-			object.put("fee", 2.55);
-			object.put("lat", 23.3);
-			object.put("lon", 23.4);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		for (int i = testCntr; i < testCntr + 10; i++) {
-			try {
-				User user = new User.Builder<User>(new User())
-						.setFirstName("Khang").setLastName("Le")
-						.setEmail("khangsile@gmail.com")
-						.setDriverProfile(new Driver(object)).build();
-				items.add(user);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}*/
 		return drivers2; //For now, just store the data sent in the list view
 	}
 
@@ -900,17 +878,20 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 				List<Address> address = null;
 
 				//Start new location service to get the address of the center of the map
-				new LatLngLocationTask(context, new Callback<List<Address>>() {
+				Object[] queryArray = { searchView.getQuery().toString() };
+				new StringLocationTask(context, new Callback<List<Address>>() {
 
 					@Override
-					public void failure(
-							RetrofitError arg0) {
+					public void failure(RetrofitError arg0) {
 					}
 
 					@Override
 					public void success(List<Address> arg0, Response arg1) {
 						// needs different request activity
 						if (arg0.isEmpty()) return;
+						
+						Log.i("List of Addresses", arg0.toString());
+						Log.i("Address", arg0.get(0).toString());
 						
 						Trip t = new Trip.Builder()
 							.setStart(new Coordinate(loc.latitude, loc.longitude))
@@ -924,7 +905,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 						startActivity(intent);
 					}
 
-				}).execute(loc); //Execute new location task
+				}).execute(queryArray); //Execute new location task
 			}
 		});
 	}

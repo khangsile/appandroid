@@ -8,6 +8,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,7 +19,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.llc.bumpr.adapters.MyReviewAdapter;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.GMapV2Painter;
-import com.llc.bumpr.sdk.lib.Coordinate;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.Trip;
@@ -83,7 +83,8 @@ public class UserProfile extends Activity {
 		ArrayList<LatLng> points = new ArrayList<LatLng>();
 		points.add(new LatLng(trip.getStart().lat, trip.getStart().lon));
 		points.add(new LatLng(trip.getEnd().lat, trip.getEnd().lon));
-		
+		Log.i("UserProfile-Start", trip.getStart().lat + " " + trip.getStart().lon);
+		Log.i("UserProfile-End", trip.getEnd().lat + " " + trip.getEnd().lon);
 		//Get the total distance of the trip
 		GMapV2Painter.getDistance(points, new Callback<Integer>() {
 
@@ -96,8 +97,10 @@ public class UserProfile extends Activity {
 			@Override
 			public void success(Integer arg0, Response arg1) {
 				// TODO Auto-generated method stub
+				float distanceInMiles = (float) (arg0 / 1600.0);
+				Double price = distanceInMiles * user.getDriverProfile().getFee();
 				TextView carRate = (TextView) findViewById(R.id.tv_car_rate);
-				carRate.setText("$" + arg0 * user.getDriverProfile().getFee());
+				carRate.setText("$" + String.format("%.2f", price));
 			}
 			
 		});
@@ -135,7 +138,7 @@ public class UserProfile extends Activity {
 		
 		//Create Request object for this request using user, driver, and trip details
 		Request r = new Request.Builder()
-						.setDriverId(user.getId())
+						.setDriverId(user.getDriverProfile().getId())
 						.setUserId(User.getActiveUser().getId())
 						.setTrip(trip)
 						.build();

@@ -3,8 +3,7 @@ package com.llc.bumpr.lib;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
+import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
@@ -23,6 +22,9 @@ public class PushNotification {
 	
 	/** Trip object holding the trip information for the request*/
 	private Trip trip;
+	
+	/** Request object holding the trip information and request id and driver id*/
+	private Request request;
 	
 	/** Boolean holding whether a driver accepted or rejected a drive request (If 
 	 * the notification is of type response)
@@ -53,6 +55,12 @@ public class PushNotification {
 			//Retrieve information for request type notification
 			user = new User(json.getJSONObject("user")); //Get user requesting the trip
 			trip = new Trip(json.getJSONObject("trip")); //Get trip object for the request
+			request = new Request.Builder()
+						.setId(requestId)
+						.setDriverId(User.getActiveUser().getDriverProfile().getId())
+						.setTrip(trip)
+						.setUserId(user.getId())
+						.build();
 		}
 		else if (type.equals("response")){
 			//Retrieve information for response type notification
@@ -74,7 +82,14 @@ public class PushNotification {
 	public int getRequestId() {
 		return requestId;
 	}
-
+	
+	/**
+	 * @return Request object
+	 */
+	public Request getRequest() {
+		return request;
+	}
+	
 	/**
 	 * @return Returns the User who sent the notification. For Requests, this is a user. For Responses, this is the driver who replied 
 	 */
