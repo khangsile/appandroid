@@ -230,6 +230,7 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 	 * Marks the request as complete!
 	 */
 	public void tripComplete(View v) {
+		//Complete trip
 		//ApiRequest apiRequest = request.
 	}
 
