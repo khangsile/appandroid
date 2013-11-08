@@ -44,19 +44,20 @@ public class PushNotification {
 	 * @throws JSONException Exception thrown from invalid json representation
 	 */
 	public PushNotification (JSONObject json) throws JSONException{
-		type = json.getString("type");
-		requestId = json.getInt("request_id");
-		message = json.getString("message");
+		//Values is all types of requests
+		type = json.getString("type"); //Get Notification Type
+		requestId = json.getInt("request_id"); //Get Request id
+		message = json.getString("message"); //Get message text
 		
 		if (type.equals("request")) {
 			//Retrieve information for request type notification
-			user = new User(json.getJSONObject("user"));
-			trip = new Trip(json.getJSONObject("trip"));
+			user = new User(json.getJSONObject("user")); //Get user requesting the trip
+			trip = new Trip(json.getJSONObject("trip")); //Get trip object for the request
 		}
 		else if (type.equals("response")){
 			//Retrieve information for response type notification
-			user = new User(json.getJSONObject("driver"));
-			response = json.getBoolean("response");
+			user = new User(json.getJSONObject("driver")); //Get driver who responded
+			response = json.getBoolean("response"); //Get response message
 		}
 	}
 	
