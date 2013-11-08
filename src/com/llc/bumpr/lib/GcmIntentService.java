@@ -167,6 +167,7 @@ public class GcmIntentService extends IntentService {
             							.setDriverId(driver.getDriverProfile().getId())
             							.setUserId(User.getActiveUser().getId())
             							.setTrip(pushNotification.getTrip())
+            							.setId(pushNotification.getRequestId())
             							.build();
             	Log.i(TAG, "3");
             	//attach objects to intent

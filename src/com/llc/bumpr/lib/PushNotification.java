@@ -3,6 +3,7 @@ package com.llc.bumpr.lib;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
@@ -46,11 +47,11 @@ public class PushNotification {
 		//Values is all types of requests
 		type = json.getString("type"); //Get Notification Type
 		requestId = json.getInt("request_id"); //Get Request id
+		trip = new Trip(json.getJSONObject("trip")); //Get trip object for the request
 		
 		if (type.equals("request")) {
 			//Retrieve information for request type notification
 			user = new User(json.getJSONObject("user")); //Get user requesting the trip
-			trip = new Trip(json.getJSONObject("trip")); //Get trip object for the request
 			request = new Request.Builder()
 						.setId(requestId)
 						.setDriverId(User.getActiveUser().getDriverProfile().getId())
@@ -61,6 +62,8 @@ public class PushNotification {
 		else if (type.equals("response")){
 			//Retrieve information for response type notification
 			user = new User(json.getJSONObject("user")); //Get driver who responded
+			Driver driver = new Driver(json.getJSONObject("user").getJSONObject("driver"));
+			user.setDriverProfile(driver);
 			accepted = json.getBoolean("accepted"); //Get response message
 		}
 	}
