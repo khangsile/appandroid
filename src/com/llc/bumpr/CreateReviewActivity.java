@@ -4,6 +4,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -58,6 +59,8 @@ public class CreateReviewActivity extends ProfileActivity {
 			.setRating(rating)
 			.setContent(description)
 			.build();
+		
+		Log.i("Review", user.getDriverProfile().getId() + " " + " ");
 
 		//Get the active session and send the request to the server
 		Session session = Session.getSession();
@@ -66,6 +69,7 @@ public class CreateReviewActivity extends ProfileActivity {
 			@Override
 			public void failure(RetrofitError arg0) {
 				//do nothing
+				Log.i("Failure", arg0.toString());
 				Toast.makeText(getApplicationContext(),
 						"Failed to post review",
 						Toast.LENGTH_SHORT).show();

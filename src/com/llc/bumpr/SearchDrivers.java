@@ -521,8 +521,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 	private void initList() {
 		//Add rows to the menu array list.  Use a pair to describe if the row should be displayed
 		//as a image, text or switch row (First field) and the text for the row (Second field)
-		menuList.add(new Pair<String, Object>("Image", user.getFirstName()
-				+ " " + user.getLastName()));
+		menuList.add(new Pair<String, Object>("Image", User.getActiveUser().getFirstName()
+				+ " " + User.getActiveUser().getLastName()));
 		//menuList.add(new Pair<String, Object>("Text", "Create Review"));
 		//menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
 		menuList.add(new Pair<String, Object>("Text", "My Sent Requests"));
