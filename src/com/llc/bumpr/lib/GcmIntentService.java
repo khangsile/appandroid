@@ -129,7 +129,7 @@ public class GcmIntentService extends IntentService {
             .setContentTitle("Driving Request Received")
             .setStyle(new NotificationCompat.BigTextStyle()
             .bigText(pushNotification.getMessage()))
-            .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has request a ride.")
+            .setContentText(rider.getFirstName() + " " + rider.getLastName() + " has request a ride.")
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
             .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate

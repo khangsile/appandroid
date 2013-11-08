@@ -34,21 +34,25 @@ public class MyRequests extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.my_requests);
 		
-		//Get action bar sherlock reference
+		//Get action bar sherlock reference and active user reference
 		abs = getSupportActionBar();
 		user = User.getActiveUser();
 		
+		//Get reference to list view to display requests
 		requests = (ListView) findViewById(R.id.lv_my_requests);
 		
+		//Get extras passed into this activity
 		Intent i = getIntent();
 		Bundle extras = i.getExtras();
 		
+		//Set the title of this activity to be the type of requests displayed
 		abs.setTitle(extras.getString("requestType"));
 		
+		//Set up request list, fill with requests, and then set up on click listener for each row item
 		initList();
-		
 		initOnClickListener();
 		
+		//Create new adapter to display requests and use this adapter to display requests in the list view
 		requestAdapter = new MyRequestsAdapter(this, tripRequests, R.layout.my_requests_row);
 		requests.setAdapter(requestAdapter);
 	}
@@ -78,7 +82,7 @@ public class MyRequests extends SherlockActivity {
 					//Take the user to the trip summary page
 				}*/
 				
-				
+				//Create review activity, pass it the driver who is being reviewed and start the activity
 				Intent intent = new Intent(getApplicationContext(), CreateReviewActivity.class);
 				intent.putExtra("user", user);
 				startActivity(intent);
@@ -92,6 +96,7 @@ public class MyRequests extends SherlockActivity {
 	 */
 	private void initList() {
 		// TODO Auto-generated method stub
+		//Initialize the list and add trip information to be displayed
 		tripRequests = new ArrayList<Object>();
 		tripRequests.add("4.83 Mi.");
 		tripRequests.add("6.44 Mi.");
