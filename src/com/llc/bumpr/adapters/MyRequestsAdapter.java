@@ -13,10 +13,14 @@ import com.llc.bumpr.R;
 import com.llc.bumpr.lib.CircularImageView;
 
 public class MyRequestsAdapter extends BaseAdapter {
+	/** Reference to List holding data to be displayed */
 	private List<Object> data;
+	/** Reference to the application context */
 	private Context context;
-	private LayoutInflater inflater;
+	/** Reference to the row layout to be displayed */
 	private int layoutId;
+	/** Reference to LayoutInflater to display row */
+	private LayoutInflater inflater;
 	
 	public MyRequestsAdapter(Context context, List<Object> inData, int layoutId){
 		data = inData;
@@ -53,13 +57,14 @@ public class MyRequestsAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		ViewHolder holder;
-        View view;
+		ViewHolder holder; //Reference to view holder
+        View view; //Reference to View
         
-        if (convertView == null) {
+        if (convertView == null) { //If new view, inflate view
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 ViewGroup vGroup = (ViewGroup) inflater.inflate(layoutId, null);
                 
+                //Create new ViewHolder object
                 holder = new ViewHolder((CircularImageView)vGroup.findViewById(R.id.iv_profile_pic), (TextView)vGroup.findViewById(R.id.tv_distance_value), 
                 				(TextView)vGroup.findViewById(R.id.tv_price_value), (TextView)vGroup.findViewById(R.id.tv_driver_name));
                 
@@ -70,7 +75,7 @@ public class MyRequestsAdapter extends BaseAdapter {
         	view = convertView;
         }
         
-        // We should use class holder pattern
+        //Use class holder to and fill details with trip and driver details
         holder.distView.setText(data.get(position).toString());
         holder.priceView.setText("$9.77");
         holder.imageView.setImageResource(R.drawable.test_image);

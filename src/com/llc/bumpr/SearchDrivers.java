@@ -229,8 +229,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 				//Display information in window above marker
 				drvName.setText(user.getFirstName() + " " + user.getLastName());
 				drvRate.setText(user.getDriverProfile().getFee() + "");
-                //float rating = user.getDriverProfile().getRating();
-				drvRtg.setRating(3.2f);
+				drvRtg.setRating((float)user.getDriverProfile().getRating());
                 drvCnt.setText(Integer.toString(driverNum+1));
                 
                 //Change alignment of rating bar so the window doesn't take the entire screen
@@ -298,7 +297,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 				final User user = (User) endListAdp.getItem(driverNum);
 				Log.i("Marker Click", user.toString());
 				// Get Latitude and Logitude values of current location
-				LatLng loc = gMap.getCameraPosition().target;
+				final LatLng loc = gMap.getCameraPosition().target;
 				// Initialize address list to hold addresses of current location
 				List<Address> address = null;
 				
@@ -312,10 +311,19 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 
 					@Override
 					public void success(List<Address> arg0, Response arg1) {
+						//If no address, do not advance
+						if (arg0.isEmpty()) return;
+						//Create trip to send in the request
+						Trip t = new Trip.Builder()
+							.setStart(new Coordinate(loc.latitude, loc.longitude))
+							.setEnd(new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()))
+							.build();
+						
 						//Open request page to ask driver for a ride
 						Intent intent = new Intent(context, UserProfile.class);
 						//Pass the driver user object to the page
 						intent.putExtra("user", user);
+						intent.putExtra("trip", t);
 						startActivity(intent);//Start the activity and display the address for testing
 						Toast.makeText(getApplicationContext(),
 								arg0.get(0).getAddressLine(0),

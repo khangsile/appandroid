@@ -37,12 +37,16 @@ import com.llc.bumpr.lib.GraphicsUtil;
 import com.llc.bumpr.sdk.models.User;
 
 public class EndlessAdapter extends ArrayAdapter<User> {
-        
+        /** Reference to list to hold data displayed in the list */
         private List<User> itemList;
+        /** Context of the application */
         private Context ctx;
+        /** Reference to the layout to be displayed */
         private int layoutId;
-        private float imageSize;
-        private GraphicsUtil imageHelper;
+
+        //Not used currently
+        //private float imageSize;
+        //private GraphicsUtil imageHelper;
         
         public EndlessAdapter(Context ctx, List<User> itemList, int layoutId) {
                 super(ctx, layoutId, itemList);
@@ -50,7 +54,7 @@ public class EndlessAdapter extends ArrayAdapter<User> {
                 this.ctx = ctx;
                 this.layoutId = layoutId;
 
-                //Set up circular image preferences here
+                //Set up circular image preferences here --Not used currently
                 //setCircleImagePrefs();
         }
 
@@ -69,43 +73,46 @@ public class EndlessAdapter extends ArrayAdapter<User> {
                 return itemList.get(position).hashCode();
         }
         
-        private void setCircleImagePrefs(){
+        //Not used currently
+        /*private void setCircleImagePrefs(){
         	//Change size of image here
 			imageSize = Conversions.dpToPixels(ctx, 50);
 			imageHelper = new GraphicsUtil();
-        }
+        }*/
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
                 ViewHolder holder;
                 View view;
                 
-                if (convertView == null) {
+                if (convertView == null) { //If new row, inflate row
                         LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         ViewGroup vGroup = (ViewGroup) inflater.inflate(layoutId, null);
                         
+                        //Create new ViewHolder object
                         holder = new ViewHolder((CircularImageView)vGroup.findViewById(R.id.iv_driver_prof_pic), (TextView)vGroup.findViewById(R.id.tv_driver_name), 
                         				(TextView)vGroup.findViewById(R.id.tv_driver_rate), (RatingBar)vGroup.findViewById(R.id.rb_user_rating),
                         				(TextView) vGroup.findViewById(R.id.tv_driver_cnt), (View) vGroup.findViewById(R.id.num_divider));
                         
-                        vGroup.setTag(holder);
+                        vGroup.setTag(holder); //Set tag
                         view = vGroup;
-                }else{
+                }else{ //Get view holder from tag
                 	holder = (ViewHolder)convertView.getTag();
                 	view = convertView;
                 }
                 
-                // We should use class holder pattern
+                //Get user from current row
                 User user = (User) itemList.get(position);
                 
+                //Fill row with user data
                 holder.drvName.setText(user.getFirstName() + " " + user.getLastName());
                 holder.drvRate.setText(user.getDriverProfile().getFee() + "");
-                holder.drvRtBar.setRating(3.2f);
+                holder.drvRtBar.setRating((float)user.getDriverProfile().getRating());
                 holder.driverCnt.setText(Integer.toString(position+1));
                 holder.blackSep.getLayoutParams().height = holder.imageView.getLayoutParams().height;
                 holder.imageView.setImageResource(R.drawable.test_image);
                 
-                //Use AsyncTask to create circular images!
+                //Use AsyncTask to create circular images! -- Not used for the time being
                 //new CircleImageAsyncTask().execute(holder);
                 
     			/*//Original way of loading circular images
@@ -118,8 +125,9 @@ public class EndlessAdapter extends ArrayAdapter<User> {
 
         }
         
+        //Not used right now!
         /** Async task to improve performance of creating circular images! **/
-        private class CircleImageAsyncTask extends AsyncTask<ViewHolder, Void, ViewHolder> {
+       /* private class CircleImageAsyncTask extends AsyncTask<ViewHolder, Void, ViewHolder> {
 
 			@Override
 			protected ViewHolder doInBackground(ViewHolder... arg0) {
@@ -136,7 +144,7 @@ public class EndlessAdapter extends ArrayAdapter<User> {
 				// TODO Auto-generated method stub
 				result.imageView.setImageBitmap(result.imageBitmap);
 			}
-        }
+        } */
         
         
     	/**View holders to improve performance of adapter! **/
@@ -150,7 +158,7 @@ public class EndlessAdapter extends ArrayAdapter<User> {
     		final TextView driverCnt;
     		final View blackSep;
     		
-    		Bitmap imageBitmap; //Needed to hold the Bitmap of the AsyncTask
+    		//Bitmap imageBitmap; //Needed to hold the Bitmap of the AsyncTask
 
     		private ViewHolder(CircularImageView imageView, TextView drvName, TextView drvRate, RatingBar drvRtBar, TextView driverCnt, View blackSep) {
     			this.imageView = imageView;

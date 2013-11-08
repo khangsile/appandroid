@@ -22,6 +22,7 @@ import com.llc.bumpr.R;
 import com.llc.bumpr.R.drawable;
 import com.llc.bumpr.RequestActivity;
 import com.llc.bumpr.SearchDrivers;
+import com.llc.bumpr.TripSummaryActivity;
 import com.llc.bumpr.UserProfile;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.User;
@@ -158,33 +159,49 @@ public class GcmIntentService extends IntentService {
         	if (pushNotification.getResponse()){
         		//If the Driver accpeted the ride request
         		/* Take the user to a Trip Summary page where they can mark the trip completed */
-        		Intent intent = new Intent(this, UserProfile.class);
-        		intent.putExtra("user", pushNotification.getUser());
+        		Log.i(TAG, "Inside Good Response");
+        		Intent intent = new Intent(this, TripSummaryActivity.class);
+            	//Get objects to pass to the activity
+            	User driver = pushNotification.getUser();
+            	User activeUser = User.getActiveUser();
+            	//Create request object
+            	Request request = new Request.Builder()
+            							.setDriverId(driver.getDriverProfile().getId())
+            							.setUserId(activeUser.getId())
+            							.setTrip(pushNotification.getTrip())
+            							.build();
+            	Log.i(TAG, "3");
+            	//attach objects to intent
+            	intent.putExtra("user", driver);
+            	intent.putExtra("request", request);
+        		
         		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                         intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-
+        		//Build the notification and set the accepted text
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Driving Request Accepted")
                 .setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(pushNotification.getMessage()))
-                .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has accepted your ride request!")
+                .setContentText(driver.getFirstName() + " " + driver.getLastName() + " has accepted your ride request!")
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
                 .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
                 .setLights(0xFF0000FF,1000,2500) //Flash blue light for 1 second on and 2.5 seconds off
                 .setPriority(Notification.PRIORITY_DEFAULT);
-
+                //Set the content and display the notification to the phone
                 mBuilder.setContentIntent(contentIntent);
                 mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         	}
         	else {
-        		//If the Driver rejected the ride request
+        		//If the Driver rejected the ride request, take the user back to the search Driver page
+        		Log.i(TAG, "Rejected response notification");
         		Intent intent = new Intent(this, SearchDrivers.class);
         		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                         intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
+        		//Build Notification with rejected text
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
@@ -197,7 +214,7 @@ public class GcmIntentService extends IntentService {
                 .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
                 .setLights(0xFF0000FF,1000,2500) //Flash blue light for 1 second on and 2.5 seconds off
                 .setPriority(Notification.PRIORITY_DEFAULT);
-
+                //Set content and display the notification to the phone
                 mBuilder.setContentIntent(contentIntent);
                 mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         	}
