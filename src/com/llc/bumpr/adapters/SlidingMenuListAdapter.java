@@ -147,15 +147,20 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 
 							@Override
 							public void failure(RetrofitError arg0) {
-								
+								Log.i("SlidingMenuListAdapter", "Fail response");
 							}
 
 							@Override
 							public void success(Driver driver, Response response) {
+								Log.i("SlidingMenuListAdapter", "Success response");
+
 								if (driver.getStatus()) {
 									Intent intent = new Intent(context, DriverLocationService.class);
 									intent.putExtra(DriverLocationService.DRIVER, User.getActiveUser().getDriverProfile());
 									context.startService(intent);
+								} else {
+									Intent intent = new Intent(context, DriverLocationService.class);
+									context.stopService(intent);
 								}
 							}
 							

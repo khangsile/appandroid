@@ -94,6 +94,8 @@ public class DriverLocationService extends Service implements
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 
+		Log.i("DriverLocationService", "Starting Service");
+		
 		if (!servicesAvailable || mLocationClient.isConnected() || mInProgress)
 			return START_STICKY;
 
@@ -132,10 +134,12 @@ public class DriverLocationService extends Service implements
 
 					@Override
 					public void failure(RetrofitError arg0) {
+						Log.i("DriverLocationService", "Logging failed");
 					}
 
 					@Override
 					public void success(Response arg0, Response arg1) {
+						Log.i("DriverLocationService", "Logging location");
 					}
 		});
 		
