@@ -123,9 +123,23 @@ public class EditDriverActivity extends SherlockActivity {
 		
 		if (activeUser.getDriverProfile() == null){
 			//Register as a driver
-			Toast.makeText(getApplicationContext(),
-					"You are not registered as a driver.",
-					Toast.LENGTH_SHORT).show();
+			ApiRequest request = activeUser.getRegisterRequest(new HashMap<String, Object>(), new Callback<Driver>() {
+
+				@Override
+				public void failure(RetrofitError arg0) {
+					String text = "After a lengthy background check, we have determined that you are unfit to serve in the line of duty.";
+					Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+				}
+
+				@Override
+				public void success(Driver arg0, Response arg1) {
+					//do something
+				}
+				
+			});
+			
+			Session.getSession().sendRequest(request);
+			
 			return; //Do not advance
 		}
 		

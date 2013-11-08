@@ -14,8 +14,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.androidtools.Conversions;
+import com.google.android.gms.maps.model.LatLng;
 import com.llc.bumpr.adapters.MyReviewAdapter;
 import com.llc.bumpr.lib.CircularImageView;
+import com.llc.bumpr.lib.GMapV2Painter;
 import com.llc.bumpr.sdk.lib.Coordinate;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Session;
@@ -26,6 +28,9 @@ public class UserProfile extends Activity {
 
 	/** Reference to the driver's user object */
 	private User user;
+	
+	/** Reference to the trip to request */
+	private Trip trip;
 	
 	/** List holding all of the reviews for the driver */
 	private List<Object> reviewList;
@@ -42,12 +47,11 @@ public class UserProfile extends Activity {
 		
 		Bundle bundle = getIntent().getExtras();
 		user = (User) bundle.getParcelable("user");
+		trip = (Trip) bundle.getParcelable("trip");
 		
-		if (user == null) {
-			throw new NullPointerException("Instance ('user') cannot be null");
-		} else if (user.getDriverProfile() == null) {
-			throw new NullPointerException("Instance ('driver') cannot be null");
-		}
+		if (user == null) throw new NullPointerException("Instance ('user') cannot be null");
+		else if (user.getDriverProfile() == null) throw new NullPointerException("Instance ('driver') cannot be null");
+		if (trip == null) throw new NullPointerException("Instance ('trip') cannot be null");
 		
 		//Retrieve views
 		CircularImageView profPic = (CircularImageView) findViewById(R.id.iv_profile_pic);
@@ -74,6 +78,28 @@ public class UserProfile extends Activity {
 		//userCar.setText("Car: 2013 Camry Hybrid XLE");
 		//numSeats.setText("Seats: 4");
 		//carRate.setText("Rate: $" + user.getDriverProfile().getFee() + "per mile");
+		ArrayList<LatLng> points = new ArrayList<LatLng>();
+		points.add(new LatLng(trip.getStart().lat, trip.getStart().lon));
+		points.add(new LatLng(trip.getEnd().lat, trip.getEnd().lon));
+		
+		//Get the total distance of the trip
+		GMapV2Painter.getDistance(points, new Callback<Integer>() {
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void success(Integer arg0, Response arg1) {
+				// TODO Auto-generated method stub
+				TextView carRate = (TextView) findViewById(R.id.tv_car_rate);
+				carRate.setText("$" + arg0 * user.getDriverProfile().getFee());
+			}
+			
+		});
+		
 		
 		//Get reviews and fill in review list view
 		initReviewList();
@@ -98,30 +124,21 @@ public class UserProfile extends Activity {
 	}
 
 	public void request(View v) {
-		Trip t = new Trip.Builder()
-					.setStart(new Coordinate(36.6, 38.7))
-					.setEnd(new Coordinate(36.2, 38.6))
-					.build();
-		
 		Request r = new Request.Builder()
-						.setDriverId(1)
+						.setDriverId(user.getId())
 						.setUserId(User.getActiveUser().getId())
-						.setTrip(t)
+						.setTrip(trip)
 						.build();
 		
 		Session session = Session.getSession();
 		session.sendRequest(r.postRequest(new Callback<Request>() {
 
 			@Override
-			public void failure(RetrofitError arg0) {
-				// TODO Auto-generated method stub
-				
+			public void failure(RetrofitError arg0) { // do nothing
 			}
 
 			@Override
-			public void success(Request arg0, Response arg1) {
-				// TODO Auto-generated method stub
-				
+			public void success(Request arg0, Response arg1) { // do nothing
 			}
 			
 		}));

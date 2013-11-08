@@ -68,8 +68,8 @@ import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.lib.Coordinate;
 import com.llc.bumpr.sdk.models.SearchQuery;
 import com.llc.bumpr.sdk.models.Session;
+import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
-import com.llc.bumpr.services.DriverLocationService;
 
 public class SearchDrivers extends SherlockFragmentActivity implements
 		EndlessListView.EndlessListener,
@@ -842,7 +842,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 				// Get data at position selected
 				final User user = (User) parent.getItemAtPosition(position);
 				// Get Latitude and Logitude values of current location
-				LatLng loc = gMap.getCameraPosition().target;
+				final LatLng loc = gMap.getCameraPosition().target;
 				// Initialize address list to hold addresses of current location
 				List<Address> address = null;
 
@@ -856,8 +856,16 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					@Override
 					public void success(List<Address> arg0, Response arg1) {
 						// needs different request activity
+						if (arg0.isEmpty()) return;
+						
+						Trip t = new Trip.Builder()
+							.setStart(new Coordinate(loc.latitude, loc.longitude))
+							.setEnd(new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()))
+							.build();
+						
 						Intent intent = new Intent(context, UserProfile.class);
 						intent.putExtra("user", user);
+						intent.putExtra("trip", t);
 						startActivity(intent);
 						Toast.makeText(getApplicationContext(),
 								arg0.get(0).getAddressLine(0),
