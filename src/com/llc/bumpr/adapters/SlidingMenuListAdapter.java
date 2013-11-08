@@ -4,24 +4,29 @@ import java.util.List;
 
 import org.jraf.android.backport.switchwidget.Switch;
 
-import com.androidtools.Conversions;
-import com.llc.bumpr.R;
-import com.llc.bumpr.lib.CircularImageView;
-import com.llc.bumpr.lib.GraphicsUtil;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.llc.bumpr.R;
 import com.llc.bumpr.lib.CircularImageView;
+import com.llc.bumpr.sdk.lib.ApiRequest;
+import com.llc.bumpr.sdk.models.Driver;
+import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
+import com.llc.bumpr.services.DriverLocationService;
 
 public class SlidingMenuListAdapter extends BaseAdapter {
 	private List<Pair<String, Object>> data;
@@ -136,15 +141,26 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 					//Verify the user is a registered driver
 					if (user.getDriverProfile() != null){
 						//Toggle driver mode
-						user.getDriverProfile().toggleStatus();
-						if (isChecked){
-							Toast.makeText(context, "Driving mode enabled", Toast.LENGTH_SHORT).show();
-						}
-						else{
-							Toast.makeText(context, "Driving mode disabled", Toast.LENGTH_SHORT).show();
-						}
+						Log.i("Mein Tag", isChecked + " ");
 						
-						//Send user object update
+						ApiRequest request = user.getDriverProfile().toggleStatusRequest(isChecked, new Callback<Driver>() {
+
+							@Override
+							public void failure(RetrofitError arg0) {
+								
+							}
+
+							@Override
+							public void success(Driver driver, Response response) {
+								if (driver.getStatus()) {
+									Intent intent = new Intent(context, DriverLocationService.class);
+									intent.putExtra(DriverLocationService.DRIVER, User.getActiveUser().getDriverProfile());
+									context.startService(intent);
+								}
+							}
+							
+						});
+						Session.getSession().sendRequest(request);
 					} 
 					else{
 						switchView.setChecked(false); //Not working for some reason

@@ -817,12 +817,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					i.putExtra("user", User.getActiveUser()); // Pass outgoing requests
 					i.putExtra("requestType", "My Sent Requests");
 					break;
-				/*case 4:
-					i = new Intent(getApplicationContext(),
-							RequestActivity.class);
-					i.putExtra("user", User.getActiveUser());
-					break; */
-				case 3: //Update the driver's location
+				case 3: 
 					ApiRequest api = User.getActiveUser().getDriverProfile().updateLocation(new Coordinate(-84.4, 38.05), new Callback<Response>() {
 
 						@Override
@@ -843,9 +838,14 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 
 						Session.getSession().sendRequest(api);
 					break;
+				case 4:
+					i = new Intent(getApplicationContext(),
+							RequestActivity.class);
+					i.putExtra("user", User.getActiveUser());
+					break;
 				case 5: //Logout
 					i = new Intent(getApplicationContext(), LoginActivity.class); //Create new intent
-					// Remove saved email and password from shared preferences
+					// Remove saved email and password from shared preferences and update shared preferences
 					SharedPreferences savedLogin = getSharedPreferences(
 							LOGIN_PREF, 0);
 					Editor loginEditor = savedLogin.edit();

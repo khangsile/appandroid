@@ -110,7 +110,7 @@ public class UserProfile extends Activity {
 						.build();
 		
 		Session session = Session.getSession();
-		session.sendRequest(r.getPostRequest(new Callback<Request>() {
+		session.sendRequest(r.postRequest(new Callback<Request>() {
 
 			@Override
 			public void failure(RetrofitError arg0) {
