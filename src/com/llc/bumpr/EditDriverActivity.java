@@ -84,13 +84,13 @@ public class EditDriverActivity extends SherlockActivity {
 		settingList.add("Model");
 		settingList.add("Year");
 		settingList.add("Passenger Seats");
-		settingList.add("Rate");
+		settingList.add("Fee");
 	}
 	
 	/**
 	 * Update the current driver with the values stored the list
 	 */
-	public void update() {
+	public void update(View v) {
 		//Create hash map to hold the key value pairs of driver details
 		HashMap<String, Object> driver = new HashMap<String, Object>();
 		//Get reference to active user
@@ -116,14 +116,15 @@ public class EditDriverActivity extends SherlockActivity {
 					driver.put("email", val);*/
 				
 				//Only keep track of Rate at the moment
-				if(adt.getItem(i).toString().equals("Rate"))
-					driver.put("rate", val); //Add rate and it's value to hash map
+				if(adt.getItem(i).toString().equals("Fee"))
+					driver.put("fee", val); //Add rate and it's value to hash map
+				
 			}
 		}
 		
 		Toast.makeText(getApplicationContext(), driver.toString(), Toast.LENGTH_SHORT).show(); //FOr testing
 		
-		if (!((((String)driver.get("rate")).trim()).length() > 0)){ //If no rate value, display error message
+		if (!((((String)driver.get("fee")).trim()).length() > 0)){ //If no rate value, display error message
 			Toast.makeText(getApplicationContext(),
 					"To register as a driver, please provide the details above.",
 					Toast.LENGTH_SHORT).show();
@@ -143,6 +144,9 @@ public class EditDriverActivity extends SherlockActivity {
 				@Override
 				public void success(Driver arg0, Response arg1) {
 					//do something
+					Toast.makeText(getApplicationContext(), arg0.getId() + "", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "Registration successful!", Toast.LENGTH_SHORT).show();
+					finish();
 				}
 				
 			});

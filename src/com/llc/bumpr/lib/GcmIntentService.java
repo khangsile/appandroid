@@ -116,6 +116,7 @@ public class GcmIntentService extends IntentService {
         	Log.i(TAG, "1");
         	User activeUser = User.getActiveUser();
         	Log.i(TAG, "2");
+        	//Create request object
         	Request request = new Request.Builder()
         							.setDriverId(activeUser.getDriverProfile().getId())
         							.setUserId(rider.getId())
