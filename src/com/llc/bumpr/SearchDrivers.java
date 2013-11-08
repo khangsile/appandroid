@@ -764,11 +764,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					i.putExtra("user", User.getActiveUser()); // Pass outgoing requests
 					i.putExtra("requestType", "My Sent Requests");
 					break;
-				/*case 4:
+				case 4:
 					i = new Intent(getApplicationContext(),
 							RequestActivity.class);
 					i.putExtra("user", User.getActiveUser());
-					break; */
+					break;
 				case 3: 
 					ApiRequest api = User.getActiveUser().getDriverProfile().updateLocation(new Coordinate(-84.4, 38.05), new Callback<Response>() {
 
