@@ -29,7 +29,7 @@ public class PushNotification {
 	/** Boolean holding whether a driver accepted or rejected a drive request (If 
 	 * the notification is of type response)
 	 */
-	private boolean response;
+	private boolean accepted;
 	
 	/* Add more details later, such as trip id, etc. */
 	
@@ -65,7 +65,7 @@ public class PushNotification {
 		else if (type.equals("response")){
 			//Retrieve information for response type notification
 			user = new User(json.getJSONObject("driver")); //Get driver who responded
-			response = json.getBoolean("response"); //Get response message
+			accepted = json.getBoolean("accepted"); //Get response message
 		}
 	}
 	
@@ -107,8 +107,8 @@ public class PushNotification {
 	/**
 	 * @return If the request was of the response type, return whether the request was accepted or rejected
 	 */
-	public boolean getResponse() {
-		return response;
+	public boolean getAccepted() {
+		return accepted;
 	}
 	
 	/**

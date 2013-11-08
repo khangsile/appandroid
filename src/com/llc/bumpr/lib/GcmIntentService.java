@@ -54,8 +54,7 @@ public class GcmIntentService extends IntentService {
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 		//The getMessageType() intent parameter must be the intent you 
 		//received in your BroadcastReceiver
-		String messageType = gcm.getMessageType(intent);
-		
+		String messageType = gcm.getMessageType(intent); 
 		if(!extras.isEmpty()) {//Has effect of unparcelling Bundle
 			/*
 			 * Filter messages based on message type.  Since it is likely GCM will
@@ -155,8 +154,8 @@ public class GcmIntentService extends IntentService {
             Log.i(TAG, "Sent notification");
         }
         else if (pushNotification.getType().equals("response")){ //If type is response
-        	Log.i(TAG, Boolean.toString(pushNotification.getResponse()));
-        	if (pushNotification.getResponse()){
+        	Log.i(TAG, Boolean.toString(pushNotification.getAccepted()));
+        	if (pushNotification.getAccepted()){
         		//If the Driver accpeted the ride request
         		/* Take the user to a Trip Summary page where they can mark the trip completed */
         		Log.i(TAG, "Inside Good Response");
@@ -167,7 +166,7 @@ public class GcmIntentService extends IntentService {
             	//Create request object
             	Request request = new Request.Builder()
             							.setDriverId(driver.getDriverProfile().getId())
-            							.setUserId(activeUser.getId())
+            							.setUserId(User.getActiveUser().getId())
             							.setTrip(pushNotification.getTrip())
             							.build();
             	Log.i(TAG, "3");

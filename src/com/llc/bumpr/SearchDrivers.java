@@ -523,10 +523,10 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 		//as a image, text or switch row (First field) and the text for the row (Second field)
 		menuList.add(new Pair<String, Object>("Image", user.getFirstName()
 				+ " " + user.getLastName()));
-		menuList.add(new Pair<String, Object>("Text", "Create Review"));
+		//menuList.add(new Pair<String, Object>("Text", "Create Review"));
 		//menuList.add(new Pair<String, Object>("Text", "My Received Requests"));
 		menuList.add(new Pair<String, Object>("Text", "My Sent Requests"));
-		menuList.add(new Pair<String, Object>("Text", "Request"));
+		//menuList.add(new Pair<String, Object>("Text", "Request"));
 		menuList.add(new Pair<String, Object>("Switch", "Driver Mode"));
 		menuList.add(new Pair<String, Object>("Text", "Logout"));
 	}
@@ -788,22 +788,22 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 							EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
-				case 1: //Open the Create Review Activity 
+				/*case 1: //Open the Create Review Activity 
 					i = new Intent(getApplicationContext(),
 							CreateReviewActivity.class);
 					i.putExtra("user", User.getActiveUser());
-					break;
+					break;*/
 				/*case 2:
 					i = new Intent(getApplicationContext(), MyRequests.class);
 					i.putExtra("user", User.getActiveUser()); // Pass Incoming Requests
 					i.putExtra("requestType", "My Received Requests");
 					break;*/
-				case 2: //Open My Sent Requests
+				case 1: //Open My Sent Requests
 					i = new Intent(getApplicationContext(), MyRequests.class);
 					i.putExtra("user", User.getActiveUser()); // Pass outgoing requests
 					i.putExtra("requestType", "My Sent Requests");
 					break;
-				case 3: 
+				/*case 3: 
 					ApiRequest api = User.getActiveUser().getDriverProfile().updateLocation(new Coordinate(-84.4, 38.05), new Callback<Response>() {
 
 						@Override
@@ -828,8 +828,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					i = new Intent(getApplicationContext(),
 							RequestActivity.class);
 					i.putExtra("user", User.getActiveUser());
-					break;
-				case 5: //Logout
+					break;*/
+				case 3: //Logout
 					i = new Intent(getApplicationContext(), LoginActivity.class); //Create new intent
 					// Remove saved email and password from shared preferences and update shared preferences
 					SharedPreferences savedLogin = getSharedPreferences(

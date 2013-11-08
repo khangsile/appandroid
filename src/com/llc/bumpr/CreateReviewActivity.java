@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Review;
 import com.llc.bumpr.sdk.models.Session;
@@ -17,6 +19,7 @@ import com.llc.bumpr.sdk.models.User;
 public class CreateReviewActivity extends ProfileActivity {
 	/** Reference to the request object being reviewed */ 
 	private Request request;
+	private Driver d;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,9 @@ public class CreateReviewActivity extends ProfileActivity {
 	@Override
 	protected void initialize() {
 		super.initialize();
+		Bundle bundle = getIntent().getExtras();
+		request = (Request)bundle.getParcelable("request");
+		d = (Driver) bundle.getParcelable("driver");
 	}
 	
 	/**
@@ -45,7 +51,7 @@ public class CreateReviewActivity extends ProfileActivity {
 
 		//Create review object
 		Review review = new Review.Builder()
-			.setDriverId(user.getId())
+			.setDriverId(d.getId())
 			.setUserId(activeUser.getId())
 			.setRequestId(request.getId())
 			.setDriverRating(rating)
@@ -60,12 +66,19 @@ public class CreateReviewActivity extends ProfileActivity {
 			public void failure(RetrofitError arg0) {
 				// TODO Auto-generated method stub
 				//do nothing
+				Toast.makeText(getApplicationContext(),
+						"Failed to post review",
+						Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void success(Response arg0, Response arg1) {
 				// TODO Auto-generated method stub
-				//do nothing
+				Toast.makeText(getApplicationContext(),
+						"Review posted!",
+						Toast.LENGTH_SHORT).show();
+				finish();
+				
 			}
 			
 		}));

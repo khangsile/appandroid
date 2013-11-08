@@ -3,6 +3,10 @@ package com.llc.bumpr;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +18,12 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.llc.bumpr.adapters.MyRequestsAdapter;
+import com.llc.bumpr.sdk.lib.ApiRequest;
+import com.llc.bumpr.sdk.lib.Coordinate;
+import com.llc.bumpr.sdk.models.Driver;
+import com.llc.bumpr.sdk.models.Request;
+import com.llc.bumpr.sdk.models.Session;
+import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
 public class MyRequests extends SherlockActivity {
@@ -83,9 +93,42 @@ public class MyRequests extends SherlockActivity {
 				}*/
 				
 				//Create review activity, pass it the driver who is being reviewed and start the activity
-				Intent intent = new Intent(getApplicationContext(), CreateReviewActivity.class);
-				intent.putExtra("user", user);
-				startActivity(intent);
+				final Driver d = new Driver.Builder(new Driver()).setId(1).build();
+				
+				final Trip t = new Trip.Builder()
+				.setStart(new Coordinate(-84.33, 32.13))
+				.setEnd(new Coordinate(-84.11, 32.01))
+				.build();
+				
+				final Request r = new Request.Builder()
+				.setDriverId(d.getId())
+				.setUserId(User.getActiveUser().getId())
+				.setTrip(t)
+				.build();
+							
+				ApiRequest api = User.getUser(1, new Callback<User>() { //Hardcode in user id of 1 for now.  Get user id later
+
+					@Override
+					public void failure(RetrofitError arg0) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getApplicationContext(),
+								"Failed to get User",
+								Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void success(User arg0, Response arg1) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(getApplicationContext(), CreateReviewActivity.class);
+						
+						intent.putExtra("user", arg0);
+						intent.putExtra("driver", d);
+						intent.putExtra("request", r);
+						startActivity(intent);
+					}
+					
+				});
+				Session.getSession().sendRequest(api);
 			}
 			
 		});

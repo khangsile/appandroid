@@ -121,14 +121,10 @@ public class UserProfile extends Activity {
 		// TODO Auto-generated method stub
 		//Get reviews of this driver to be displayed in the list view
 		reviewList = new ArrayList<Object>();
-		reviewList.add("This is a very long ..................... text object to span" +
-            		"multiple lines to test that the reviews are being set properly");
-		reviewList.add("Test a short review");
-		reviewList.add("Test a mean mean mean mean review review review review review .......... damn damn damn damn damn damn damn this is very very very very long long long long.");
-		reviewList.add("Hi");
-		reviewList.add("This guys blows");
-		reviewList.add("He wrecked");
-		reviewList.add("I puked in his car");
+		reviewList.add("He propmptly replied to my request and was here before I knew it!!");
+		reviewList.add("He is very outgoing and has a really clean car! I highly recommend!");
+		reviewList.add("He was great!  Very nice and even drove us through Canes on the way home!");
+		reviewList.add("This guy is the best! Best driver I have had yet!");
 	}
 
 	/**
