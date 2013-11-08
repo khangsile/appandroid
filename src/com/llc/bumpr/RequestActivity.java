@@ -2,14 +2,13 @@ package com.llc.bumpr;
 
 import java.util.ArrayList;
 
-import org.w3c.dom.Document;
-
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Color;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -25,11 +24,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.llc.bumpr.lib.CircularImageView;
-import com.llc.bumpr.lib.GMapV2Direction;
 import com.llc.bumpr.lib.GMapV2Painter;
+import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.models.Request;
+import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
 public class RequestActivity extends SherlockFragmentActivity implements
@@ -38,7 +37,7 @@ public class RequestActivity extends SherlockFragmentActivity implements
 
 	/** Reference to the user asking for a ride */
 	private User user;
-	/** Refernce to the Request object sent by the user */
+	/** Reference to the Request object sent by the user */
 	private Request request;
 
 	/** Reference to the Layout object holding the map fragment */
@@ -215,11 +214,30 @@ public class RequestActivity extends SherlockFragmentActivity implements
 	}
 
 	public void acceptRequest(View v) {
-
+		answerRequest(true);
 	}
 
 	public void declineRequest(View v) {
+		answerRequest(false);
+	}
+	
+	/**
+	 * Sends a response to accept or decline the request
+	 * @param accept the answer to the request
+	 */
+	public void answerRequest(boolean accept) {
+		ApiRequest apiRequest = request.respondTo(accept, new Callback<Response>() {
 
+			@Override
+			public void failure(RetrofitError arg0) {
+			}
+
+			@Override
+			public void success(Response arg0, Response arg1) {
+			}
+			
+		});
+		Session.getSession().sendRequest(apiRequest);
 	}
 
 }
