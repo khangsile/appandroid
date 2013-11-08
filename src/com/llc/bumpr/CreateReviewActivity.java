@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Review;
 import com.llc.bumpr.sdk.models.Session;
@@ -64,11 +66,18 @@ public class CreateReviewActivity extends ProfileActivity {
 			@Override
 			public void failure(RetrofitError arg0) {
 				//do nothing
+				Toast.makeText(getApplicationContext(),
+						"Failed to post review",
+						Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void success(Response arg0, Response arg1) {
-				//do nothing
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext(),
+						"Review posted!",
+						Toast.LENGTH_SHORT).show();
+				finish();
 			}
 			
 		}));
