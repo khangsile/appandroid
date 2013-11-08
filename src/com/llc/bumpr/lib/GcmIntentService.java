@@ -98,7 +98,6 @@ public class GcmIntentService extends IntentService {
     	/* Log Printing for testing */
     	Log.i(TAG, pushNotification.getType());
 		Log.i(TAG, Integer.toString(pushNotification.getRequestId()));
-		Log.i(TAG, pushNotification.getMessage());
 		Log.i(TAG, pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName());
     	/* Finished Printing */
 
@@ -139,7 +138,7 @@ public class GcmIntentService extends IntentService {
             .setSmallIcon(R.drawable.ic_launcher)
             .setContentTitle("Driving Request Received")
             .setStyle(new NotificationCompat.BigTextStyle()
-            .bigText(pushNotification.getMessage()))
+            .bigText(rider.getFirstName() + " " + rider.getLastName() + " has request a ride."))
             .setContentText(rider.getFirstName() + " " + rider.getLastName() + " has request a ride.")
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
@@ -182,7 +181,7 @@ public class GcmIntentService extends IntentService {
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Driving Request Accepted")
                 .setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(pushNotification.getMessage()))
+                .bigText(driver.getFirstName() + " " + driver.getLastName() + " has accepted your ride request!"))
                 .setContentText(driver.getFirstName() + " " + driver.getLastName() + " has accepted your ride request!")
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
@@ -206,7 +205,7 @@ public class GcmIntentService extends IntentService {
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Driving Request Rejected")
                 .setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(pushNotification.getMessage()))
+                .bigText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has rejected your ride request."))
                 .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has rejected your ride request.")
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)

@@ -17,9 +17,6 @@ public class PushNotification {
 	/** Reference to the user who sent the notification */
 	private User user;
 	
-	/** String holding the text of the notification */
-	private String message;
-	
 	/** Trip object holding the trip information for the request*/
 	private Trip trip;
 	
@@ -49,7 +46,6 @@ public class PushNotification {
 		//Values is all types of requests
 		type = json.getString("type"); //Get Notification Type
 		requestId = json.getInt("request_id"); //Get Request id
-		message = json.getString("message"); //Get message text
 		
 		if (type.equals("request")) {
 			//Retrieve information for request type notification
@@ -64,7 +60,7 @@ public class PushNotification {
 		}
 		else if (type.equals("response")){
 			//Retrieve information for response type notification
-			user = new User(json.getJSONObject("driver")); //Get driver who responded
+			user = new User(json.getJSONObject("user")); //Get driver who responded
 			accepted = json.getBoolean("accepted"); //Get response message
 		}
 	}
@@ -95,13 +91,6 @@ public class PushNotification {
 	 */
 	public User getUser() {
 		return user;
-	}
-	
-	/**
-	 * @return Returns the message sent with the push notification
-	 */
-	public String getMessage() {
-		return message;
 	}
 	
 	/**
