@@ -136,8 +136,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 	/** Endless List work around for the current moment */
 	private List<User> emptyList = new ArrayList<User>();
 	
-	/** Boolean object to identify if the activity has already been loaded yet or not */
-	private boolean alreadyLoaded;
+	/** Boolean to hold if this is the first time the activity has loaded */
+	private boolean reStart = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +179,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 		setEndlessListOnClickListener();
 
 		// Create new location client.
+		if (!reStart)
 		mLocationClient = new LocationClient(this, this, this);
 
 		setMapsInfoWindowAdapter();
@@ -345,8 +346,12 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 		menuAdpt = new SlidingMenuListAdapter(this, menuList, user);
 		lvMenu.setAdapter(menuAdpt);
 		
-		//Clear points off map since they lost their reference.  New search required
-		gMap.clear();
+		if(!reStart){
+			//Take user to current location
+			reStart = true;
+		}else{
+			mLocationClient.disconnect(); //No longer update user to their location
+		}
 	}
 
 	/**
@@ -588,6 +593,8 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 						
 						for (int i = 0; i < drivers.size(); i++){
 							//Display Marker
+							Log.i("com.llc.bumpr Map", gMap.getCameraPosition().target.toString());
+							Log.i("com.llc.bumpr Map", Double.toString(drivers.get(i).getDriverProfile().getPosition().lat) + " " + Double.toString(drivers.get(i).getDriverProfile().getPosition().lon));
 							Marker marker = gMap.addMarker(new MarkerOptions()
 															.position(new LatLng(drivers.get(i).getDriverProfile().getPosition().lat, drivers.get(i).getDriverProfile().getPosition().lon))
 															.title("Driver " + (i+1))
@@ -597,7 +604,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 						//Close Dialog
 						dialog.dismiss();
 					}
-					
 				});				
 
 				return true;

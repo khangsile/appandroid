@@ -17,6 +17,8 @@
             android:layout_toRightOf="@id/iv_profile_pic"
             android:textColor="@android:color/black"
             android:layout_centerVertical="true"
+            android:paddingBottom="-2dp"
+            android:layout_marginLeft="5dp"
             android:textSize="18sp" />
     
     <TextView

@@ -138,19 +138,17 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 						//Toggle driver mode
 						user.getDriverProfile().toggleStatus();
 						if (isChecked){
-							Toast.makeText(context, "True!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(context, "Driving mode enabled", Toast.LENGTH_SHORT).show();
 						}
 						else{
-							Toast.makeText(context, "False!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(context, "Driving mode disabled", Toast.LENGTH_SHORT).show();
 						}
 						
 						//Send user object update
 					} 
 					else{
-						if (isChecked){
-							switchView.setChecked(false); //Not working for some reason
-							Toast.makeText(context, "Please register as driver before using this feature", Toast.LENGTH_SHORT).show();
-						}
+						switchView.setChecked(false); //Not working for some reason
+						Toast.makeText(context, "Please register as driver before using this feature", Toast.LENGTH_SHORT).show();
 					}
 				}
 				
