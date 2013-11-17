@@ -76,7 +76,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		//Set base url to connect to Tony's server for testing
-		BumprClient.setBaseURL("http://192.168.1.200:3000/api/v1");
+		BumprClient.setBaseURL("http://10.20.182.69:3000/api/v1");
 		
 		//Get shared preferences with saved login details
 		savedLogin = getSharedPreferences (LOGIN_PREF, 0);

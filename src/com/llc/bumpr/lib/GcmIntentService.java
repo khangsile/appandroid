@@ -68,19 +68,12 @@ public class GcmIntentService extends IntentService {
 			}else if(GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // Post notification of received message.
 				try {
-					//Log message received
-					Log.i(TAG, extras.get("message").toString());
-					//Create JSON object from message received
 					JSONObject json = new JSONObject(extras.get("message").toString());
 					Log.i(TAG, json.toString());
-					//Create PushNotification object from JSON
 					sendNotification(new PushNotification(json)); 
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					Log.e(TAG, "JSON Exception Caught: " + e);
 					e.printStackTrace();
 				}
-                Log.i(TAG, "Received: " + extras.toString()); //Log message received
 			}
 		}
 		//Release the wake lock provided by the WakefulBroadcastReceiver
@@ -107,14 +100,11 @@ public class GcmIntentService extends IntentService {
         
         //If type is request
         if (pushNotification.getType().equals("request")){
-        	Log.i(TAG, "Inside request");
         	//Create intent to handle this Notification
         	Intent intent = new Intent(this, RequestActivity.class);
         	//Get objects to pass to the activity
         	User rider = pushNotification.getUser();
-        	Log.i(TAG, "1");
         	User activeUser = User.getActiveUser();
-        	Log.i(TAG, "2");
         	//Create request object
         	Request request = new Request.Builder()
         							.setDriverId(activeUser.getDriverProfile().getId())
@@ -122,15 +112,12 @@ public class GcmIntentService extends IntentService {
         							.setTrip(pushNotification.getTrip())
         							.setId(pushNotification.getRequestId())
         							.build();
-        	Log.i(TAG, "3");
-        	//attach objects to intent
+        	//Attach objects to intent
         	intent.putExtra("user", rider);
         	intent.putExtra("request", request);
-        	Log.i(TAG, "4");
         	//Sent intent as pending intent
         	PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                     intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-        	Log.i(TAG, "pending intent made");
         	
         	//Create notification
         	NotificationCompat.Builder mBuilder =
@@ -145,12 +132,10 @@ public class GcmIntentService extends IntentService {
             .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
             .setLights(0xFF0000FF,1000,2500) //Flash blue light for 1 second on and 2.5 seconds off
             .setPriority(Notification.PRIORITY_DEFAULT);
-        	Log.i(TAG, "made notification");
 
         	//Set pending intent to open upon click, and display notification to the phone
             mBuilder.setContentIntent(contentIntent);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-            Log.i(TAG, "Sent notification");
         }
         else if (pushNotification.getType().equals("response")){ //If type is response
         	Log.i(TAG, Boolean.toString(pushNotification.getAccepted()));
