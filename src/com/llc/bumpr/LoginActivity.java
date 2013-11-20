@@ -416,7 +416,7 @@ public class LoginActivity extends Activity {
 	}
 
 	/**
-	 * @author Khang Le Test user profile
+	 * @author Khang Le 
 	 */
 	public void loginWithFacebook(View v) {
 		// start Facebook Login
