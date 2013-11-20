@@ -47,7 +47,7 @@ public class LoginActivity extends Activity {
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 		
 	/** Google Project # required for GCM messages */
-	String SENDER_ID = getString(R.string.gcm_sender_id);
+	private String SENDER_ID;
 
 	/** Tag used to log messages */
 	static final String TAG = "com.llc.bumpr GCM";
@@ -82,8 +82,9 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		// Set base url to connect to Tony's server for testing
+		SENDER_ID = getString(R.string.gcm_sender_id);
 		
-		BumprClient.setBaseURL("http://192.168.1.156:3000/api/v1");
+		BumprClient.setBaseURL("http://192.168.1.200:3000/api/v1");
 
 		// Get shared preferences with saved login details
 		savedLogin = getSharedPreferences(LOGIN_PREF, 0);

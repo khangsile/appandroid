@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -79,7 +80,6 @@ public class RegistrationActivity extends Activity {
 					BumprError error = BumprError.errorToBumprError(arg0);
 					log.info(error.getMessage());
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				//Display failed message
@@ -90,7 +90,8 @@ public class RegistrationActivity extends Activity {
 			public void success(User arg0, Response arg1) {
 				// TODO Auto-generated method stub
 				//Add user details to shared preferences upon successful login
-				
+				Log.i("user_id", arg0.getId() + "");
+				Log.i("session_token", Session.getSession().getAuthToken());
 				/* Leave this for the time being. Got to think of a better way to integrate this (with DriverProfile in mind). */
 				//Store details upon successful login in Shared Preferences
 				SharedPreferences.Editor loginEditor = savedLogin.edit();

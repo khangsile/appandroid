@@ -43,14 +43,16 @@ public class GCMRegistrationManager {
 		if (resultCode != ConnectionResult.SUCCESS) {
 			if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
 				dialog.dismiss();
-				return false;
-			} else { // Otherwise, the device is not support
-				Log.i(TAG, "This device is not supported.");
-				dialog.dismiss();
-			}
-			// If the error is not recoverable, return false
+				return true;
+			}  
+			// Otherwise, the device is not support
+			Log.i(TAG, "This device is not supported.");
+			dialog.dismiss();
+			
 			return false;
 		}
+		
+		dialog.dismiss();
 		// If google play services are installed and activated, return true
 		return true;
 	}
@@ -99,6 +101,8 @@ public class GCMRegistrationManager {
 			return "";
 		}
 		// Return registration id if all tests were passed
+		Log.i(TAG, registrationId);
+		
 		return registrationId;
 	}
 	

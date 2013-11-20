@@ -1,13 +1,9 @@
 package com.llc.bumpr.adapters;
 
-import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.llc.bumpr.R;
-import com.llc.bumpr.lib.DynamicImageView;
 import com.llc.bumpr.sdk.models.User;
 
 public class EditProfileListAdapter extends BaseAdapter {
@@ -144,7 +138,11 @@ public class EditProfileListAdapter extends BaseAdapter {
 					holder.editText.setInputType(InputType.TYPE_CLASS_NUMBER);
 				}
 				else if (data.get(position).equals("Fee")){
-					holder.editText.setText(Double.toString(user.getDriverProfile().getFee()));
+					double fee = 0;
+					if (user.getDriverProfile() != null)
+						fee = user.getDriverProfile().getFee();
+					
+					holder.editText.setText(String.format("%1$,.2f", fee));
 					holder.editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 				}
 				

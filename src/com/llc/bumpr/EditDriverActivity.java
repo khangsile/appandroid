@@ -9,6 +9,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,7 +19,6 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.llc.bumpr.adapters.EditProfileListAdapter;
-import com.llc.bumpr.lib.DynamicImageView;
 import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.Session;
@@ -133,7 +133,8 @@ public class EditDriverActivity extends SherlockActivity {
 		
 		if (activeUser.getDriverProfile() == null){ //If the current user is not a registered driver, register them
 			//Register as a driver
-			ApiRequest request = activeUser.getRegisterRequest(new HashMap<String, Object>(), new Callback<Driver>() {
+			
+			ApiRequest request = activeUser.getRegisterRequest(driver, new Callback<Driver>() {
 
 				@Override
 				public void failure(RetrofitError arg0) {
@@ -144,7 +145,6 @@ public class EditDriverActivity extends SherlockActivity {
 				@Override
 				public void success(Driver arg0, Response arg1) {
 					//do something
-					Toast.makeText(getApplicationContext(), arg0.getId() + "", Toast.LENGTH_SHORT).show();
 					Toast.makeText(getApplicationContext(), "Registration successful!", Toast.LENGTH_SHORT).show();
 					finish();
 				}
@@ -161,11 +161,10 @@ public class EditDriverActivity extends SherlockActivity {
 
 			@Override
 			public void failure(RetrofitError arg0) {
-				// TODO Auto-generated method stub
-				// Display error
-				Toast.makeText(getApplicationContext(),
-						"Error updating driver page",
-						Toast.LENGTH_SHORT).show();
+				Log.i("EditDriverActivity", arg0.getMessage());
+				
+				
+				Toast.makeText(getApplicationContext(), "Error updating driver page", Toast.LENGTH_SHORT).show();
 				return;
 			}
 
