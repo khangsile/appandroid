@@ -45,9 +45,9 @@ public class LoginActivity extends Activity {
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
+		
 	/** Google Project # required for GCM messages */
-	String SENDER_ID = "130758040838";
+	String SENDER_ID = getString(R.string.gcm_sender_id);
 
 	/** Tag used to log messages */
 	static final String TAG = "com.llc.bumpr GCM";
@@ -63,12 +63,16 @@ public class LoginActivity extends Activity {
 
 	/** Holds the reference to the password edit text box in the layout */
 	EditText password;
+
 	/** Reference to a Google Cloud Messaging object */
 	private GoogleCloudMessaging gcm;
+	
 	/** AtomicInteger to keep track of messages sent */
 	private AtomicInteger msgId = new AtomicInteger();
+	
 	/** Reference to shared preferences where GCM details are stored */
 	private SharedPreferences prefs;
+	
 	/** String to hold the GCM registration ID */
 	private String regId;
 
@@ -78,7 +82,8 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		// Set base url to connect to Tony's server for testing
-		BumprClient.setBaseURL("http://192.168.1.200:3000/api/v1");
+		
+		BumprClient.setBaseURL("http://192.168.1.156:3000/api/v1");
 
 		// Get shared preferences with saved login details
 		savedLogin = getSharedPreferences(LOGIN_PREF, 0);
@@ -100,8 +105,7 @@ public class LoginActivity extends Activity {
 			if (TextUtils.isEmpty(regId)) {
 				registerInBackground();
 			}
-			// See if user details are saved on this phone. If so, login for
-			// them
+			// See if user details are saved on this phone. If so, login for them
 			checkSavedLogin(pd);
 		} else {
 			Log.i(TAG, "No valid Google Play Services APK found.");
@@ -114,7 +118,9 @@ public class LoginActivity extends Activity {
 	}
 	
 	/**
-	 * Gets the result from a previous activity. 
+	 * Gets the result from a previous activity. For now, this is solely used for Facebook login.
+	 * If we would like to use this for other methods, we will need to use a case switch based on the
+	 * requestCode (or resultCode). Can't remember. 
 	 */
 	@Override
 	  public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -135,6 +141,7 @@ public class LoginActivity extends Activity {
 				&& !savedLogin.getString("password", "").contentEquals("")) {
 			String email = savedLogin.getString("email", ""); // Get email
 			String password = savedLogin.getString("password", ""); // Get password
+			String authToken = savedLogin.getString("auth_token", "");
 			Session.getSession().login(email, password,
 					getRegistrationId(this), new Callback<User>() {
 						// Login through backend. Hopefully avoid this in the
@@ -251,8 +258,7 @@ public class LoginActivity extends Activity {
 					// your app is using accounts.
 
 					// Not needed currently. We are sending up the GCM API key
-					// upon login
-					// sendRegistrationIdToBackend();
+					// upon login sendRegistrationIdToBackend();
 
 					// Store registration id here in shared preferences
 					storeRegistrationId(context, regId);
@@ -378,32 +384,19 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void success(User user, Response arg1) {
-
-				// Add user details to shared preferences upon successful login
-
-				/*
-				 * Issue with passing user to new intent. Android doesn't allow
-				 * SharedPrefs editor to putObjects
-				 */
-
-				/*
-				 * Leave this for the time being. Got to think of a better way
-				 * to integrate this (with DriverProfile in mind).
-				 */
 				// Store details upon successful login
 				SharedPreferences.Editor loginEditor = savedLogin.edit();
 				loginEditor.putString("email", email.getText().toString());
-				loginEditor
-						.putString("password", password.getText().toString());
+				loginEditor.putString("password", password.getText().toString());
+				loginEditor.putString("auth_token", Session.getSession().getAuthToken());
 				loginEditor.commit();
 
 				// dismiss dialog and create new intent
 				dialog.dismiss();
 				Intent i = new Intent(getApplicationContext(),
 						SearchDrivers.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-						| Intent.FLAG_ACTIVITY_CLEAR_TASK);// Remove Login from
-															// stack
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				// Remove Login from stack
 				startActivity(i); // start new intent
 			}
 
@@ -429,6 +422,7 @@ public class LoginActivity extends Activity {
 		// start Facebook Login
 		List<String> permissions = new ArrayList<String>();
 		permissions.add("email"); //get permission to see user's email account
+		//Welcome to nested callback hell. 
 		openActiveSession(this, true, new com.facebook.Session.StatusCallback() {
 
 			@Override

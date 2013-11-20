@@ -451,7 +451,6 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 	 * @return Boolean value signifying if Google Maps is available
 	 */
 	private boolean isGooglePlayServicesAvailable() {
-		// TODO Auto-generated method stub
 		// Verify user has good version of google play services. Necessary for
 		// maps
 		int retCode = GooglePlayServicesUtil
@@ -472,12 +471,10 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 	 * Connection to GPS failed. Attempt to resolve it. Otherwise, catch the
 	 * exception
 	 * 
-	 * @param connResult
-	 *            Result from the connection attempt
+	 * @param connResult Result from the connection attempt
 	 */
 	@Override
 	public void onConnectionFailed(ConnectionResult connResult) {
-		// TODO Auto-generated method stub
 		// If Google Play Services can resolve the errors, allow it to resolve
 		// the errors!
 		if (connResult.hasResolution())
@@ -486,8 +483,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 				connResult.startResolutionForResult(this,
 						CONNECTION_FAILURE_RESOLUTION_REQUEST);
 			} catch (IntentSender.SendIntentException e) {
-				// Thrown if Google Play Services canceled the original
-				// PendingIntent
+				// Thrown if Google Play Services canceled the original PendingIntent
 				e.printStackTrace();
 			}
 	}
@@ -498,14 +494,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 	 */
 	@Override
 	public void onConnected(Bundle bundle) {
-		// TODO Auto-generated method stub
 		//If GPS connected successfully, location client get last location
 		Location loc = mLocationClient.getLastLocation();
-		//convert location into lat long
 		LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
 		//Set map center and zoom level
 		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
-		//Move map to location chosen
 		gMap.animateCamera(camUpdate);
 	}
 
@@ -887,6 +880,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 
 				//Start new location service to get the address of the center of the map
 				Object[] queryArray = { searchView.getQuery().toString() };
+				//add logging
 				new StringLocationTask(context, new Callback<List<Address>>() {
 
 					@Override

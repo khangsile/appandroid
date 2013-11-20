@@ -36,7 +36,6 @@ public abstract class GeocodeLocationTask extends AsyncTask<Object, Void, List<A
 	@Override
 	protected List<Address> doInBackground(Object... params) {
 		// TODO Auto-generated method stub
-		geocoder = new Geocoder(context, Locale.getDefault());
 		
 		List<Address> addressList = null;
 		int responseCount = 0;
@@ -48,8 +47,10 @@ public abstract class GeocodeLocationTask extends AsyncTask<Object, Void, List<A
                 // populate address list from query and return
                 addressList = getAddressList(params);
             } catch (SocketTimeoutException e) {
+            	e.printStackTrace();
                 addressList = null;
             }  catch (IOException e) {
+            	e.printStackTrace();
                 addressList = null;
             }
             // add to the response count until the response limit has been hit

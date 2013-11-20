@@ -9,6 +9,7 @@
     <string name="cancel">Cancel</string>
     <string name="decline">Decline</string>
     <string name="email">Email</string>
+    <string name="gcm_sender_id">130758040838</string>
     <string name="first_name">First Name</string>
     <string name="hello_world">Hello world!</string>
     <string name="last_name">Last Name</string>

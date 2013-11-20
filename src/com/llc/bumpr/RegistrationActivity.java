@@ -6,6 +6,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.llc.bumpr.lib.GCMRegistrationManager;
 import com.llc.bumpr.sdk.lib.BumprError;
 import com.llc.bumpr.sdk.models.Registration;
 import com.llc.bumpr.sdk.models.Session;
@@ -23,10 +25,19 @@ public class RegistrationActivity extends Activity {
 	private SharedPreferences savedLogin;
 	/** Constant phrase to hold login details */
 	public static final String LOGIN_PREF = "bumprLogin";
+	
+	private GCMRegistrationManager manager;
 
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration); //Display the registration layout
+        
+        final ProgressDialog dialog = ProgressDialog.show(this,
+				"Please Wait", "Checking for saved login...", false, true);
+        if (GCMRegistrationManager.checkPlayServices(dialog, this)) {
+        	manager = new GCMRegistrationManager(this);
+        	manager.getRegistrationIdFromGCM();
+        }
         
         //Get shared preferences with saved login details
       	savedLogin = getSharedPreferences (LOGIN_PREF, 0);
@@ -46,6 +57,7 @@ public class RegistrationActivity extends Activity {
 		
 		//Create a new registration object with the information provided
 		Registration r = new Registration.Builder()
+							.setRegistrationId(manager.getRegistrationId())
 							.setPassword(password)
 							.setPasswordConfirmation(passwordConfirmation)
 							.setFirstName(firstname)
@@ -79,15 +91,12 @@ public class RegistrationActivity extends Activity {
 				// TODO Auto-generated method stub
 				//Add user details to shared preferences upon successful login
 				
-				/*
-				 * Issue with passing user to new intent.  Android doesn't allow SharedPrefs editor to putObjects 
-				 */
-				
 				/* Leave this for the time being. Got to think of a better way to integrate this (with DriverProfile in mind). */
 				//Store details upon successful login in Shared Preferences
 				SharedPreferences.Editor loginEditor = savedLogin.edit();
 				loginEditor.putString("email", email);
 				loginEditor.putString("password", password);
+				loginEditor.putString("auth_token", Session.getSession().getAuthToken());
 				loginEditor.commit();
 				
 				Intent i =  new Intent(getApplicationContext(), SearchDrivers.class); //Create intent to go to next
