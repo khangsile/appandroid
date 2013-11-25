@@ -141,7 +141,7 @@ public class GCMRegistrationManager {
 	 * Stores the registration ID and app versionCode in the application's
 	 * shared preferences.
 	 */
-	private void registerInBackground() {
+	public void registerInBackground() {
 		new AsyncTask<Void, Void, String>() {
 			@Override
 			protected String doInBackground(Void... params) {

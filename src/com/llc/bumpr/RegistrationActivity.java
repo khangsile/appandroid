@@ -6,7 +6,10 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,12 +29,15 @@ public class RegistrationActivity extends Activity {
 	private SharedPreferences savedLogin;
 	/** Constant phrase to hold login details */
 	public static final String LOGIN_PREF = "bumprLogin";
+	/** Reference to the current context */
+	private Context context;
 	
 	private GCMRegistrationManager manager;
 
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration); //Display the registration layout
+        context = getApplicationContext();
         
         final ProgressDialog dialog = ProgressDialog.show(this,
 				"Please Wait", "Checking for saved login...", false, true);
@@ -49,6 +55,9 @@ public class RegistrationActivity extends Activity {
 	 * @param v Reference to the view who called this function upon being clicked
 	 */
 	public void register(View v) {
+		// Start loading dialog to show action is taking place
+		final ProgressDialog dialog = ProgressDialog.show(RegistrationActivity.this,
+						"Please Wait", "Registering...", false, true);
 		//Get references to the view objects in the layout
 		final String firstname = ((EditText)findViewById(R.id.et_firstname)).getText().toString().trim();
 		final String lastname = ((EditText)findViewById(R.id.et_lastname)).getText().toString().trim();
@@ -82,8 +91,21 @@ public class RegistrationActivity extends Activity {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				//Display failed message
-				Toast.makeText(getApplicationContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
+				//Create failed login dialog to inform user login failed
+				AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
+				builder.setTitle("Registration Failed");
+				builder.setMessage("An error occurred during registration. Please provide all of the information above, and verify the passwords match.");
+				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int arg1) {
+						dialog.cancel();
+					}
+				});
+				dialog.dismiss();
+				//Build the created dialog
+				AlertDialog dg = builder.create();
+				//Display the dialog
+				dg.show();
 			}
 
 			@Override
@@ -99,6 +121,8 @@ public class RegistrationActivity extends Activity {
 				loginEditor.putString("password", password);
 				loginEditor.putString("auth_token", Session.getSession().getAuthToken());
 				loginEditor.commit();
+				
+				dialog.dismiss();
 				
 				Intent i =  new Intent(getApplicationContext(), SearchDrivers.class); //Create intent to go to next
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//Remove Login from stack
