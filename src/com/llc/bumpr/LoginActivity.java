@@ -264,6 +264,19 @@ public class LoginActivity extends Activity {
 
 										@Override
 										public void failure(RetrofitError arg0) { // do nothing for now
+											AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+											builder.setTitle("Facebook Login Failed");
+											builder.setMessage("An error occurred while logging you in via Facebook. Please try logging in using facebook later.");
+											builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+												@Override
+												public void onClick(DialogInterface dialog, int arg1) {
+													dialog.cancel();
+												}
+											});
+											//Build the created dialog
+											AlertDialog dg = builder.create();
+											//Display the dialog
+											dg.show();
 										}
 
 										@Override
