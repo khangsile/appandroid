@@ -333,4 +333,9 @@ public class LoginActivity extends Activity {
 		
 		return login;
 	}
+	
+	public void testButton(View v){
+		Intent i = new Intent(getApplicationContext(), CreateTripActivity.class);
+		startActivity(i);
+	}
 }

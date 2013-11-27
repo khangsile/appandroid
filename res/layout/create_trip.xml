@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/et_trip_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="@string/trip_title"
+        android:inputType="textCapWords"
+        android:maxLines="1" />
+
+    <FrameLayout
+        android:id="@+id/fl_map_container"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/et_trip_title"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit_text_border" >
+
+        <fragment
+            android:id="@+id/map_request"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.SupportMapFragment" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_info_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fl_map_container"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#C0C0C0" >
+
+        <TextView
+            android:id="@+id/tv_pickup_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="5dp"
+            android:text="@string/trip_date"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_max_riders_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:text="@string/passengers"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_pickup_date_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/tv_pickup_date_text"
+            android:layout_marginLeft="5dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_max_riders_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_max_riders_text"
+            android:layout_marginRight="5dp"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_locations"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_info_container"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="5dp"
+        android:weightSum="1" >
+
+        <EditText
+            android:id="@+id/et_start_loc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_weight=".5"
+            android:hint="@string/start_loc"
+            android:inputType="textCapWords"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/et_end_loc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_weight=".5"
+            android:hint="@string/end_loc"
+            android:inputType="textCapWords"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_tags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_layout_locations"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="@string/tags"
+        android:inputType="textCapWords" />
+
+    <Button
+        android:id="@+id/btn_create"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:background="#e6e6fa"
+        android:onClick="createTrip"
+        android:text="@string/create_trip" />
+
+</RelativeLayout>
