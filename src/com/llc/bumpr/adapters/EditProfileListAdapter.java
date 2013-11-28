@@ -86,10 +86,9 @@ public class EditProfileListAdapter extends BaseAdapter {
 
 				if (convertView == null) { //If this is a new row being created
 					ViewGroup vGroup = (ViewGroup) inflater.inflate(
-							R.layout.edit_profile_text_row, null); //Inflat the row
+							R.layout.edit_profile_text_row, null); //Inflate the row
 
-					// Use the view holder pattern to save already looked up
-					// subviews
+					// Use the view holder pattern to save already looked up subviews
 					holder = new TextViewHolder(
 							(TextView) vGroup.findViewById(R.id.tv_edit_prof_text),
 							(EditText) vGroup.findViewById(R.id.et_edit_prof_value));

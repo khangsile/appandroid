@@ -2,7 +2,6 @@ package com.llc.bumpr;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,12 +26,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.SessionState;
-import com.facebook.model.GraphUser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.sdk.lib.BumprClient;
-import com.llc.bumpr.sdk.lib.BumprError;
+import com.llc.bumpr.sdk.models.Login;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
@@ -80,11 +79,12 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.main);
 		// Set base url to connect to Tony's server for testing
 		SENDER_ID = getString(R.string.gcm_sender_id);
 		
-		BumprClient.setBaseURL("http://192.168.1.200:3000/api/v1");
+		BumprClient.setBaseURL("http://192.168.1.24" + ":3000/api/v1");
 
 		// Get shared preferences with saved login details
 		savedLogin = getSharedPreferences(LOGIN_PREF, 0);
@@ -143,25 +143,25 @@ public class LoginActivity extends Activity {
 			String email = savedLogin.getString("email", ""); // Get email
 			String password = savedLogin.getString("password", ""); // Get password
 			String authToken = savedLogin.getString("auth_token", "");
-			Session.getSession().login(email, password,
-					getRegistrationId(this), new Callback<User>() {
-						// Login through backend. Hopefully avoid this in the
-						// future
-						@Override
-						public void failure(RetrofitError arg0) { // Should not get here
-							pd.dismiss();
-						}
+			Login login = new Login.Builder()
+							.setEmail(email)
+							.setPassword(password)
+							.setRegistrationId(getRegistrationId(this))
+							.setPlatform("android")
+							.build();
+			
+			Session.getSession().login(getApplicationContext(), login, new FutureCallback<User>() {
 
 						@Override
-						public void success(User arg0, Response arg1) {
-							// If successful, create new intent, set flags, and
-							// start the activity
-							Intent i = new Intent(getApplicationContext(),
-									SearchDrivers.class);
-							i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); 
-							// Remove Login
-							startActivity(i);// Start activity
-							pd.dismiss(); // dismiss dialog
+						public void onCompleted(Exception arg0, User arg1) {
+							if (arg0 == null) {
+								Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+								i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); 
+								startActivity(i);
+								pd.dismiss();
+							} else {
+								arg0.printStackTrace();
+							}
 						}
 					});
 		}
@@ -346,16 +346,20 @@ public class LoginActivity extends Activity {
 		return true;
 	}
 
-	public void authenticate(Callback<User> cb) {
-		// Get information stored in text boxes
+	public void authenticate(FutureCallback<User> cb) {
 		String email = ((EditText) findViewById(R.id.et_email)).getText()
 				.toString();
 		String password = ((EditText) findViewById(R.id.et_password)).getText()
 				.toString();
 
-		// Perform login
 		Session session = Session.getSession();
-		session.login(email, password, getRegistrationId(this), cb);
+		Login login = new Login.Builder()
+						.setEmail(email)
+						.setPassword(password)
+						.setRegistrationId(getRegistrationId(this))
+						.setPlatform("android")
+						.build();
+		session.login(this, login, cb);
 	}
 
 	/**
@@ -372,33 +376,26 @@ public class LoginActivity extends Activity {
 		// Start loading dialog to show action is taking place
 		final ProgressDialog dialog = ProgressDialog.show(LoginActivity.this,
 				"Please Wait", "Logging in...", false, true);
-		// make call to authenticate
-		authenticate(new Callback<User>() {
+		authenticate(new FutureCallback<User>() {
 
 			@Override
-			public void failure(RetrofitError arg0) {
-				// dismiss dialog and display failed login text
-				dialog.dismiss();
-				Toast.makeText(getApplicationContext(), "Login Failed",
-						Toast.LENGTH_SHORT).show();
-			}
+			public void onCompleted(Exception arg0, User arg1) {
+				if (arg0 == null) {
+					// Store details upon successful login
+					SharedPreferences.Editor loginEditor = savedLogin.edit();
+					loginEditor.putString("email", email.getText().toString());
+					loginEditor.putString("password", password.getText().toString());
+					loginEditor.putString("auth_token", Session.getSession().getAuthToken());
+					loginEditor.commit();
 
-			@Override
-			public void success(User user, Response arg1) {
-				// Store details upon successful login
-				SharedPreferences.Editor loginEditor = savedLogin.edit();
-				loginEditor.putString("email", email.getText().toString());
-				loginEditor.putString("password", password.getText().toString());
-				loginEditor.putString("auth_token", Session.getSession().getAuthToken());
-				loginEditor.commit();
-
-				// dismiss dialog and create new intent
-				dialog.dismiss();
-				Intent i = new Intent(getApplicationContext(),
-						SearchDrivers.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				// Remove Login from stack
-				startActivity(i); // start new intent
+					dialog.dismiss();
+					Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					// Remove Login from stack
+					startActivity(i); // start new intent
+				} else {
+					arg0.printStackTrace();
+				}
 			}
 
 		});
@@ -420,37 +417,31 @@ public class LoginActivity extends Activity {
 	 * @author Khang Le 
 	 */
 	public void loginWithFacebook(View v) {
-		// start Facebook Login
 		List<String> permissions = new ArrayList<String>();
-		permissions.add("email"); //get permission to see user's email account
-		//Welcome to nested callback hell. 
+		permissions.add("email"); //Add extra permissions here
 		openActiveSession(this, true, new com.facebook.Session.StatusCallback() {
 
 			@Override
 			public void call(com.facebook.Session session, SessionState state, Exception exception) {
 				if (state.isOpened()) {
-					session.getAccessToken();
-					com.facebook.Request.newMeRequest(session, new com.facebook.Request.GraphUserCallback() {
-						
+					String token = session.getAccessToken();
+					Login login = new Login.Builder()
+									.setRegistrationId(getRegistrationId(getApplicationContext()))
+									.setPlatform("android")
+									.setAccessToken(token)
+									.build();
+
+					Session.getSession().loginWithFacebook(getApplicationContext(), login, new FutureCallback<User>() {
+
 						@Override
-						public void onCompleted(GraphUser user, com.facebook.Response response) {
-							//login using the constructed FbLogin HashMap
-							Session.getSession().login(constructFbLogin(com.facebook.Session.getActiveSession(), user), 
-									new Callback<User>() {
-
-										@Override
-										public void failure(RetrofitError arg0) { // do nothing for now
-										}
-
-										@Override
-										public void success(User arg0, Response arg1) {											
-											Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
-											startActivity(i);
-										}
-								
-							});
+						public void onCompleted(Exception arg0, User arg1) {
+							if (arg0 != null) return;
+							
+							Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+							i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);							
+							startActivity(i); // start new intent
 						}
-					}).executeAsync();
+					});
 				}
 			}
 		}, permissions);
@@ -470,30 +461,8 @@ public class LoginActivity extends Activity {
 	    return null;
 	}
 	
-	/**
-	 * Constructs the HashMap to send to the server for Facebook login
-	 * @param session The current Facebook user session
-	 * @param user the current user as a Facebook GraphUser
-	 * @return the HashMap to send to the server for Facebook login
-	 */
-	private HashMap<String, Object> constructFbLogin(com.facebook.Session session, GraphUser user) {
-		HashMap<String, Object> login = new HashMap<String, Object>();
-		login.put("provider", "facebook");
-		login.put("uid", user.getId());
-		
-		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("email", user.getProperty("email"));
-		info.put("first_name", user.getFirstName());
-		info.put("last_name", user.getLastName());
-		info.put("image", "http://graph.facebook.com/" + user.getId() + "/picture?type=square");
-		login.put("info", info);
-		
-		HashMap<String, Object> credentials = new HashMap<String, Object>();
-		credentials.put("token", session.getAccessToken());
-		credentials.put("expires_at", session.getExpirationDate().getTime());
-		credentials.put("expires", true);
-		login.put("credentials", credentials);
-		
-		return login;
+	public void changeIP(View v) {
+		Intent i = new Intent(this, DevActivity.class);
+		startActivity(i);
 	}
 }

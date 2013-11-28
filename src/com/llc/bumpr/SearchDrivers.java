@@ -58,6 +58,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.adapters.EndlessAdapter;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.lib.CircularImageView;
@@ -148,6 +149,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		//Dispaly layout to screen
+		
 		setContentView(R.layout.search_driver);
 		//Get context and current user
 		context = getApplicationContext();
@@ -771,89 +773,46 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 		//Set up listener for sliding menu
 		lvMenu.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent i = null;
 				switch (position) {
 				case 0: //Open the user settings page
-					i = new Intent(getApplicationContext(),
-							EditProfileActivity.class);
+					i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
-				/*case 1: //Open the Create Review Activity 
-					i = new Intent(getApplicationContext(),
-							CreateReviewActivity.class);
-					i.putExtra("user", User.getActiveUser());
-					break;*/
-				/*case 2:
-					i = new Intent(getApplicationContext(), MyRequests.class);
-					i.putExtra("user", User.getActiveUser()); // Pass Incoming Requests
-					i.putExtra("requestType", "My Received Requests");
-					break;*/
 				case 1: //Open My Sent Requests
 					i = new Intent(getApplicationContext(), MyRequests.class);
 					i.putExtra("user", User.getActiveUser()); // Pass outgoing requests
 					i.putExtra("requestType", "My Sent Requests");
 					break;
-				/*case 3: 
-					ApiRequest api = User.getActiveUser().getDriverProfile().updateLocation(new Coordinate(-84.4, 38.05), new Callback<Response>() {
-
-						@Override
-						public void failure(RetrofitError arg0) {
-							// TODO Auto-generated method stub
-							Log.i("this", "there");
-							Log.i("this", arg0.getMessage());
-						}
-
-						@Override
-						public void success(Response arg0,
-								Response arg1) {
-							// TODO Auto-generated method stub
-							Log.i("this", "here");
-						}
-
-					});
-
-						Session.getSession().sendRequest(api);
-					break;
-				case 4:
-					i = new Intent(getApplicationContext(),
-							RequestActivity.class);
-					i.putExtra("user", User.getActiveUser());
-					break;*/
 				case 3: //Logout
-					i = new Intent(getApplicationContext(), LoginActivity.class); //Create new intent
 					// Remove saved email and password from shared preferences and update shared preferences
-					SharedPreferences savedLogin = getSharedPreferences(
-							LOGIN_PREF, 0);
+					SharedPreferences savedLogin = getSharedPreferences(LOGIN_PREF, 0);
 					Editor loginEditor = savedLogin.edit();
 					loginEditor.remove("email");
 					loginEditor.remove("password");
 					loginEditor.commit();
-
-					// clear history
-					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-							| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					
 					Session session = Session.getSession();
-					//log out of the session
-					session.logout(new Callback<Response>() {
+					session.logout(getApplicationContext(), new FutureCallback<String>() {
 
 						@Override
-						public void failure(RetrofitError arg0) {
-							// TODO Auto-generated method stub
+						public void onCompleted(Exception arg0, String arg1) {
+							if (arg0 != null) {
+								arg0.printStackTrace();
+								return;
+							}
+							
+							Intent i = new Intent(getApplicationContext(), LoginActivity.class); //Create new intent
+							i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+							startActivity(i);
 						}
 
-						@Override
-						public void success(Response arg0, Response arg1) {
-							// TODO Auto-generated method stub
-						}
 					});
 				default:
 					break;
 				}
 
-				//Start the intent created in the switch statement
 				if (i != null) {
 					startActivity(i);
 				}
@@ -875,12 +834,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 				final User user = (User) parent.getItemAtPosition(position);
 				// Get Latitude and Logitude values of current location
 				final LatLng loc = gMap.getCameraPosition().target;
-				// Initialize address list to hold addresses of current location
+				
 				List<Address> address = null;
 
 				//Start new location service to get the address of the center of the map
 				Object[] queryArray = { searchView.getQuery().toString() };
-				//add logging
 				new StringLocationTask(context, new Callback<List<Address>>() {
 
 					@Override

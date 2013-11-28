@@ -1,22 +1,16 @@
 package com.llc.bumpr;
 
-import java.util.logging.Logger;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.lib.GCMRegistrationManager;
-import com.llc.bumpr.sdk.lib.BumprError;
 import com.llc.bumpr.sdk.models.Registration;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
@@ -57,7 +51,7 @@ public class RegistrationActivity extends Activity {
 		final String passwordConfirmation = ((EditText)findViewById(R.id.et_password_confirmation)).getText().toString().trim();
 		
 		//Create a new registration object with the information provided
-		Registration r = new Registration.Builder()
+		Registration r = new Registration.Builder(new Registration())
 							.setRegistrationId(manager.getRegistrationId())
 							.setPassword(password)
 							.setPasswordConfirmation(passwordConfirmation)
@@ -68,41 +62,24 @@ public class RegistrationActivity extends Activity {
 		
 		//Use the active session to send the request to the server
 		Session session = Session.getSession();
-		session.register(r, new Callback<User>() {
+		session.register(this, r, new FutureCallback<User>() {
 
 			@Override
-			public void failure(RetrofitError arg0) {
-				// TODO Auto-generated method stub
-				try {
-					//Log the error that was caught
-					Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-					log.info(arg0.getUrl());
-					BumprError error = BumprError.errorToBumprError(arg0);
-					log.info(error.getMessage());
-				} catch (Exception e) {
-					e.printStackTrace();
+			public void onCompleted(Exception arg0, User arg1) {
+				if (arg0 == null) {
+					SharedPreferences.Editor loginEditor = savedLogin.edit();
+					loginEditor.putString("email", email);
+					loginEditor.putString("password", password);
+					loginEditor.putString("auth_token", Session.getSession().getAuthToken());
+					loginEditor.commit();
+					
+					Intent i =  new Intent(getApplicationContext(), SearchDrivers.class); //Create intent to go to next
+					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//Remove Login from stack
+					startActivity(i); //Start the intent
+				} else {
+					Toast.makeText(getApplicationContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
+					arg0.printStackTrace();
 				}
-				//Display failed message
-				Toast.makeText(getApplicationContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void success(User arg0, Response arg1) {
-				// TODO Auto-generated method stub
-				//Add user details to shared preferences upon successful login
-				Log.i("user_id", arg0.getId() + "");
-				Log.i("session_token", Session.getSession().getAuthToken());
-				/* Leave this for the time being. Got to think of a better way to integrate this (with DriverProfile in mind). */
-				//Store details upon successful login in Shared Preferences
-				SharedPreferences.Editor loginEditor = savedLogin.edit();
-				loginEditor.putString("email", email);
-				loginEditor.putString("password", password);
-				loginEditor.putString("auth_token", Session.getSession().getAuthToken());
-				loginEditor.commit();
-				
-				Intent i =  new Intent(getApplicationContext(), SearchDrivers.class); //Create intent to go to next
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//Remove Login from stack
-				startActivity(i); //Start the intent
 			}
 			
 		});

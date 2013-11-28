@@ -76,7 +76,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter> <!-- Testing new UI's --> 
         </activity>
         <activity 
             android:name="com.llc.bumpr.RegistrationActivity"
@@ -134,6 +134,20 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
      	</activity>
+     	<activity
+            android:name="com.llc.bumpr.DevActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+     	</activity>
+     	<activity
+     	    android:name="com.llc.bumpr.UIActivity"
+     	    android:label="@string/app_name"
+     	    android:screenOrientation="portrait" >
+            <!-- <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter> -->
+        </activity>
         <service
             android:name="com.llc.bumpr.services.DriverLocationService"
             android:label="@string/app_name">            
