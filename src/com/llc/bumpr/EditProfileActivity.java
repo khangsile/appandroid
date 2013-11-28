@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.AlertDialog;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.adapters.EditProfileListAdapter;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.sdk.lib.ApiRequest;
@@ -177,20 +177,15 @@ public class EditProfileActivity extends SherlockActivity {
 		//Get reference to active user to update
 		User activeUser = User.getActiveUser();
 		//Send request update
-		ApiRequest request = activeUser.getUpdateRequest(user, new Callback<User>() {
+		ApiRequest request = activeUser.getUpdateRequest(this, user, new FutureCallback<User>() {
 
 			@Override
-			public void failure(RetrofitError arg0) {
-				// TODO Auto-generated method stub
-				//Display error alert
-				Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void success(User arg0, Response arg1) {
-				// TODO Auto-generated method stub
-				//End activity upon success
-				finish();
+			public void onCompleted(Exception arg0, User arg1) {
+				if (arg0 == null) {
+					finish();
+				} else {
+					Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+				}
 			}
 			
 		});

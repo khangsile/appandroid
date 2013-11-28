@@ -1,10 +1,16 @@
 package com.llc.bumpr;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +31,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.GMapV2Painter;
+import com.llc.bumpr.lib.LatLngLocationTask;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.User;
 
@@ -67,10 +74,9 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 		
 		// Set up list of points for trip to display route on the map
 		ArrayList<LatLng> points = new ArrayList<LatLng>();
-		points.add(new LatLng(34.3445, -84.2312));
-		points.add(new LatLng(34.3442, -84.231));
-		points.add(new LatLng(33.99, -84.212));
-		points.add(new LatLng(31.3, -83.1));
+		points.add(new LatLng(request.getTrip().getStart().lat, request.getTrip().getStart().lon));
+		points.add(new LatLng(request.getTrip().getEnd().lat, request.getTrip().getEnd().lon));
+		
 		//Paint route on the map
 		GMapV2Painter painter = new GMapV2Painter(gMap, points);
 		painter.setWidth(8);
@@ -160,9 +166,9 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 		//Get last location from user
 		Location loc = mLocationClient.getLastLocation();
 		//Create latlong from this location
-		LatLng latLng = new LatLng(34.3445, -84.2312);
+		LatLng start = new LatLng(request.getTrip().getStart().lat, request.getTrip().getStart().lon);
 		//Set zoom level for the map
-		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(start, 15);
 		//Move map to this location
 		gMap.animateCamera(camUpdate);
 	}
@@ -196,17 +202,43 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 		CircularImageView userPhoto = (CircularImageView) findViewById(R.id.img_user);
 		userPhoto.setImageResource(R.drawable.test_image);
 
-		//Get references to view objects in the layout that need request details
-		TextView toAddress = (TextView) findViewById(R.id.tv_toAddress);
-		TextView toCityState = (TextView) findViewById(R.id.tv_toCityState);
-		TextView fromAddress = (TextView) findViewById(R.id.tv_fromAddress);
-		TextView fromCityState = (TextView) findViewById(R.id.tv_fromCityState);
-
 		//Fill in request views with request information
-		toAddress.setText("619 Braddock Ct.");
-		toCityState.setText("Edgewood, KY 41017");
-		fromAddress.setText("557 Lone Oak Dr.");
-		fromCityState.setText("Lexington, KY 40503");
+		new LatLngLocationTask(this, new Callback<List<Address>>() {
+
+			@Override
+			public void failure(RetrofitError arg0) { // do nothing
+			}
+
+			@Override
+			public void success(List<Address> arg0, Response arg1) {
+				if (arg0.isEmpty()) return;
+				
+				TextView toAddress = (TextView) findViewById(R.id.tv_toAddress);
+				TextView toCityState = (TextView) findViewById(R.id.tv_toCityState);
+
+				toAddress.setText(arg0.get(0).getAddressLine(0));
+				toCityState.setText(arg0.get(0).getLocality());
+			}
+			
+		}).execute(new LatLng(request.getTrip().getEnd().lat, request.getTrip().getEnd().lon));
+		
+		new LatLngLocationTask(this, new Callback<List<Address>>() {
+
+			@Override
+			public void failure(RetrofitError arg0) { // do nothing
+			}
+
+			@Override
+			public void success(List<Address> arg0, Response arg1) {
+				if (arg0.isEmpty()) return;
+				
+				TextView fromAddress = (TextView) findViewById(R.id.tv_fromAddress);
+				TextView fromCityState = (TextView) findViewById(R.id.tv_fromCityState);
+				fromAddress.setText(arg0.get(0).getAddressLine(0));
+				fromCityState.setText(arg0.get(0).getLocality());
+			}
+			
+		}).execute(new LatLng(request.getTrip().getStart().lat, request.getTrip().getStart().lon));
 		
 		Button hideButton = (Button) findViewById(R.id.btn_decline);
 		Button completeButton = (Button) findViewById(R.id.btn_accept);
@@ -214,6 +246,7 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 		//Remove hide button from view and Set text of complete button
 		hideButton.setVisibility(View.GONE);
 		completeButton.setText("Trip Complete");
+		completeButton.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT,1f));
 		//Set on click listener
 		completeButton.setOnClickListener(new View.OnClickListener() {
 

@@ -1,12 +1,12 @@
 package com.llc.bumpr;
 
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
@@ -35,16 +35,14 @@ public class BumprActivity extends SherlockFragmentActivity {
 	}
 	
 	private void getUser(Session session) {
-		ApiRequest request = User.getActiveUserRequest(new Callback<User>() {
+		ApiRequest request = User.getMeRequest(getApplicationContext(), new FutureCallback<User>() {
 
 			@Override
-			public void failure(RetrofitError arg0) {
+			public void onCompleted(Exception arg0, User arg1) {
+				if (arg0 == null) {
+					//Do something
+				}
 			}
-
-			@Override
-			public void success(User arg0, Response arg1) {
-			}
-			
 		});
 		
 		session.sendRequest(request);

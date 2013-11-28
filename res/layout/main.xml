@@ -58,6 +58,7 @@
             android:onClick="login"
             android:text="@string/login" />
 
+        
         <Button
             android:id="@+id/btn_register"
             android:layout_width="300dp"
@@ -67,6 +68,17 @@
             android:background="#e6e6fa"
             android:onClick="toRegistration"
             android:text="@string/register" />
+       
+
+        <!-- <Button
+            android:id="@+id/btn_register"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_login"
+            android:layout_marginTop="10dp"
+            android:background="#e6e6fa"
+            android:onClick="testButton"
+            android:text="@string/register" /> -->
 
         <View
             android:id="@+id/left_divider"
@@ -95,15 +107,15 @@
             android:layout_marginTop="15dp"
             android:background="@android:color/black" />
 
-        <!--
-             <com.facebook.widget.LoginButton
-            android:id="@+id/authButton"
+        <!--  <com.facebook.widget.LoginButton
+            android:id="@+id/btn_login_with_fb"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/or"
-            android:layout_marginTop="5dp" />
-        -->
+            android:layout_marginTop="5dp"
+            android:onClick="loginWithFacebook" /> -->
 
+        
         <Button
             android:id="@+id/btn_login_with_fb"
             android:layout_width="300dp"
@@ -113,6 +125,7 @@
             android:background="#e6e6fa"
             android:onClick="loginWithFacebook"
             android:text="@string/login_with_fb" />
+      
     </RelativeLayout>
 
 </RelativeLayout>

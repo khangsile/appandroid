@@ -1,21 +1,15 @@
 package com.llc.bumpr;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,10 +20,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.SessionState;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.koushikdutta.async.future.FutureCallback;
+import com.llc.bumpr.lib.GCMRegistrationManager;
+import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.lib.BumprClient;
 import com.llc.bumpr.sdk.models.Login;
 import com.llc.bumpr.sdk.models.Session;
@@ -38,15 +31,6 @@ import com.llc.bumpr.sdk.models.User;
 public class LoginActivity extends Activity {
 	/** Reference to the current context */
 	private Context context;
-
-	// Constants needed for GCM registration
-	public static final String EXTRA_MESSAGE = "message";
-	public static final String PROPERTY_REG_ID = "registration_id";
-	private static final String PROPERTY_APP_VERSION = "appVersion";
-	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-		
-	/** Google Project # required for GCM messages */
-	private String SENDER_ID;
 
 	/** Tag used to log messages */
 	static final String TAG = "com.llc.bumpr GCM";
@@ -62,27 +46,18 @@ public class LoginActivity extends Activity {
 
 	/** Holds the reference to the password edit text box in the layout */
 	EditText password;
-
-	/** Reference to a Google Cloud Messaging object */
-	private GoogleCloudMessaging gcm;
-	
-	/** AtomicInteger to keep track of messages sent */
-	private AtomicInteger msgId = new AtomicInteger();
-	
-	/** Reference to shared preferences where GCM details are stored */
-	private SharedPreferences prefs;
 	
 	/** String to hold the GCM registration ID */
 	private String regId;
+	
+	/** GCM Registration Manager object to perform the registration */
+	GCMRegistrationManager gcm;
 
 	// Test Git Push
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.main);
-		// Set base url to connect to Tony's server for testing
-		SENDER_ID = getString(R.string.gcm_sender_id);
 		
 		BumprClient.setBaseURL("http://192.168.1.24" + ":3000/api/v1");
 
@@ -95,17 +70,17 @@ public class LoginActivity extends Activity {
 		final ProgressDialog pd = ProgressDialog.show(LoginActivity.this,
 				"Please Wait", "Checking for saved login...", false, true);
 		// Only allow the app to continue if Google Play Services is available!
-		if (checkPlayServices(pd)) {
+		if (GCMRegistrationManager.checkPlayServices(pd, context)) {
 			// Google Cloud Messaging Registration
-			gcm = GoogleCloudMessaging.getInstance(this);
-			regId = getRegistrationId(context); // Retrieve user registration id
-
+			gcm = new GCMRegistrationManager(context);
+			regId = gcm.getRegistrationIdFromGCM(); // Retrieve user registration id
 			Log.i(TAG, regId);
 
 			// If no registration id, register in the background!
 			if (TextUtils.isEmpty(regId)) {
-				registerInBackground();
+				gcm.registerInBackground();
 			}
+			
 			// See if user details are saved on this phone. If so, login for them
 			checkSavedLogin(pd);
 		} else {
@@ -113,7 +88,6 @@ public class LoginActivity extends Activity {
 		}
 		pd.dismiss();
 
-		// Get references to text fields in the layout
 		email = (EditText) findViewById(R.id.et_email);
 		password = (EditText) findViewById(R.id.et_password);
 	}
@@ -140,223 +114,80 @@ public class LoginActivity extends Activity {
 		// Maybe store JSON of user object in future
 		if (!savedLogin.getString("email", "").contentEquals("")
 				&& !savedLogin.getString("password", "").contentEquals("")) {
-			String email = savedLogin.getString("email", ""); // Get email
-			String password = savedLogin.getString("password", ""); // Get password
+			String email = savedLogin.getString("email", ""); 
+			String password = savedLogin.getString("password", "");
 			String authToken = savedLogin.getString("auth_token", "");
+
 			Login login = new Login.Builder()
 							.setEmail(email)
 							.setPassword(password)
-							.setRegistrationId(getRegistrationId(this))
+							.setRegistrationId(gcm.getRegistrationIdFromGCM())
 							.setPlatform("android")
 							.build();
 			
-			Session.getSession().login(getApplicationContext(), login, new FutureCallback<User>() {
+			if (authToken == null || authToken.trim().equals("")) return;
+			
+			Session session = Session.getSession();
+			session.setAuthToken(authToken);
+			
+			ApiRequest r = User.getMeRequest(this, new FutureCallback<User>() {
 
-						@Override
-						public void onCompleted(Exception arg0, User arg1) {
-							if (arg0 == null) {
-								Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
-								i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); 
-								startActivity(i);
-								pd.dismiss();
-							} else {
-								arg0.printStackTrace();
-							}
-						}
-					});
-		}
-	}
-
-	/**
-	 * Gets the current registration ID for application on GCM service.
-	 * <p>
-	 * If the result is empty, the app needs to register with GCM service.
-	 * 
-	 * @param context2 Application context
-	 * @return registration ID or empty string if there is no existing
-	 * registration ID
-	 */
-	private String getRegistrationId(Context context2) {
-		// TODO Auto-generated method stub
-		// Get shared preferences and check if GCM registration id is stored
-		prefs = getGCMPreferences(context2);
-		String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-		// If no registration stored, return empty string
-		if (TextUtils.isEmpty(registrationId)) {
-			Log.i(TAG, "Registration not found.");
-			return "";
-		}
-		// Check if app was updated. If so, it must clear the registration ID
-		// since the existing regID is not guaranteed to work with the new app
-		// version.
-		int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION,
-				Integer.MIN_VALUE);
-		int currentVersion = getAppVersion(context2);
-		if (registeredVersion != currentVersion) {
-			// If new version, return empty string
-			Log.i(TAG, "App version changed.");
-			return "";
-		}
-		// Return registration id if all tests were passed
-		return registrationId;
-	}
-
-	/**
-	 * Get Application's current version
-	 * 
-	 * @param context2 Application context
-	 * @return Application's version code from the {@code PackageManager}
-	 */
-	private int getAppVersion(Context context2) {
-		// TODO Auto-generated method stub
-		try {
-			// Check package info and return the version
-			PackageInfo packageInfo = context2.getPackageManager()
-					.getPackageInfo(context2.getPackageName(), 0);
-			return packageInfo.versionCode;
-		} catch (NameNotFoundException e) {
-			// This should never take place
-			throw new RuntimeException("Could not get package name: " + e);
-		}
-	}
-
-	/**
-	 * Get GCM Shared Preferences instance
-	 * 
-	 * @param context2 Application context
-	 * @return Application's {@code SharedPreferences}.
-	 */
-	private SharedPreferences getGCMPreferences(Context context2) {
-		// TODO Auto-generated method stub
-		return getSharedPreferences(LoginActivity.class.getSimpleName(),
-				Context.MODE_PRIVATE);
-	}
-
-	/**
-	 * Registers the application with GCM servers asynchronously.
-	 * <p>
-	 * Stores the registration ID and app versionCode in the application's
-	 * shared preferences.
-	 */
-	private void registerInBackground() {
-		new AsyncTask<Void, Void, String>() {
-			@Override
-			protected String doInBackground(Void... params) {
-				// TODO Auto-generated method stub
-				String msg = "";
-				try {
-					// If no Gcm instance, create a new instance for this
-					// context
-					if (gcm == null)
-						gcm = GoogleCloudMessaging.getInstance(context);
-					// register the user to GCM and store their registration id
-					regId = gcm.register(SENDER_ID);
-					msg = "Device registered, registration ID=" + regId;
-
-					// You should send the registration ID to your server over
-					// HTTP, so it can use GCM/HTTP or CCS to send messages to your
-					// app. The request to your server should be authenticated if
-					// your app is using accounts.
-
-					// Not needed currently. We are sending up the GCM API key
-					// upon login sendRegistrationIdToBackend();
-
-					// Store registration id here in shared preferences
-					storeRegistrationId(context, regId);
-				} catch (IOException ex) {
-					msg = "Error :" + ex.getMessage();
-					// If there is an error, require user to click a button to
-					// register again
-					// Or hit back button to exit
+				@Override
+				public void onCompleted(Exception arg0, User arg1) {
+					if (arg0 == null) {
+						Toast.makeText(getApplicationContext(), arg1.getFirstName(), Toast.LENGTH_LONG).show();
+						Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); 
+						startActivity(i);
+					} else {
+						arg0.printStackTrace();
+					}
 				}
-				// return GCM API key to onPostExecute
-				return msg;
-			}
+				
+			});
+			
+			session.sendRequest(r);
+			
+			/*Session.getSession().login(getApplicationContext(), login, new FutureCallback<User>() {
 
-			@Override
-			protected void onPostExecute(String msg) {
-				// Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-			}
-		}.execute(null, null, null); // Execute the async task
+				@Override
+				public void onCompleted(Exception arg0, User arg1) {
+					pd.dismiss();
 
-	}
-
-	/**
-	 * Stores the registration ID and app versionCode in the application's
-	 * {@code SharedPreferences}
-	 * 
-	 * @param context Application's context
-	 * @param regid Registration ID
-	 */
-	private void storeRegistrationId(Context context2, String regid) {
-		// Get GCM preferences
-		prefs = getGCMPreferences(context2);
-		int appVersion = getAppVersion(context); // Get the app version
-		Log.i(TAG, "Saving regId on app version " + appVersion);
-
-		// Write the app version and GCM API key to shared preferences and store
-		// them
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(PROPERTY_REG_ID, regid);
-		editor.putInt(PROPERTY_APP_VERSION, appVersion);
-		editor.commit();
-	}
-
-	/**
-	 * Check the device to make sure it has the Google Play Services APK. If it
-	 * doesn't, display a dialog that allows users to download the APK from the
-	 * Google Play Store or enable it in the device's system settings.
-	 * 
-	 * @param pd Reference to the displayed progress dialog
-	 */
-	private boolean checkPlayServices(final ProgressDialog pd) {
-		// Check if GOogle Play Services are available
-		int resultCode = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(this);
-		// If not successful attempt to recover from the error and have them
-		// download google play services
-		if (resultCode != ConnectionResult.SUCCESS) {
-			if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-				pd.dismiss();
-				GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-						PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			} else { // Otherwise, the device is not support
-				Log.i(TAG, "This device is not supported.");
-				pd.dismiss();
-				finish();
-			}
-			// If the error is not recoverable, return false
-			return false;
+					if (arg0 == null) {
+						Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); 
+						startActivity(i);
+					} else {
+						arg0.printStackTrace();
+					}
+				}
+			});*/
 		}
-		// If google play services are installed and activated, return true
-		return true;
 	}
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
-		// checkPlayServices(); //Verify Google Play Services is available
+		//checkPlayServices(); //Verify Google Play Services is available
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
 	public void authenticate(FutureCallback<User> cb) {
-		String email = ((EditText) findViewById(R.id.et_email)).getText()
-				.toString();
-		String password = ((EditText) findViewById(R.id.et_password)).getText()
-				.toString();
+		String email = ((EditText) findViewById(R.id.et_email)).getText().toString();
+		String password = ((EditText) findViewById(R.id.et_password)).getText().toString();
 
 		Session session = Session.getSession();
+
 		Login login = new Login.Builder()
 						.setEmail(email)
 						.setPassword(password)
-						.setRegistrationId(getRegistrationId(this))
+						.setRegistrationId(gcm.getRegistrationIdFromGCM())
 						.setPlatform("android")
 						.build();
 		session.login(this, login, cb);
@@ -380,6 +211,8 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void onCompleted(Exception arg0, User arg1) {
+				dialog.dismiss();
+
 				if (arg0 == null) {
 					// Store details upon successful login
 					SharedPreferences.Editor loginEditor = savedLogin.edit();
@@ -388,12 +221,25 @@ public class LoginActivity extends Activity {
 					loginEditor.putString("auth_token", Session.getSession().getAuthToken());
 					loginEditor.commit();
 
-					dialog.dismiss();
 					Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-					// Remove Login from stack
-					startActivity(i); // start new intent
-				} else {
+					startActivity(i);
+				} else {					
+					//Create failed login dialog to inform user login failed
+					AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+					builder.setTitle("Login Failed");
+					builder.setMessage("An error occurred while logging you in. Please re-enter your credentials or register for an account.");
+					builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int arg1) {
+							dialog.cancel();
+						}
+					});
+					
+					AlertDialog dg = builder.create();
+				
+					dg.show();
+
 					arg0.printStackTrace();
 				}
 			}
@@ -426,7 +272,7 @@ public class LoginActivity extends Activity {
 				if (state.isOpened()) {
 					String token = session.getAccessToken();
 					Login login = new Login.Builder()
-									.setRegistrationId(getRegistrationId(getApplicationContext()))
+									.setRegistrationId(gcm.getRegistrationIdFromGCM())
 									.setPlatform("android")
 									.setAccessToken(token)
 									.build();
@@ -435,11 +281,25 @@ public class LoginActivity extends Activity {
 
 						@Override
 						public void onCompleted(Exception arg0, User arg1) {
-							if (arg0 != null) return;
-							
-							Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
-							i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);							
-							startActivity(i); // start new intent
+							if (arg0 == null) {
+								Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+								i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);							
+								startActivity(i); // start new intent
+							} else {
+								AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+								builder.setTitle("Facebook Login Failed");
+								builder.setMessage("An error occurred while logging you in via Facebook. Please try logging in using facebook later.");
+								builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+								
+									@Override
+									public void onClick(DialogInterface dialog, int arg1) {
+										dialog.cancel();
+									}
+								});
+										
+								AlertDialog dg = builder.create();
+								dg.show();
+							} 
 						}
 					});
 				}
@@ -463,6 +323,11 @@ public class LoginActivity extends Activity {
 	
 	public void changeIP(View v) {
 		Intent i = new Intent(this, DevActivity.class);
+		startActivity(i);
+	}
+	
+	public void testButton(View v){
+		Intent i = new Intent(getApplicationContext(), CreateTripActivity.class);
 		startActivity(i);
 	}
 }

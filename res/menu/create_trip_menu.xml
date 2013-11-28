@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/it_calendar"
+        android:title="@string/search_title"
+        android:icon="@drawable/ic_menu_calendar"
+        android:showAsAction="always"/>
+    
+    <item
+        android:id="@+id/it_user_cnt"
+        android:title="@string/search_title"
+        android:icon="@drawable/ic_menu_add_users"
+        android:showAsAction="always"/>
+</menu>
