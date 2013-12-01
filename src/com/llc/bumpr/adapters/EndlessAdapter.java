@@ -18,22 +18,15 @@ package com.llc.bumpr.adapters;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.androidtools.Conversions;
 import com.llc.bumpr.R;
 import com.llc.bumpr.lib.CircularImageView;
-import com.llc.bumpr.lib.GraphicsUtil;
 import com.llc.bumpr.sdk.models.User;
 
 public class EndlessAdapter extends ArrayAdapter<User> {

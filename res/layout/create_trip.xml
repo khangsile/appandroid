@@ -12,6 +12,7 @@
         android:layout_marginRight="10dp"
         android:hint="@string/trip_title"
         android:inputType="textCapWords"
+        android:gravity="center"
         android:maxLines="1" />
 
     <FrameLayout
@@ -30,16 +31,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             class="com.google.android.gms.maps.SupportMapFragment" />
+        
+         <!-- Don't remove. This is the fix. -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
     </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/rl_info_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="65dp"
         android:layout_below="@id/fl_map_container"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="#C0C0C0" >
+        android:background="#F5F5F5" >
 
         <TextView
             android:id="@+id/tv_pickup_date_text"

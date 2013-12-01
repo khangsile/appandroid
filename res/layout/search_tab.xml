@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_bottom" />
+     
+    <LinearLayout android:id="@id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"       
+        android:layout_alignParentBottom="true"
+        android:weightSum="1"
+		android:background="@color/ghost_white" >
+        
+        <Button android:id="@+id/btn_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".46"
+            android:textStyle="bold"
+            android:background="@color/ghost_white"
+            android:textSize="10dp"
+            android:text="SORT" />
+        
+        <View android:layout_width="1px"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="#dcdcdc" />
+        
+        <Button android:id="@+id/btn_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".46"
+            android:textStyle="bold"
+            android:background="@color/ghost_white"
+            android:textSize="10dp"
+            android:text="FILTER" />
+        
+        <View android:layout_width="1px"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="#dcdcdc" />
+        
+        
+        <Button android:id="@+id/btn_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_weight=".05"
+            android:background="@android:drawable/ic_menu_mapmode"
+            android:onClick="toggle" />
+        
+    </LinearLayout>        
+    
+     <View android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_above="@id/layout_bottom"
+        android:background="#dcdcdc" />
+
+</RelativeLayout>

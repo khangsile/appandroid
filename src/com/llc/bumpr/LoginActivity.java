@@ -265,6 +265,7 @@ public class LoginActivity extends Activity {
 	public void loginWithFacebook(View v) {
 		List<String> permissions = new ArrayList<String>();
 		permissions.add("email"); //Add extra permissions here
+		
 		openActiveSession(this, true, new com.facebook.Session.StatusCallback() {
 
 			@Override
@@ -282,9 +283,11 @@ public class LoginActivity extends Activity {
 						@Override
 						public void onCompleted(Exception arg0, User arg1) {
 							if (arg0 == null) {
-								Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
-								i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);							
-								startActivity(i); // start new intent
+								//Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+								//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);							
+								//startActivity(i); // start new intent
+								Intent i = new Intent(getApplicationContext(), SearchTabActivity.class);
+								startActivity(i);
 							} else {
 								AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
 								builder.setTitle("Facebook Login Failed");

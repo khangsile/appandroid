@@ -59,7 +59,7 @@
             android:text="@string/login" />
 
         
-        <Button
+       <!-- <Button
             android:id="@+id/btn_register"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -68,9 +68,9 @@
             android:background="#e6e6fa"
             android:onClick="toRegistration"
             android:text="@string/register" />
-       
+       -->
 
-        <!-- <Button
+         <Button
             android:id="@+id/btn_register"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
             android:layout_marginTop="10dp"
             android:background="#e6e6fa"
             android:onClick="testButton"
-            android:text="@string/register" /> -->
+            android:text="@string/register" />
 
         <View
             android:id="@+id/left_divider"

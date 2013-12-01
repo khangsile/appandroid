@@ -17,16 +17,24 @@
     <style name="AppTheme" parent="Theme.Sherlock.Light">
 		<item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
 		<item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
-        
+        <item name="android:actionBarTabStyle">@style/Widget.Styled.ActionBar.Tab</item>
+    	<item name="actionBarTabStyle">@style/Widget.Styled.ActionBar.Tab</item>
+		
+		
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:windowBackground">@color/ghost_white</item>
         <item name="android:buttonStyle">@style/Button</item>
         <item name="switchStyle">@style/Widget.Holo.Light.CompoundButton.Switch</item>
     </style>
     
-    <style name="Widget.Styled.ActionBar" parent="@style/Widget.Sherlock.ActionBar.Solid">
+    <style name="Widget.Styled.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">
          <item name="background">@color/ghost_white</item>
        	 <item name="android:background">@color/ghost_white</item>
+    </style>
+    
+    <style name="Widget.Styled.ActionBar.Tab" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">
+        <item name="background">@color/ghost_white</item>
+        <item name="android:background">@color/ghost_white</item>
     </style>
     
     <style name = "TextAppearance.ActionBar.SearchViewStyle" parent="@style/Widget.Sherlock.Light.SearchAutoCompleteTextView">

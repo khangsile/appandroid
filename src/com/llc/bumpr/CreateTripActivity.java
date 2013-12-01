@@ -54,7 +54,7 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 		// TODO Auto-generated method stub
 		super.onCreateOptionsMenu(menu);
 
-		//Inflate actinon bar sherlock
+		//Inflate action bar sherlock
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.create_trip_menu, menu);
 		

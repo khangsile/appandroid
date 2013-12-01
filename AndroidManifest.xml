@@ -140,6 +140,11 @@
             android:screenOrientation="portrait" >
      	</activity>
      	<activity
+            android:name="com.llc.bumpr.CreateTripActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+     	</activity>
+     	<activity
      	    android:name="com.llc.bumpr.UIActivity"
      	    android:label="@string/app_name"
      	    android:screenOrientation="portrait" >
@@ -148,11 +153,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter> -->
         </activity>
-        <activity
-            android:name="com.llc.bumpr.CreateTripActivity"
+        <activity 
+            android:name="com.llc.bumpr.SearchTabActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-     	</activity>
+            android:screenOrientation="portrait">        
+        </activity>
         <service
             android:name="com.llc.bumpr.services.DriverLocationService"
             android:label="@string/app_name">            
