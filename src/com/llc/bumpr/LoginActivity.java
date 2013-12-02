@@ -42,10 +42,10 @@ public class LoginActivity extends Activity {
 	private SharedPreferences savedLogin;
 
 	/** Holds reference to the email edit text box in the layout */
-	EditText email;
+	private EditText email;
 
 	/** Holds the reference to the password edit text box in the layout */
-	EditText password;
+	private EditText password;
 	
 	/** String to hold the GCM registration ID */
 	private String regId;
@@ -265,6 +265,11 @@ public class LoginActivity extends Activity {
 	public void loginWithFacebook(View v) {
 		List<String> permissions = new ArrayList<String>();
 		permissions.add("email"); //Add extra permissions here
+		
+		Intent i = new Intent(getApplicationContext(), SearchTabActivity.class);
+		startActivity(i);
+		
+		if (true) return;
 		
 		openActiveSession(this, true, new com.facebook.Session.StatusCallback() {
 
