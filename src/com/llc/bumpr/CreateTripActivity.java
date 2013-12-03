@@ -6,6 +6,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Address;
@@ -13,6 +14,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -32,15 +40,33 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.lib.StringLocationTask;
 import com.llc.bumpr.sdk.lib.Coordinate;
 import com.llc.bumpr.sdk.models.Trip;
+import com.llc.bumpr.adapters.PlacesAutoCompleteAdapter;
 
 public class CreateTripActivity extends SherlockFragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener {
+		GooglePlayServicesClient.OnConnectionFailedListener,
+		OnItemClickListener {
+	//Assign these here to make them final
+	/** Reference to the start address */
+	private AutoCompleteTextView startAdd;
+	
+	/** Reference to the end address */
+	private AutoCompleteTextView endAdd;
+	
+	/** Reference to the trip tags*/
+	private EditText tripTags;
+	
+	/** Reference to the create trip button*/
+	private Button createBtn;
+	
 	/** Reference to the map UI element */
 	private GoogleMap gMap;
 
 	/** Reference to the location client (Allows use of GPS) */
 	private LocationClient mLocationClient;
+	
+	/** Reference to the application context */
+	private Context context;
 
 	/** Request value to get current location (Using GPS) */
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -51,6 +77,9 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_trip); // Set layout to show the create
 												// trip page
+		
+		//Set context
+		context = getApplicationContext();
 
 		// Get map fragment!
 		gMap = ((SupportMapFragment) getSupportFragmentManager()
@@ -58,6 +87,56 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 
 		// Create new location client.
 		mLocationClient = new LocationClient(this, this, this);
+		
+		// Fill references to UI elements in view
+		startAdd = (AutoCompleteTextView) findViewById(R.id.et_start_loc);
+		endAdd = (AutoCompleteTextView) findViewById(R.id.et_end_loc);
+		tripTags = (EditText) findViewById(R.id.et_tags);
+		createBtn = (Button) findViewById(R.id.btn_create);
+		
+		//Set places autocomplete adapters
+		startAdd.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.auto_complete_list_item));
+		endAdd.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.auto_complete_list_item));
+		
+		//Set on item click listeners
+		startAdd.setOnItemClickListener(this);
+		endAdd.setOnItemClickListener(this);
+		
+		//Set on focus change listeners
+		startAdd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus){
+				if (hasFocus){ //Resize text views
+					startAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.8f));
+					endAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.2f));
+				}
+				else{
+					startAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.5f));
+					endAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.5f));
+				}
+			}
+		});
+		
+		endAdd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus){
+				if (hasFocus){
+					endAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.8f));
+					startAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.2f));
+				}
+				else{
+					endAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.5f));
+					startAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.5f));
+				}
+			}
+		});
+		
+	}
+	
+	@Override
+	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+		String str = (String) adapterView.getItemAtPosition(position);
+		Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
 	}
 	
 	@Override
@@ -244,5 +323,4 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onDisconnected() {
 	}
-
 }
