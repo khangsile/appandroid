@@ -12,6 +12,11 @@ import android.location.Geocoder;
 
 import com.google.android.gms.maps.model.LatLng;
 
+/**
+ * Takes a LatLng and converts it to an address
+ * @author KhangSiLe
+ *
+ */
 public class LatLngLocationTask extends GeocodeLocationTask {
 
 	public LatLngLocationTask(Context context, Callback<List<Address>> callback) {

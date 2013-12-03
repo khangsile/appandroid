@@ -59,7 +59,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		BumprClient.setBaseURL("http://192.168.1.24" + ":3000/api/v1");
+		BumprClient.setBaseURL("http://192.168.1.200" + ":3000/api/v1");
 
 		// Get shared preferences with saved login details
 		savedLogin = getSharedPreferences(LOGIN_PREF, 0);
@@ -265,11 +265,6 @@ public class LoginActivity extends Activity {
 	public void loginWithFacebook(View v) {
 		List<String> permissions = new ArrayList<String>();
 		permissions.add("email"); //Add extra permissions here
-		
-		Intent i = new Intent(getApplicationContext(), SearchTabActivity.class);
-		startActivity(i);
-		
-		if (true) return;
 		
 		openActiveSession(this, true, new com.facebook.Session.StatusCallback() {
 
