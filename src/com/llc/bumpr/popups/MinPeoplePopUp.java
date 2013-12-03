@@ -19,7 +19,6 @@ public class MinPeoplePopUp extends PopupWindow {
 
 	private Context context;
 	private OnSubmitListener listener;
-	private TextView instructions;
 	private TextView tvCount;
 	private int count = 1;
 	
@@ -41,7 +40,7 @@ public class MinPeoplePopUp extends PopupWindow {
 		setBackgroundDrawable(new ColorDrawable());
 		
 		tvCount = (TextView) v.findViewById(R.id.tv_people_count);
-		instructions = (TextView) v.findViewById(R.id.tv_instructions);
+		
 		
 		/** Set up buttons */
 		Button up = (Button) v.findViewById(R.id.btn_up);
@@ -74,12 +73,6 @@ public class MinPeoplePopUp extends PopupWindow {
 			
 		});
 		
-	}
-	
-	/************************* SETTERS ***************************/
-	
-	public void setInstructions(String instruction) {
-		instructions.setText(instruction);
 	}
 	
 	/************************* BUTTON METHODS ********************/

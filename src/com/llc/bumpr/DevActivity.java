@@ -18,8 +18,8 @@ public class DevActivity extends SherlockActivity {
 	
 	public void changeIP(View v) {
 		EditText ip = (EditText) findViewById(R.id.et_ip_address);
-		String baseURL = ip.getText().toString();
-		Session.baseURL = baseURL + ":3000/api/v1";
+		String baseURL = ip.toString();
+		Session.baseURL = baseURL + "/api/v1";
 		BumprClient.setBaseURL(baseURL + "/api/v1");
 		Log.i("BUMPRCLIENT", "changed to " + baseURL + "/api/v1");
 	}

@@ -8,18 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
-		android:alpha=".8"
+		android:alpha=".3"
         android:background="#222222" >
-        
-        <TextView android:id="@+id/tv_instructions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:textSize="15dp"
-            android:textColor="#ffffff"
-            android:background="#80000000" />
         
         <Button android:id="@+id/btn_apply"
             android:layout_width="wrap_content"
@@ -55,14 +45,14 @@
             android:layout_height="35dp"
             android:layout_above="@id/tv_people_count"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/ic_up_arrow" />
+            android:background="@drawable/up_arrow" />
         
         <Button android:id="@+id/btn_down"
             android:layout_width="50dp"
             android:layout_height="35dp"
             android:layout_below="@id/tv_people_count"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/ic_down_arrow" />
+            android:background="@drawable/down_arrow" />
             
     </RelativeLayout>
     
