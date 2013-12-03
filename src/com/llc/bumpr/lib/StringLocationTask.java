@@ -11,6 +11,11 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 
+/**
+ * Takes a string an converts it to an address with LatLng coordinates
+ * @author KhangSiLe
+ *
+ */
 public class StringLocationTask extends GeocodeLocationTask {
 
 	public StringLocationTask(Context context, Callback<List<Address>> callback) {

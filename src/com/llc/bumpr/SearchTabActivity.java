@@ -1,9 +1,9 @@
 package com.llc.bumpr;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.content.res.Resources;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -24,6 +24,7 @@ import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.llc.bumpr.fragments.SearchListFragment;
 import com.llc.bumpr.fragments.SearchMapFragment;
+import com.llc.bumpr.popups.CalendarPopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp.OnSubmitListener;
 
@@ -83,15 +84,25 @@ public class SearchTabActivity extends SherlockFragmentActivity {
 	}
     
     @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) { 
+	public boolean onOptionsItemSelected(MenuItem item) {		
+		Resources r = getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
+    	
+        switch (item.getItemId()) { 
 		case R.id.it_calendar: //Calendar button pressed
-			Toast.makeText(getApplicationContext(),
-					"Calendar Pressed",
-					Toast.LENGTH_SHORT).show();
+			CalendarPopUp cPopUp = new CalendarPopUp(this, null, new CalendarPopUp.OnSubmitListener() {
+
+				@Override
+				public void valueChanged(Date date) {
+					
+				}
+				
+			});
+			cPopUp.showAtLocation(pager, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
+			cPopUp.setInstructions("Find all rides after the chosen date.");
 			return true;
 		case R.id.it_user_count: //Add user button pressed
-			PopupWindow popUp = new MinPeoplePopUp(this, null, new OnSubmitListener() {
+			MinPeoplePopUp mPopUp = new MinPeoplePopUp(this, null, new OnSubmitListener() {
 
 				@Override
 				public void valueChanged(int value) {
@@ -99,12 +110,8 @@ public class SearchTabActivity extends SherlockFragmentActivity {
 				}
 				
 			});
-			
-			Resources r = getResources();
-			float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
-			
-			popUp.showAtLocation(pager, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
-
+			mPopUp.showAtLocation(pager, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
+			mPopUp.setInstructions("Set the number of guests");
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

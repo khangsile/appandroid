@@ -1,11 +1,18 @@
 package com.llc.bumpr;
 
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -21,6 +28,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.koushikdutta.async.future.FutureCallback;
+import com.llc.bumpr.lib.StringLocationTask;
+import com.llc.bumpr.sdk.lib.Coordinate;
+import com.llc.bumpr.sdk.models.Trip;
 
 public class CreateTripActivity extends SherlockFragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
@@ -84,9 +95,61 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 	 * @param v View that is calling this function
 	 */
 	public void createTrip(View v){
-		Toast.makeText(getApplicationContext(),
-				"Create Trip Called",
-				Toast.LENGTH_SHORT).show();		
+		
+		final String start = ((EditText) findViewById(R.id.et_start_loc)).getText().toString();
+		final String end = ((EditText) findViewById(R.id.et_end_loc)).getText().toString();
+		
+		Object[] starts = {start};
+		
+		/* This is ugly. Any suggestions on different implementations?
+		 * 1. Grab the locations as they are entering in the data. Allow users to 
+		 * move the location on the map manually
+		 * if it is not desired location. 
+		 */
+		new StringLocationTask(this, new Callback<List<Address>>() {
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				// do nothing
+			}
+
+			@Override
+			public void success(List<Address> arg0, Response arg1) {
+				final Coordinate startLoc = new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude());
+				startLoc.title = start;
+				
+				Object[] ends = {end};
+				new StringLocationTask(getApplicationContext(), new Callback<List<Address>>() {
+
+					@Override
+					public void failure(RetrofitError arg0) {
+						// TODO Auto-generated method stub
+					}
+
+					@Override
+					public void success(List<Address> arg0, Response arg1) {
+						Coordinate endLoc = new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude());
+						endLoc.title = end;
+						
+						Trip t = new Trip.Builder()
+									.setStart(startLoc)
+									.setEnd(endLoc)
+									.build();
+						t.post(getApplicationContext(), new FutureCallback<String>() {
+
+							@Override
+							public void onCompleted(Exception arg0, String arg1) {
+								// Do something.
+							}
+							
+						});
+					}
+					
+				}).execute(ends);
+			}
+			
+		}).execute(starts);		
+		
 	}
 
 	@Override
