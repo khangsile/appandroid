@@ -147,22 +147,6 @@ public class LoginActivity extends Activity {
 			});
 			
 			session.sendRequest(r);
-			
-			/*Session.getSession().login(getApplicationContext(), login, new FutureCallback<User>() {
-
-				@Override
-				public void onCompleted(Exception arg0, User arg1) {
-					pd.dismiss();
-
-					if (arg0 == null) {
-						Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
-						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); 
-						startActivity(i);
-					} else {
-						arg0.printStackTrace();
-					}
-				}
-			});*/
 		}
 	}
 
@@ -270,6 +254,8 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void call(com.facebook.Session session, SessionState state, Exception exception) {
+				
+				if (exception != null) exception.printStackTrace();
 				if (state.isOpened()) {
 					String token = session.getAccessToken();
 					Login login = new Login.Builder()

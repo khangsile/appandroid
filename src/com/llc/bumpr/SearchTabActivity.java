@@ -94,7 +94,7 @@ public class SearchTabActivity extends SherlockFragmentActivity {
 
 				@Override
 				public void valueChanged(Date date) {
-					
+					//Do something
 				}
 				
 			});
@@ -106,7 +106,7 @@ public class SearchTabActivity extends SherlockFragmentActivity {
 
 				@Override
 				public void valueChanged(int value) {
-					Toast.makeText(getApplicationContext(), "" + value, Toast.LENGTH_LONG).show();
+					//Do something
 				}
 				
 			});

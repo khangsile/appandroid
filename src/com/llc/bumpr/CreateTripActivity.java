@@ -13,7 +13,6 @@ import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,10 +36,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.koushikdutta.async.future.FutureCallback;
+import com.llc.bumpr.adapters.PlacesAutoCompleteAdapter;
 import com.llc.bumpr.lib.StringLocationTask;
 import com.llc.bumpr.sdk.lib.Coordinate;
 import com.llc.bumpr.sdk.models.Trip;
-import com.llc.bumpr.adapters.PlacesAutoCompleteAdapter;
 
 public class CreateTripActivity extends SherlockFragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
