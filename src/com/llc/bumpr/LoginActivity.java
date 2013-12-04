@@ -92,6 +92,10 @@ public class LoginActivity extends Activity {
 		password = (EditText) findViewById(R.id.et_password);
 	}
 	
+	public void initializeMe(User activeUser) {
+		
+	}
+	
 	/**
 	 * Gets the result from a previous activity. For now, this is solely used for Facebook login.
 	 * If we would like to use this for other methods, we will need to use a case switch based on the
@@ -136,7 +140,7 @@ public class LoginActivity extends Activity {
 				public void onCompleted(Exception arg0, User arg1) {
 					if (arg0 == null) {
 						Toast.makeText(getApplicationContext(), arg1.getFirstName(), Toast.LENGTH_LONG).show();
-						Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+						Intent i = new Intent(getApplicationContext(), SearchTabActivity.class);
 						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); 
 						startActivity(i);
 					} else {

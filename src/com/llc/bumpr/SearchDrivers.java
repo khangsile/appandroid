@@ -73,7 +73,7 @@ import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
-public class SearchDrivers extends SherlockFragmentActivity implements
+public class SearchDrivers extends BumprActivity implements
 		EndlessListView.EndlessListener,
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener {
@@ -145,7 +145,7 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 	private boolean reStart = false;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		//Dispaly layout to screen
@@ -870,5 +870,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 				}).execute(queryArray); //Execute new location task
 			}
 		});
+	}
+
+	@Override
+	protected void initializeMe(User activeUser) {
+		// TODO Auto-generated method stub
+		
 	}
 }
