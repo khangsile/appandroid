@@ -9,16 +9,16 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.res.Resources;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -32,9 +32,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -54,10 +52,13 @@ import com.llc.bumpr.lib.StringLocationTask;
 import com.llc.bumpr.popups.CalendarPopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp.OnSubmitListener;
+import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.lib.Coordinate;
+import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.Trip;
+import com.llc.bumpr.sdk.models.User;
 
-public class CreateTripActivity extends SherlockFragmentActivity implements
+public class CreateTripActivity extends BumprActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener,
 		OnItemClickListener {
@@ -184,6 +185,11 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 		});		
 	}
 	
+	public void initializeMe(User activeUser) {
+		
+	}
+
+	
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 		String str = (String) adapterView.getItemAtPosition(position);
@@ -230,7 +236,7 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 				
 			});
 			mPopUp.showAtLocation(parent, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
-			mPopUp.setInstructions("Minimum number of people required for this trip");
+			mPopUp.setInstructions("Minimum number of people required\nfor this trip");
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -306,32 +312,55 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 	 * @param v View that is calling this function
 	 */
 	public void createTrip(View v){
+		final ProgressDialog pd = ProgressDialog.show(CreateTripActivity.this,
+				"Please Wait", "Creating your trip...", false, true);
+		
+		//Start progress dialog
 		Log.i("com.llc.bumpr", "Creating trip!");
 		//Parse trip tags
 		String[] tags = tripTags.getText().toString().split(",");
 		
-		for (String tag:tags){
+		for (String tag:tags)
 			tag = tag.trim();
-		}
-		
-		Log.i("com.llc.bumpr", tags.toString());
-		tripBldr.setTags((ArrayList<String>)Arrays.asList(tags));
+			
+		tripBldr.setTags(new ArrayList<String>(Arrays.asList(tags)));
 		//Get trip price
 		tripBldr.setFee(Double.parseDouble(tripPrice.getText().toString()));
 		
 		//Perform Success!
 		Trip t = tripBldr.build();
 		
-			t.post(getApplicationContext(), new FutureCallback<String>() {
+		ApiRequest request = t.post(getApplicationContext(), new FutureCallback<String>() {
 			
 			@Override
-			public void onCompleted(Exception arg0, String arg1) {
+			public void onCompleted(Exception e, String s) {
 				//Perform complete
-				Toast.makeText(getApplicationContext(), "Trip Created!",Toast.LENGTH_SHORT).show();
-				finish();
+				if (e == null){
+					pd.dismiss();
+					finish();
+				}else{
+					//Make dialog
+					pd.dismiss();
+					AlertDialog.Builder builder = new AlertDialog.Builder(CreateTripActivity.this);
+					builder.setTitle("Trip Creation Failed");
+					builder.setMessage("An error occurred while creating your trip. Please verify you supplied " +
+							"all of the information (Note: Set the trip date and minimum required users for the trip using the buttons at the top of the page).");
+					builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int arg1) {
+							dialog.cancel();
+						}
+					});
+					
+					AlertDialog dg = builder.create();
+				
+					dg.show();
+				}
 			}
 		
 		});
+		
+		Session.getSession().sendRequest(request);
 	}
 
 	@Override
