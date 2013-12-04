@@ -27,9 +27,10 @@ import com.llc.bumpr.fragments.SearchMapFragment;
 import com.llc.bumpr.popups.CalendarPopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp.OnSubmitListener;
+import com.llc.bumpr.sdk.models.User;
 
 
-public class SearchTabActivity extends SherlockFragmentActivity {	
+public class SearchTabActivity extends BumprActivity {	
 	private ViewPager pager;
 	
 	private PagerAdapter pagerAdapter;
@@ -49,6 +50,16 @@ public class SearchTabActivity extends SherlockFragmentActivity {
         pagerAdapter = new ScreenSlidePagerAdapter(manager);
         pager.setAdapter(pagerAdapter);
     }
+	
+	/**
+	 * Inherited method
+	 * Load items pertaining to the active user here
+	 */
+	@Override
+	protected void initializeMe(User activeUser) {
+		// TODO Auto-generated method stub
+		
+	}
 	
     /******************************** MENU *******************************/
     

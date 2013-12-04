@@ -1,7 +1,5 @@
 package com.llc.bumpr;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -11,7 +9,7 @@ import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
-public class BumprActivity extends SherlockFragmentActivity {
+public abstract class BumprActivity extends SherlockFragmentActivity {
 
 	private final String SHARED_PREF_LOGIN = "bumprLogin";
 	
@@ -40,12 +38,21 @@ public class BumprActivity extends SherlockFragmentActivity {
 			@Override
 			public void onCompleted(Exception arg0, User arg1) {
 				if (arg0 == null) {
-					//Do something
+					//Asynchronous initialization
+					initializeMe(arg1);
 				}
 			}
 		});
 		
 		session.sendRequest(request);
 	}
+	
+	/**
+	 * Method used for asynchronous loading of the active user if it 
+	 * falls out of memory. This method should be implemented by all 
+	 * child classes
+	 * @param activeUser the active user
+	 */
+	protected abstract void initializeMe(User activeUser);
 	
 }
