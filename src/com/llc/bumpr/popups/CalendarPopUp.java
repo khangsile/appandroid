@@ -49,11 +49,12 @@ public class CalendarPopUp extends PopupWindow {
 		calendar.setOnDateSelectedListener(new OnDateSelectedListener() {
 
 			@Override
-			public void onDateSelected(Date date) {
+			public void onDateSelected(Date newDate) {
+				date = newDate;
 			}
 
 			@Override
-			public void onDateUnselected(Date date) {
+			public void onDateUnselected(Date newDate) {
 			}
 			
 		});

@@ -781,9 +781,11 @@ public class SearchDrivers extends SherlockFragmentActivity implements
 					i.putExtra("user", User.getActiveUser());
 					break;
 				case 1: //Open My Sent Requests
-					i = new Intent(getApplicationContext(), MyRequests.class);
-					i.putExtra("user", User.getActiveUser()); // Pass outgoing requests
-					i.putExtra("requestType", "My Sent Requests");
+//					i = new Intent(getApplicationContext(), MyRequests.class);
+//					i.putExtra("user", User.getActiveUser()); // Pass outgoing requests
+//					i.putExtra("requestType", "My Sent Requests");
+					i = new Intent(getApplicationContext(), CreateTripActivity.class);
+					startActivity(i);
 					break;
 				case 3: //Logout
 					// Remove saved email and password from shared preferences and update shared preferences
