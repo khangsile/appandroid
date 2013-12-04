@@ -1,19 +1,27 @@
 package com.llc.bumpr;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.EditText;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -21,6 +29,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -37,10 +47,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.koushikdutta.async.future.FutureCallback;
+import com.llc.bumpr.adapters.PlacesAutoCompleteAdapter;
+import com.llc.bumpr.lib.GMapV2Painter;
 import com.llc.bumpr.lib.StringLocationTask;
+import com.llc.bumpr.popups.CalendarPopUp;
+import com.llc.bumpr.popups.MinPeoplePopUp;
+import com.llc.bumpr.popups.MinPeoplePopUp.OnSubmitListener;
 import com.llc.bumpr.sdk.lib.Coordinate;
 import com.llc.bumpr.sdk.models.Trip;
-import com.llc.bumpr.adapters.PlacesAutoCompleteAdapter;
 
 public class CreateTripActivity extends SherlockFragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
@@ -53,8 +67,23 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 	/** Reference to the end address */
 	private AutoCompleteTextView endAdd;
 	
-	/** Reference to the trip tags*/
+	/** Coordinates object to hold start address location */
+	private Coordinate startCoor;
+	
+	/** Coordinates object to hold end address location */
+	private Coordinate endCoor;
+	
+	/** Reference to the trip tags */
 	private EditText tripTags;
+	
+	/** Reference to the trip price */
+	private EditText tripPrice;
+	
+	/** Reference to the trip date */
+	private TextView tripDate;
+	
+	/** Reference to the number of trip passengers */
+	private TextView tripPassengers;
 	
 	/** Reference to the create trip button*/
 	private Button createBtn;
@@ -91,7 +120,13 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 		// Fill references to UI elements in view
 		startAdd = (AutoCompleteTextView) findViewById(R.id.et_start_loc);
 		endAdd = (AutoCompleteTextView) findViewById(R.id.et_end_loc);
+		
 		tripTags = (EditText) findViewById(R.id.et_tags);
+		tripPrice = (EditText) findViewById(R.id.et_price);
+		
+		tripDate = (TextView) findViewById(R.id.tv_pickup_date_value);
+		tripPassengers = (TextView) findViewById(R.id.tv_max_riders_value);
+		
 		createBtn = (Button) findViewById(R.id.btn_create);
 		
 		//Set places autocomplete adapters
@@ -113,6 +148,11 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 				else{
 					startAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.5f));
 					endAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.5f));
+					
+					if((startAdd.getText().toString().trim().length()) > 0 && (endAdd.getText().toString().trim().length()) > 0){
+						//draw route on map
+						drawRoute();
+					}
 				}
 			}
 		});
@@ -127,16 +167,19 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 				else{
 					endAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.5f));
 					startAdd.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.5f));
+					
+					if((startAdd.getText().toString().trim().length()) > 0 && (endAdd.getText().toString().trim().length()) > 0){
+						//draw route on map
+						drawRoute();
+					}
 				}
 			}
-		});
-		
+		});		
 	}
 	
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 		String str = (String) adapterView.getItemAtPosition(position);
-		Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
 	}
 	
 	@Override
@@ -153,30 +196,45 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Resources r = getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
+        RelativeLayout parent = (RelativeLayout) findViewById(R.id.rl_view);
 		switch (item.getItemId()) {
 		case R.id.it_calendar: //Calendar button pressed
-			Toast.makeText(getApplicationContext(),
-					"Calendar Pressed",
-					Toast.LENGTH_SHORT).show();
+			CalendarPopUp cPopUp = new CalendarPopUp(this, null, new CalendarPopUp.OnSubmitListener() {
+
+				@Override
+				public void valueChanged(Date date) {
+					tripDate.setText("" + date.toString());
+				}
+				
+			});
+			cPopUp.showAtLocation(parent, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
 			return true;
 		case R.id.it_user_cnt: //Add user button pressed
-			Toast.makeText(getApplicationContext(),
-					"Set user count pressed",
-					Toast.LENGTH_SHORT).show();
+			MinPeoplePopUp mPopUp = new MinPeoplePopUp(this, null, new OnSubmitListener() {
+
+				@Override
+				public void valueChanged(int value) {
+					tripPassengers.setText(value + " total passengers");
+				}
+				
+			});
+			mPopUp.showAtLocation(parent, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
+			mPopUp.setInstructions("Set the minimum number of guests required for this trip");
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 	
-	/**
-	 * Submit trip information to the application server to create the trip
-	 * @param v View that is calling this function
-	 */
-	public void createTrip(View v){
-		
-		final String start = ((EditText) findViewById(R.id.et_start_loc)).getText().toString();
-		final String end = ((EditText) findViewById(R.id.et_end_loc)).getText().toString();
+	public void drawRoute() { 
+		//Display android dialog box while trip is being drawn
+		final ProgressDialog pd = ProgressDialog.show(CreateTripActivity.this,
+				"Please Wait", "Finding the best route for this trip...", false, true);
+				
+		final String start = startAdd.getText().toString();
+		final String end = endAdd.getText().toString();
 		
 		Object[] starts = {start};
 		
@@ -189,7 +247,93 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 
 			@Override
 			public void failure(RetrofitError arg0) {
-				// do nothing
+				pd.dismiss();
+				Log.e("com.llc.bunpr", "Failed to convert start address to latlng");
+			}
+
+			@Override
+			public void success(List<Address> arg0, Response arg1) {
+				startCoor = new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude());
+				startCoor.title = start;
+				
+				Object[] ends = {end};
+				new StringLocationTask(getApplicationContext(), new Callback<List<Address>>() {
+
+					@Override
+					public void failure(RetrofitError arg0) {
+						pd.dismiss();
+						Log.e("com.llc.bunpr", "Failed to convert end address to latlng");
+					}
+
+					@Override
+					public void success(List<Address> arg0, Response arg1) {
+						endCoor = new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude());
+						endCoor.title = end;
+
+						// Set up list of points for trip to display route on the map
+						ArrayList<LatLng> points = new ArrayList<LatLng>();
+						points.add(new LatLng(startCoor.lat, startCoor.lon));
+						points.add(new LatLng(endCoor.lat, endCoor.lon));
+						
+						//Paint route on the map
+						GMapV2Painter painter = new GMapV2Painter(gMap, points);
+						painter.setWidth(8);
+						painter.paint();
+						
+						pd.dismiss();
+					}
+					
+				}).execute(ends);
+			}
+			
+		}).execute(starts);
+	}
+	
+	/**
+	 * Submit trip information to the application server to create the trip
+	 * @param v View that is calling this function
+	 */
+	public void createTrip(View v){
+		Log.i("com.llc.bumpr", "Creating trip!");
+		//Parse trip tags
+		
+		//Get trip price
+		
+		//Get trip date
+		
+		//Get passenger #
+		
+		//Perform Success!
+		final Trip t = new Trip.Builder()
+				.setStart(startCoor)
+				.setEnd(endCoor)
+				.build();
+			t.post(getApplicationContext(), new FutureCallback<String>() {
+			
+			@Override
+			public void onCompleted(Exception arg0, String arg1) {
+				//Perform complete
+				Toast.makeText(getApplicationContext(), "Trip Created!",Toast.LENGTH_SHORT).show();
+				finish();
+			}
+		
+		});
+		
+		/*final String start = startAdd.getText().toString();
+		final String end = endAdd.getText().toString();
+		
+		Object[] starts = {start};
+		
+		 This is ugly. Any suggestions on different implementations?
+		 * 1. Grab the locations as they are entering in the data. Allow users to 
+		 * move the location on the map manually
+		 * if it is not desired location. 
+		 
+		new StringLocationTask(this, new Callback<List<Address>>() {
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				Log.e("com.llc.bunpr", "Failed to convert start address to latlng");
 			}
 
 			@Override
@@ -202,7 +346,7 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 
 					@Override
 					public void failure(RetrofitError arg0) {
-						// TODO Auto-generated method stub
+						Log.e("com.llc.bunpr", "Failed to convert end address to latlng");
 					}
 
 					@Override
@@ -210,7 +354,7 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 						Coordinate endLoc = new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude());
 						endLoc.title = end;
 						
-						Trip t = new Trip.Builder()
+						final Trip t = new Trip.Builder()
 									.setStart(startLoc)
 									.setEnd(endLoc)
 									.build();
@@ -218,7 +362,15 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 
 							@Override
 							public void onCompleted(Exception arg0, String arg1) {
-								// Do something.
+								// Set up list of points for trip to display route on the map
+								ArrayList<LatLng> points = new ArrayList<LatLng>();
+								points.add(new LatLng(t.getStart().lat, t.getStart().lon));
+								points.add(new LatLng(t.getEnd().lat, t.getEnd().lon));
+								
+								//Paint route on the map
+								GMapV2Painter painter = new GMapV2Painter(gMap, points);
+								painter.setWidth(8);
+								painter.paint();
 							}
 							
 						});
@@ -227,7 +379,7 @@ public class CreateTripActivity extends SherlockFragmentActivity implements
 				}).execute(ends);
 			}
 			
-		}).execute(starts);		
+		}).execute(starts);	*/	
 		
 	}
 

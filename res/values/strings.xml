@@ -8,6 +8,7 @@
     <string name="cancel">Cancel</string>
     <string name="create_trip">Create Trip</string>
     <string name="decline">Decline</string>
+    <string name="dollar_sign">$</string>
     <string name="end_loc">End Address</string>
     <string name="email">Email</string>
     <string name="gcm_sender_id">130758040838</string>
@@ -26,6 +27,7 @@
 	<string name="tags">Trip Tags (Comma Separated)</string>
 	<string name="trip_title">Trip Title</string>
 	<string name="trip_date">Trip Date:</string>
+	<string name="trip_price">Price</string>
 	<string name="request_me">Request Me</string>
 	
 </resources>
