@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
@@ -74,7 +75,9 @@ public class MyRequests extends SherlockActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				
-				//Create review activity, pass it the driver who is being reviewed and start the activity
+				Toast.makeText(getApplicationContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
+				
+/*				//Create review activity, pass it the driver who is being reviewed and start the activity
 				final Driver d = new Driver.Builder(new Driver()).setId(1).build();
 				
 				final Trip t = new Trip.Builder()
@@ -106,9 +109,8 @@ public class MyRequests extends SherlockActivity {
 					}
 					
 				});
-				Session.getSession().sendRequest(api);
+				Session.getSession().sendRequest(api); */
 			}
-			
 		});
 	}
 
@@ -118,11 +120,11 @@ public class MyRequests extends SherlockActivity {
 	private void initList() {
 		//Initialize the list and add trip information to be displayed
 		tripRequests = new ArrayList<Object>();
-		tripRequests.add("4.83 Mi.");
-		tripRequests.add("6.44 Mi.");
-		tripRequests.add("3.30 Mi.");
-		tripRequests.add("1.34 Mi.");
-		tripRequests.add("7.98 Mi.");
+		tripRequests.add("Orlando, FL");
+		tripRequests.add("Florence, KY");
+		tripRequests.add("Houston, TX");
+		tripRequests.add("Nashville, TN");
+		tripRequests.add("New York City, NY");
 	}
 	
 	

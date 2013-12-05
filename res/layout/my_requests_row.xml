@@ -2,62 +2,58 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
     <com.llc.bumpr.lib.CircularImageView
         android:id="@+id/iv_profile_pic"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:padding="5dp"
-        android:layout_alignParentLeft="true" />
-    
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentLeft="true"
+        android:padding="5dp" />
+
     <TextView
-            android:id="@+id/tv_driver_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/iv_profile_pic"
-            android:textColor="@android:color/black"
-            android:layout_centerVertical="true"
-            android:paddingBottom="-2dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="18sp" />
-    
+        android:id="@+id/tv_driver_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/iv_profile_pic"
+        android:paddingBottom="-2dp"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
     <TextView
-        android:id="@+id/tv_distance_value"
+        android:id="@+id/tv_start_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_to_line"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_to_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:textSize="15sp" />
-    
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="3dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="3dp"
+        android:gravity="right"
+        android:paddingBottom="-2dp"
+        android:text="@string/to"
+        android:textSize="12sp" />
+
     <TextView
-        android:id="@+id/tv_price_value"
+        android:id="@+id/tv_end_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/tv_distance_value"
+        android:layout_below="@id/tv_to_line"
+        android:layout_marginBottom="10dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:textSize="15sp" />
-    
-    <TextView
-        android:id="@+id/tv_distance_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/tv_distance_value"
-        android:layout_alignTop="@id/tv_distance_value"
-        android:layout_marginRight="5dp"
-        android:textSize="15sp"
-        android:text="Distance:" />
-    
-    <TextView
-        android:id="@+id/tv_price_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_distance_tag"
-        android:layout_alignTop="@id/tv_price_value"
-        android:layout_marginRight="5dp"
-        android:textSize="15sp"
-        android:text="Price:" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

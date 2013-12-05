@@ -146,9 +146,11 @@ public class SearchTabActivity extends BumprActivity {
 					break;
 				case 1: //Open Inbox
 					i = new Intent(getApplicationContext(), CreateTripActivity.class);
+					i.putExtra("requestType", "Inbox");
 					break;
 				case 2: //Open Outbox
-					i = new Intent(getApplicationContext(), CreateTripActivity.class);
+					i = new Intent(getApplicationContext(), MyRequests.class);
+					i.putExtra("requestType", "Outbox");
 					break;
 				case 3: //Logout
 					SharedPreferences savedLogin = getSharedPreferences(LOGIN_PREF, 0);

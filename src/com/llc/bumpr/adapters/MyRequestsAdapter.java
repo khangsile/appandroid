@@ -65,8 +65,8 @@ public class MyRequestsAdapter extends BaseAdapter {
                 ViewGroup vGroup = (ViewGroup) inflater.inflate(layoutId, null);
                 
                 //Create new ViewHolder object
-                holder = new ViewHolder((CircularImageView)vGroup.findViewById(R.id.iv_profile_pic), (TextView)vGroup.findViewById(R.id.tv_distance_value), 
-                				(TextView)vGroup.findViewById(R.id.tv_price_value), (TextView)vGroup.findViewById(R.id.tv_driver_name));
+                holder = new ViewHolder((CircularImageView)vGroup.findViewById(R.id.iv_profile_pic), (TextView)vGroup.findViewById(R.id.tv_start_add), 
+                				(TextView)vGroup.findViewById(R.id.tv_end_add), (TextView)vGroup.findViewById(R.id.tv_driver_name));
                 
                 vGroup.setTag(holder);
                 view = vGroup;
@@ -76,8 +76,8 @@ public class MyRequestsAdapter extends BaseAdapter {
         }
         
         //Use class holder to and fill details with trip and driver details
-        holder.distView.setText(data.get(position).toString());
-        holder.priceView.setText("$9.77");
+        holder.startAdd.setText("Cincinnati, OH");
+        holder.endAdd.setText(data.get(position).toString());
         holder.imageView.setImageResource(R.drawable.test_image);
         holder.userName.setText("Kyle Cooper");
         
@@ -89,13 +89,13 @@ public class MyRequestsAdapter extends BaseAdapter {
 											// List
 		final CircularImageView imageView;
 		final TextView userName;
-		final TextView distView;
-		final TextView priceView;
+		final TextView startAdd;
+		final TextView endAdd;
 
-		private ViewHolder(CircularImageView imageView, TextView distView, TextView priceView, TextView userName) {
+		private ViewHolder(CircularImageView imageView, TextView startAdd, TextView endAdd, TextView userName) {
 			this.imageView = imageView;
-			this.distView = distView;
-			this.priceView = priceView;
+			this.startAdd = startAdd;
+			this.endAdd = endAdd;
 			this.userName = userName;
 		}
 	}
