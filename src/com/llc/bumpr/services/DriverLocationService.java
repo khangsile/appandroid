@@ -18,7 +18,6 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.llc.bumpr.sdk.lib.ApiRequest;
-import com.llc.bumpr.sdk.lib.Coordinate;
 import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.Session;
 
@@ -129,7 +128,7 @@ public class DriverLocationService extends Service implements
 				+ Double.toString(location.getLongitude());
 		Log.i("debug", msg);
 		
-		ApiRequest request = driver.updateLocation(new Coordinate(location.getLatitude(), location.getLongitude()),
+		ApiRequest request = driver.updateLocation(new com.llc.bumpr.sdk.lib.Location(location.getLatitude(), location.getLongitude()),
 				new Callback<Response>() {
 
 					@Override

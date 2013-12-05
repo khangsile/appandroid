@@ -29,6 +29,8 @@ public abstract class BumprActivity extends SherlockFragmentActivity {
 				if (token.trim().equals("") || token == null) return;
 			}
 			getUser(session);
+		} else {
+			initializeMe(User.getActiveUser());
 		}
 	}
 	

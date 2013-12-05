@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Locale;
 
 import retrofit.Callback;
-
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;

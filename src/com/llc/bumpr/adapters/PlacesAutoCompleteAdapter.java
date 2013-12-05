@@ -3,8 +3,8 @@ package com.llc.bumpr.adapters;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.widget.Filter;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.llc.bumpr.lib.PlacesAutoComplete;

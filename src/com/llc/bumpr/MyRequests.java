@@ -3,22 +3,19 @@ package com.llc.bumpr;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.adapters.MyRequestsAdapter;
 import com.llc.bumpr.sdk.lib.ApiRequest;
-import com.llc.bumpr.sdk.lib.Coordinate;
+import com.llc.bumpr.sdk.lib.Location;
 import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Session;
@@ -81,8 +78,8 @@ public class MyRequests extends SherlockActivity {
 				final Driver d = new Driver.Builder(new Driver()).setId(1).build();
 				
 				final Trip t = new Trip.Builder()
-				.setStart(new Coordinate(-84.33, 32.13))
-				.setEnd(new Coordinate(-84.11, 32.01))
+				.setStart(new Location(-84.33, 32.13))
+				.setEnd(new Location(-84.11, 32.01))
 				.build();
 				
 				final Request r = new Request.Builder()

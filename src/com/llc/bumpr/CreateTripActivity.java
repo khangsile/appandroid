@@ -17,7 +17,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.res.Resources;
 import android.location.Address;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -53,7 +52,7 @@ import com.llc.bumpr.popups.CalendarPopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp.OnSubmitListener;
 import com.llc.bumpr.sdk.lib.ApiRequest;
-import com.llc.bumpr.sdk.lib.Coordinate;
+import com.llc.bumpr.sdk.lib.Location;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
@@ -70,10 +69,10 @@ public class CreateTripActivity extends BumprActivity implements
 	private AutoCompleteTextView endAdd;
 	
 	/** Coordinates object to hold start address location */
-	private Coordinate startCoor;
+	private Location startCoor;
 	
 	/** Coordinates object to hold end address location */
-	private Coordinate endCoor;
+	private Location endCoor;
 	
 	/** Reference to the trip tags */
 	private EditText tripTags;
@@ -289,7 +288,8 @@ public class CreateTripActivity extends BumprActivity implements
 
 			@Override
 			public void success(List<Address> arg0, Response arg1) {
-				startCoor = new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()).setTitle(start);
+				Location location;
+				startCoor = new Location(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()).setTitle(start);
 				tripBldr.setStart(startCoor); //Set trip start coordinate
 				
 				Object[] ends = {end};
@@ -303,7 +303,7 @@ public class CreateTripActivity extends BumprActivity implements
 
 					@Override
 					public void success(List<Address> arg0, Response arg1) {
-						endCoor = new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()).setTitle(end);
+						endCoor = new Location(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()).setTitle(end);
 						tripBldr.setEnd(endCoor); //Set trip end coordinate
 
 						// Set up list of points for trip to display route on the map
@@ -475,7 +475,7 @@ public class CreateTripActivity extends BumprActivity implements
 	@Override
 	public void onConnected(Bundle bundle) {
 		// If GPS connected successfully, location client get last location
-		Location loc = mLocationClient.getLastLocation();
+		android.location.Location loc = mLocationClient.getLastLocation();
 		LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
 		// Set map center and zoom level
 		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);

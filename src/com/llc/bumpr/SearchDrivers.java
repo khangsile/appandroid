@@ -16,7 +16,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +33,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -66,8 +64,7 @@ import com.llc.bumpr.lib.EndlessListView;
 import com.llc.bumpr.lib.GraphicsUtil;
 import com.llc.bumpr.lib.LatLngLocationTask;
 import com.llc.bumpr.lib.StringLocationTask;
-import com.llc.bumpr.sdk.lib.ApiRequest;
-import com.llc.bumpr.sdk.lib.Coordinate;
+import com.llc.bumpr.sdk.lib.Location;
 import com.llc.bumpr.sdk.models.SearchQuery;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.Trip;
@@ -317,8 +314,8 @@ public class SearchDrivers extends BumprActivity implements
 						if (arg0.isEmpty()) return;
 						//Create trip to send in the request
 						Trip t = new Trip.Builder()
-							.setStart(new Coordinate(loc.latitude, loc.longitude))
-							.setEnd(new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()))
+							.setStart(new Location(loc.latitude, loc.longitude))
+							.setEnd(new Location(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()))
 							.build();
 						
 						//Open request page to ask driver for a ride
@@ -497,7 +494,7 @@ public class SearchDrivers extends BumprActivity implements
 	@Override
 	public void onConnected(Bundle bundle) {
 		//If GPS connected successfully, location client get last location
-		Location loc = mLocationClient.getLastLocation();
+		android.location.Location loc = mLocationClient.getLastLocation();
 		LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
 		//Set map center and zoom level
 		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
@@ -856,8 +853,8 @@ public class SearchDrivers extends BumprActivity implements
 						Log.i("Address", arg0.get(0).toString());
 						
 						Trip t = new Trip.Builder()
-							.setStart(new Coordinate(loc.latitude, loc.longitude))
-							.setEnd(new Coordinate(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()))
+							.setStart(new Location(loc.latitude, loc.longitude))
+							.setEnd(new Location(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()))
 							.build();
 
 						//Start new Request activity for the driver clicked						

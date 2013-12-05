@@ -1,6 +1,5 @@
 package com.llc.bumpr.lib;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,20 +9,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.llc.bumpr.LoginActivity;
 import com.llc.bumpr.R;
-import com.llc.bumpr.R.drawable;
 import com.llc.bumpr.RequestActivity;
 import com.llc.bumpr.SearchDrivers;
 import com.llc.bumpr.TripSummaryActivity;
-import com.llc.bumpr.UserProfile;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.User;
 

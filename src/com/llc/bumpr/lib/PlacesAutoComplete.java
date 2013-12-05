@@ -14,8 +14,6 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.llc.bumpr.R;
-
 public class PlacesAutoComplete {
 	private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
 	private static final String TYPE_AUTOCOMPLETE = "/autocomplete";

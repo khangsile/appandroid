@@ -6,7 +6,6 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;

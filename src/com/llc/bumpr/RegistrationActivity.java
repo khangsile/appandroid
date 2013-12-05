@@ -3,14 +3,12 @@ package com.llc.bumpr;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.lib.GCMRegistrationManager;

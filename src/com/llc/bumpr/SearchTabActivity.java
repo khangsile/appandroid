@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -34,10 +39,14 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.fragments.SearchListFragment;
 import com.llc.bumpr.fragments.SearchMapFragment;
+import com.llc.bumpr.lib.StringLocationTask;
 import com.llc.bumpr.popups.CalendarPopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp.OnSubmitListener;
+import com.llc.bumpr.sdk.lib.Location;
 import com.llc.bumpr.sdk.models.Session;
+import com.llc.bumpr.sdk.models.Trip;
+import com.llc.bumpr.sdk.models.Trip.SearchRequest;
 import com.llc.bumpr.sdk.models.User;
 
 
@@ -64,6 +73,9 @@ public class SearchTabActivity extends BumprActivity {
 	/** Constant phrase to hold login details */
 	public static final String LOGIN_PREF = "bumprLogin";
 	
+	/** SearchRequest Builder to create searches */
+	SearchRequest request = new SearchRequest();
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,22 +90,18 @@ public class SearchTabActivity extends BumprActivity {
         pager.setAdapter(pagerAdapter);
         
         /*********************** SLIDING MENU *************************/
-        // Inflate listview view
  		View slMenu = LayoutInflater.from(getApplication()).inflate(
  				R.layout.sliding_menu, null);
- 		//Reference to sliding menu list view
+
  		lvMenu = (ListView) slMenu.findViewById(R.id.menu_list);
 
- 		// Setup menu to be used by sliding menu
  		menuList = new ArrayList<Pair<String, Object>>();
  		initList();
 
- 		//Create new sliding menu adapter and assign this adapter to the sliding menu list view
  		menuAdpt = new SlidingMenuListAdapter(this, menuList, User.getActiveUser());
  		lvMenu.setAdapter(menuAdpt);
- 		setMenuOnClickListener(); //Set up on click listener for the sliding menu
+ 		setMenuOnClickListener(); 
 
- 		// Set up sliding menu
  		initSlidingMenu(slMenu);
     }
 	
@@ -143,11 +151,9 @@ public class SearchTabActivity extends BumprActivity {
 					i = new Intent(getApplicationContext(), CreateTripActivity.class);
 					break;
 				case 3: //Logout
-					// Remove saved email and password from shared preferences and update shared preferences
 					SharedPreferences savedLogin = getSharedPreferences(LOGIN_PREF, 0);
 					Editor loginEditor = savedLogin.edit();
-					loginEditor.remove("email");
-					loginEditor.remove("password");
+					loginEditor.remove("auth_token");
 					loginEditor.commit();
 					
 					Session session = Session.getSession();
@@ -214,6 +220,30 @@ public class SearchTabActivity extends BumprActivity {
 
                  @Override
                  public boolean onQueryTextSubmit(String query) {
+                         request = new SearchRequest();
+                         Object[] string = {query};
+                         new StringLocationTask(getApplicationContext(), new Callback<List<Address>>() {
+
+							@Override
+							public void failure(RetrofitError arg0) {								
+							}
+
+							@Override
+							public void success(List<Address> arg0,
+									Response arg1) {
+								if (arg0 == null) return;
+								if (arg0.isEmpty()) return;
+								
+								Location end = new Location()
+									.setLatitude(arg0.get(0).getLatitude())
+									.setLongitude(arg0.get(0).getLongitude());
+								
+								request.setEnd(end);
+								search();
+							}
+                        	 
+                         }).execute(string);
+                         
                          return false;
                  }
 
@@ -245,7 +275,7 @@ public class SearchTabActivity extends BumprActivity {
 
 				@Override
 				public void valueChanged(Date date) {
-					//Do something
+	
 				}
 				
 			});
@@ -257,7 +287,7 @@ public class SearchTabActivity extends BumprActivity {
 
 				@Override
 				public void valueChanged(int value) {
-					//Do something
+					request.setMinSeats(value);
 				}
 				
 			});
@@ -278,6 +308,8 @@ public class SearchTabActivity extends BumprActivity {
     	int currentItem = pager.getCurrentItem();
 		pager.setCurrentItem((currentItem + 1) % fragments.size());
     }
+    
+    /********************** PAGER ADAPTER ***********************/
     
     /**
      * A simple pager adapter that represents 2 ScreenSlidePageFragment objects, in
@@ -300,6 +332,7 @@ public class SearchTabActivity extends BumprActivity {
     }
     
     /******************* ACTIVITY DEFAULTS ********************/
+    
     @Override
     protected void onResume() {
     	super.onResume();
@@ -307,16 +340,14 @@ public class SearchTabActivity extends BumprActivity {
 		// Reset menu top row to hold the updated user's name (Verify the name has not changed)
 		menuList.remove(0);
 		menuList.add(0, new Pair<String, Object>("Image", User.getActiveUser().getFirstName()
-				+ " " + User.getActiveUser().getLastName()));// Pass User Object in future
+				+ " " + User.getActiveUser().getLastName()));
 
-		//Create new sliding menu adapter and assign it to the sliding menu list view
 		menuAdpt = new SlidingMenuListAdapter(this, menuList, User.getActiveUser());
 		lvMenu.setAdapter(menuAdpt);
     }
     
     @Override
     public void onBackPressed() {
-    	//If sliding menu is showing, close sliding menu
     	if(slidingMenu.isMenuShowing())
     		slidingMenu.toggle();
     	else
@@ -331,5 +362,30 @@ public class SearchTabActivity extends BumprActivity {
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	/*************************** HELPER **********************/
+	
+	public void search() {
+		request.setContext(this);
+		request.setCallback(new FutureCallback<List<Trip>>() {
+
+			@Override
+			public void onCompleted(Exception arg0, List<Trip> arg1) {
+				if (arg0 == null && arg1 != null) {
+					if (arg1.isEmpty()) {
+						//Sorry buddy. There ain't no trips.
+					} else {
+						Trip t = arg1.get(0);
+						Log.i("Trip", t.getStart().lat + "");
+					}
+				} else {
+					arg0.printStackTrace();
+				}
+			}
+			
+		});
+		
+		Session.getSession().sendRequest(request);
 	}
 }

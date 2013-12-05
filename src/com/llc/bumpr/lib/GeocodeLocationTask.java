@@ -2,9 +2,7 @@ package com.llc.bumpr.lib;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit.Callback;
 import android.content.Context;

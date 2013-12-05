@@ -13,7 +13,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.llc.bumpr.R;
 import com.llc.bumpr.adapters.SearchTripsAdapter;
-import com.llc.bumpr.sdk.lib.Coordinate;
+import com.llc.bumpr.sdk.lib.Location;
 import com.llc.bumpr.sdk.models.Trip;
 
 public class SearchListFragment extends SherlockFragment {
@@ -49,8 +49,8 @@ public class SearchListFragment extends SherlockFragment {
    	 	trips = new ArrayList<Trip>();
    	 	for (int i=0; i<12; i++) 
         trips.add(new Trip.Builder().setDriverId(1)
-       		 .setStart(new Coordinate(12, 12))
-       		 .setEnd(new Coordinate(12, 12))
+       		 .setStart(new Location(12, 12))
+       		 .setEnd(new Location(12, 12))
        		 .build());
         colors = new ArrayList<Color>();
         
