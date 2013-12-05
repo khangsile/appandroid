@@ -373,7 +373,7 @@ public class CreateTripActivity extends BumprActivity implements
 			Session.getSession().sendRequest(request);
 		}catch(Exception e){ //If an exception was thrown building the trip
 			pd.dismiss();
-			errorDialog("Please provide the start and end location for your trip.");
+			errorDialog("Please provide the information above (Tags are optional).");
 			return;
 		}
 	}
