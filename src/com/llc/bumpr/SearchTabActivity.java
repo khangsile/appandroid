@@ -42,6 +42,7 @@ import com.llc.bumpr.sdk.models.User;
 
 
 public class SearchTabActivity extends BumprActivity {	
+	
 	private ViewPager pager;
 	
 	private PagerAdapter pagerAdapter;
@@ -53,8 +54,10 @@ public class SearchTabActivity extends BumprActivity {
 	
 	/** Reference to the list view that will hold the sliding menu information */
 	private ListView lvMenu;
+	
 	/** List that will hold the data to fill the sliding menu */
 	private List<Pair<String, Object>> menuList;
+	
 	/** Reference to the adapter that will populate the sliding menu with it's data */
 	private SlidingMenuListAdapter menuAdpt;
 	
@@ -135,11 +138,9 @@ public class SearchTabActivity extends BumprActivity {
 					break;
 				case 1: //Open Inbox
 					i = new Intent(getApplicationContext(), CreateTripActivity.class);
-					startActivity(i);
 					break;
 				case 2: //Open Outbox
 					i = new Intent(getApplicationContext(), CreateTripActivity.class);
-					startActivity(i);
 					break;
 				case 3: //Logout
 					// Remove saved email and password from shared preferences and update shared preferences

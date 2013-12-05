@@ -42,9 +42,9 @@ public class CalendarPopUp extends PopupWindow {
 		nextYear.add(Calendar.YEAR, 1);
 
 		calendar = (CalendarPickerView) v.findViewById(R.id.calendar_view);
-		Date today = new Date();
-		calendar.init(today, nextYear.getTime())
-		    .withSelectedDate(today);
+		date = new Date();
+		calendar.init(date, nextYear.getTime())
+		    .withSelectedDate(date);
 		
 		calendar.setOnDateSelectedListener(new OnDateSelectedListener() {
 
