@@ -3,7 +3,8 @@
     xmlns:map="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true" >
 
     <LinearLayout
         android:id="@+id/linear_layout_locations"
@@ -57,16 +58,16 @@
             android:id="@+id/tv_dollar_sign"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".02"
+            android:layout_weight=".03"
             android:textColor="@android:color/black"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:text="@string/dollar_sign" />
         
         <EditText
             android:id="@+id/et_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".23"
+            android:layout_weight=".22"
             android:hint="@string/trip_price"
             android:inputType="numberDecimal"
             android:textSize="14sp" />"
@@ -114,7 +115,9 @@
             android:layout_margin="5dp"
             android:text="@string/trip_date"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:clickable="true"
+            android:onClick="setDate" />
 
         <TextView
             android:id="@+id/tv_max_riders_text"
@@ -124,25 +127,36 @@
             android:layout_margin="5dp"
             android:text="@string/passengers"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:clickable="true"
+            android:onClick="setPassengers" />
 
         <TextView
             android:id="@+id/tv_pickup_date_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="150dp"
+            android:minHeight="40dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/tv_pickup_date_text"
             android:layout_marginLeft="5dp"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:clickable="true"
+            android:onClick="setDate" />
 
         <TextView
             android:id="@+id/tv_max_riders_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:minWidth="150dp"
             android:layout_alignParentRight="true"
             android:layout_below="@id/tv_max_riders_text"
             android:layout_marginRight="5dp"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:gravity="right"
+            android:clickable="true"
+            android:onClick="setPassengers" />
     </RelativeLayout>
 
     <Button

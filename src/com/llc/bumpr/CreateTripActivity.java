@@ -193,6 +193,9 @@ public class CreateTripActivity extends BumprActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 		String str = (String) adapterView.getItemAtPosition(position);
+		//Remove focus so the route is drawn
+		RelativeLayout parent = (RelativeLayout) findViewById(R.id.rl_view);
+		parent.requestFocus();
 	}
 	
 	@Override
@@ -209,38 +212,53 @@ public class CreateTripActivity extends BumprActivity implements
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Resources r = getResources();
-        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
         RelativeLayout parent = (RelativeLayout) findViewById(R.id.rl_view);
+        
 		switch (item.getItemId()) {
 		case R.id.it_calendar: //Calendar button pressed
-			CalendarPopUp cPopUp = new CalendarPopUp(this, null, new CalendarPopUp.OnSubmitListener() {
-
-				@Override
-				public void valueChanged(Date date) {
-					tripDate.setText("" + date.toString());
-					tripBldr.setStartTime(date); //Set start time of trip
-				}
-				
-			});
-			cPopUp.showAtLocation(parent, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
+			setDate(parent);
 			return true;
 		case R.id.it_user_cnt: //Add user button pressed
-			MinPeoplePopUp mPopUp = new MinPeoplePopUp(this, null, new OnSubmitListener() {
-
-				@Override
-				public void valueChanged(int value) {
-					tripPassengers.setText(value + " total passengers");
-					tripBldr.setMinSeats(value); //Set minimum number of passengers
-				}
-				
-			});
-			mPopUp.showAtLocation(parent, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
-			mPopUp.setInstructions("Minimum number of people required\nfor this trip");
+			setPassengers(parent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public void setDate(View v){
+		Resources r = getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
+        RelativeLayout parent = (RelativeLayout) findViewById(R.id.rl_view);
+		
+        CalendarPopUp cPopUp = new CalendarPopUp(this, null, new CalendarPopUp.OnSubmitListener() {
+
+			@Override
+			public void valueChanged(Date date) {
+				tripDate.setText("" + date.toString());
+				tripBldr.setStartTime(date); //Set start time of trip
+			}
+			
+		});
+		cPopUp.showAtLocation(parent, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
+	}
+	
+	public void setPassengers(View v) {
+		Resources r = getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
+        RelativeLayout parent = (RelativeLayout) findViewById(R.id.rl_view);
+        
+		MinPeoplePopUp mPopUp = new MinPeoplePopUp(this, null, new OnSubmitListener() {
+
+			@Override
+			public void valueChanged(int value) {
+				tripPassengers.setText(value + " total passengers");
+				tripBldr.setNumSeats(value); //Set minimum number of passengers
+			}
+			
+		});
+		mPopUp.showAtLocation(parent, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
+		mPopUp.setInstructions("Minimum number of people required\nfor this trip");
 	}
 	
 	/**
@@ -325,42 +343,54 @@ public class CreateTripActivity extends BumprActivity implements
 			
 		tripBldr.setTags(new ArrayList<String>(Arrays.asList(tags)));
 		//Get trip price
-		tripBldr.setFee(Double.parseDouble(tripPrice.getText().toString()));
+		if(tripPrice.getText().toString().trim().length() == 0) { //If price is blank
+			pd.dismiss();
+			errorDialog("Please input a trip price.");
+			return;
+		}else
+			tripBldr.setFee(Double.parseDouble(tripPrice.getText().toString()));
 		
-		//Perform Success!
-		Trip t = tripBldr.build();
-		
-		ApiRequest request = t.post(getApplicationContext(), new FutureCallback<String>() {
-			
-			@Override
-			public void onCompleted(Exception e, String s) {
-				//Perform complete
-				if (e == null){
-					pd.dismiss();
-					finish();
-				}else{
-					//Make dialog
-					pd.dismiss();
-					AlertDialog.Builder builder = new AlertDialog.Builder(CreateTripActivity.this);
-					builder.setTitle("Trip Creation Failed");
-					builder.setMessage("An error occurred while creating your trip. Please verify you supplied " +
-							"all of the information (Note: Set the trip date and minimum required users for the trip using the buttons at the top of the page).");
-					builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int arg1) {
-							dialog.cancel();
-						}
-					});
-					
-					AlertDialog dg = builder.create();
+		//Build the trip and post it
+		try {
+			Trip t = tripBldr.build();
+			ApiRequest request = t.post(getApplicationContext(), new FutureCallback<String>() {
 				
-					dg.show();
+				@Override
+				public void onCompleted(Exception e, String s) {
+					//Perform complete
+					if (e == null){
+						pd.dismiss();
+						finish();
+					}else{ //If an exception was thrown posting the trip
+						pd.dismiss();
+						errorDialog("Please provide the information above (Tags are optional).");
+						return;
+					}
 				}
+			
+			});
+			
+			Session.getSession().sendRequest(request);
+		}catch(Exception e){ //If an exception was thrown building the trip
+			pd.dismiss();
+			errorDialog("Please provide the information above (Tags are optional).");
+			return;
+		}
+	}
+	
+	public void errorDialog(String s){
+		AlertDialog.Builder builder = new AlertDialog.Builder(CreateTripActivity.this);
+		builder.setTitle("Trip Creation Failed");
+		builder.setMessage(s);
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int arg1) {
+				dialog.cancel();
+				return;
 			}
-		
 		});
-		
-		Session.getSession().sendRequest(request);
+		AlertDialog dg = builder.create();
+		dg.show();
 	}
 
 	@Override
