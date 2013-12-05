@@ -871,4 +871,10 @@ public class SearchDrivers extends BumprActivity implements
 			}
 		});
 	}
+
+	@Override
+	protected void initializeMe(User activeUser) {
+		// TODO Auto-generated method stub
+		
+	}
 }

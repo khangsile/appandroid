@@ -20,13 +20,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -44,7 +41,7 @@ import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 
 
-public class SearchTabActivity extends SherlockFragmentActivity {	
+public class SearchTabActivity extends BumprActivity {	
 	private ViewPager pager;
 	
 	private PagerAdapter pagerAdapter;
@@ -97,6 +94,15 @@ public class SearchTabActivity extends SherlockFragmentActivity {
  		initSlidingMenu(slMenu);
     }
 	
+	/**
+	 * Inherited method
+	 * Load items pertaining to the active user here
+	 */
+	@Override
+	protected void initializeMe(User activeUser) {
+		// TODO Auto-generated method stub
+	}
+
 	/**************************** SLIDING MENU ***************************/
 	
 	/**
