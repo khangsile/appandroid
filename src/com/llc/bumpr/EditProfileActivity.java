@@ -35,10 +35,12 @@ public class EditProfileActivity extends SherlockActivity {
 	/** Reference to the profile picture UI element */
 	private CircularImageView profPic;
 	
+	/** Reference to the User name UI element */
+	private TextView userName;
+	
 	/** Reference to the List View UI element that holds the profile settings information */
 	private ListView profSettings;
-	/** Reference to the join date UI text element */
-	private TextView joinDate;
+	
 	/**A reference to the current context to be used in inner classes */
 	final private Context context = this;
 	/** A reference to the listview adapter */
@@ -47,15 +49,16 @@ public class EditProfileActivity extends SherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_profile);
-		//Get reference to the views in the layout
-		profPic = (CircularImageView) findViewById(R.id.iv_profile_pic);
-		profSettings = (ListView) findViewById(R.id.lv_settings_list);
-		joinDate = (TextView) findViewById(R.id.tv_edit_prof_join_date_text);
 		
-		//Set Join Date -- Use user details in the future
-		joinDate.setText("October 25, 2013");
-		//Set image resources
+		//Get references to the view objects in the layout and fill these in with user details
+		userName = (TextView) findViewById(R.id.tv_user_name);
+		userName.setText(User.getActiveUser().getFirstName() + " " + User.getActiveUser().getLastName());
+
+		profPic = (CircularImageView) findViewById(R.id.img_user);
 		profPic.setImageResource(R.drawable.test_image);
+	
+		//Reference to profile list
+		profSettings = (ListView) findViewById(R.id.lv_settings_list);
 		
 		//Set up settings list, create edit profile adapter, and set the adapter
 		settingList = new ArrayList<String>();
@@ -79,7 +82,7 @@ public class EditProfileActivity extends SherlockActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				// TODO Auto-generated method stub
-				if (position == 4){ //Update Password dialog box!
+				if (position == 2){ //Update Password dialog box!
 					//Inflate change password dialog
 					LayoutInflater li = LayoutInflater.from(context);
 					View changePassView = li.inflate(R.layout.change_password_dialog, null); 
@@ -121,12 +124,6 @@ public class EditProfileActivity extends SherlockActivity {
 					changePassDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 					changePassDialog.show();
 				}
-				else if(position == 5) { //Edit Driver Settings Page
-					//Create intent for edit driver activity
-					Intent i = new Intent(getApplicationContext(), EditDriverActivity.class);
-					i.putExtra("user", User.getActiveUser()); //Pass the current active user
-					startActivity(i); //Start the activity
-				}
 			}
 		});
 	}
@@ -136,12 +133,9 @@ public class EditProfileActivity extends SherlockActivity {
 	 */
 	private void initList(){
 		//Fill edit profile list with details for a user
-		settingList.add("First Name");
-		settingList.add("Last Name");
-		settingList.add("Phone");
 		settingList.add("Email");
+		settingList.add("Phone");
 		settingList.add("Password");
-		settingList.add("Driver Settings");
 	}
 	
 	/**
@@ -162,10 +156,6 @@ public class EditProfileActivity extends SherlockActivity {
 				val = (Object) et.getText().toString(); //Save the value in the edit text
 				
 				//Add each field to the hash map
-				if(adt.getItem(i).toString().equals("First Name"))
-					user.put("first_name", val);
-				if(adt.getItem(i).toString().equals("Last Name"))
-					user.put("last_name", val);
 				if(adt.getItem(i).toString().equals("Phone"))
 					user.put("phone_number", val);
 				if(adt.getItem(i).toString().equals("Email"))

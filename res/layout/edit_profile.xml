@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     android:orientation="vertical" >
-    
+
+    <!--
     <com.llc.bumpr.lib.CircularImageView
         android:id="@+id/iv_profile_pic"
         android:layout_width="100dp"
@@ -14,10 +17,23 @@
         android:layout_marginTop="10dp" />
     
     <TextView
-        android:id="@+id/tv_edit_prof_join_date_title"
+        android:id="@+id/tv_edit_prof_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/iv_profile_pic"
+        android:layout_toRightOf="@id/iv_profile_pic"
+        android:minHeight="32dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/tv_edit_prof_join_date_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_edit_prof_name"
         android:layout_toRightOf="@id/iv_profile_pic"
         android:minHeight="32dp"
         android:paddingLeft="15dp"
@@ -38,16 +54,18 @@
         android:textColor="#000"
         android:textSize="15sp" />
     
-<!--     <com.llc.bumpr.lib.DynamicImageView -->
-<!--         android:id="@+id/iv_car_pic" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_width="150dp" -->
-<!--         android:scaleType="centerCrop" -->
-<!--         android:layout_alignParentTop="true" -->
-<!--         android:layout_alignParentRight="true" -->
-<!--         android:layout_marginRight="10dp" -->
-<!--         android:layout_marginTop="10dp" -->
-<!--         /> -->
+    <com.llc.bumpr.lib.DynamicImageView
+        android:id="@+id/iv_car_pic"
+        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        />
+        
+        
     
     <View android:id="@+id/divider"
             android:layout_width="match_parent"
@@ -59,25 +77,33 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="#cccccc" />
-    
-    <ListView 
-        android:id="@+id/lv_settings_list"
-        android:layout_below="@id/divider"
+    -->
+
+    <include
+        android:id="@+id/layout_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@color/ghost_white"
-        android:dividerHeight="1dp"
-        android:padding="8dp"
-        android:descendantFocusability="beforeDescendants" />
-    
+        layout="@layout/profile" />
+
+        <ListView
+            android:id="@+id/lv_settings_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_profile"
+            android:descendantFocusability="beforeDescendants"
+            android:divider="@color/ghost_white"
+            android:dividerHeight="1dp"
+            android:padding="8dp" />
+
     <Button
         android:id="@+id/bt_submit_changes"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
         android:background="#e6e6fa"
-        android:text="@string/submit"
         android:onClick="update"
-        android:layout_marginBottom="10dp" />
+        android:text="@string/submit" />
+
 </RelativeLayout>
