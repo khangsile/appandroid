@@ -209,7 +209,7 @@ public class LoginActivity extends Activity {
 					loginEditor.putString("auth_token", Session.getSession().getAuthToken());
 					loginEditor.commit();
 
-					Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
+					Intent i = new Intent(getApplicationContext(), SearchTabActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					startActivity(i);
 				} else {					
