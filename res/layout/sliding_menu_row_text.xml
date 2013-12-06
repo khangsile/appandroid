@@ -9,16 +9,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:paddingLeft="5dp" />
 
     <TextView
         android:id="@+id/tv_sliding_menu_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/iv_row_icon"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/iv_row_icon"
         android:textColor="#000"
         android:textSize="18sp" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="#cccccc"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
 
 </RelativeLayout>
