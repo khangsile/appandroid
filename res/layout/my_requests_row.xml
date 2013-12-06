@@ -19,14 +19,15 @@
         android:layout_toRightOf="@id/iv_profile_pic"
         android:paddingBottom="-2dp"
         android:textColor="@android:color/black"
-        android:textSize="20sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/tv_start_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/tv_to_line"
         android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -51,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/tv_to_line"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="25dp"
         android:layout_marginRight="5dp"
         android:textSize="18sp"
         android:textStyle="bold" />
