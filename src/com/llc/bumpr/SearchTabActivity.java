@@ -125,6 +125,7 @@ public class SearchTabActivity extends BumprActivity {
 		//as a image, text or switch row (First field) and the text for the row (Second field)
 		menuList.add(new Pair<String, Object>("Image", User.getActiveUser().getFirstName()
 				+ " " + User.getActiveUser().getLastName()));
+		menuList.add(new Pair<String, Object>("Text", "Start Trip"));
 		menuList.add(new Pair<String, Object>("Text", "Inbox"));
 		menuList.add(new Pair<String, Object>("Text", "Outbox"));
 		menuList.add(new Pair<String, Object>("Text", "Logout"));
@@ -144,15 +145,19 @@ public class SearchTabActivity extends BumprActivity {
 					i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
-				case 1: //Open Inbox
+				case 1: //Open create trip page
 					i = new Intent(getApplicationContext(), CreateTripActivity.class);
+					i.putExtra("user", User.getActiveUser());
+					break;
+				case 2: //Open Inbox
+					i = new Intent(getApplicationContext(), MyRequests.class);
 					i.putExtra("requestType", "Inbox");
 					break;
-				case 2: //Open Outbox
+				case 3: //Open Outbox
 					i = new Intent(getApplicationContext(), MyRequests.class);
 					i.putExtra("requestType", "Outbox");
 					break;
-				case 3: //Logout
+				case 4: //Logout
 					SharedPreferences savedLogin = getSharedPreferences(LOGIN_PREF, 0);
 					Editor loginEditor = savedLogin.edit();
 					loginEditor.remove("auth_token");
