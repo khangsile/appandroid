@@ -23,7 +23,7 @@ import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
-public class MyRequests extends SherlockActivity {
+public class MyRequests extends BumprActivity {
 	/** Reference to the ListView that holds all of the requests */
 	private ListView requests;
 	/** List of data to fill trip list view with  */
@@ -36,7 +36,7 @@ public class MyRequests extends SherlockActivity {
 	private User user;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.my_requests);
@@ -125,6 +125,12 @@ public class MyRequests extends SherlockActivity {
 		tripRequests.add("Houston, TX");
 		tripRequests.add("Nashville, TN");
 		tripRequests.add("New York City, NY");
+	}
+
+	@Override
+	protected void initializeMe(User activeUser) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

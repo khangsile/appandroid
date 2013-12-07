@@ -158,6 +158,11 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait">        
         </activity>
+        <activity 
+            android:name="com.llc.bumpr.MyTripsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">  
+        </activity>
         <service
             android:name="com.llc.bumpr.services.DriverLocationService"
             android:label="@string/app_name">            

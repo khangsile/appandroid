@@ -222,6 +222,10 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 				holder.icon.setImageResource(R.drawable.ic_create_trip);
 				holder.icon.setVisibility(View.VISIBLE);
 			}
+			else if (dataObj.toString().equals("Trips")) {
+				holder.icon.setImageResource(R.drawable.ic_trips);
+				holder.icon.setVisibility(View.VISIBLE);
+			}
 			else if(dataObj.toString().equals("Inbox")) {
 				holder.icon.setImageResource(R.drawable.ic_inbox);
 				holder.icon.setVisibility(View.VISIBLE);
