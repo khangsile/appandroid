@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -203,9 +204,8 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 
 				// Use the view holder pattern to save already looked up
 				// subviews
-				holder = new TextViewHolder(
-						(TextView) vGroup
-								.findViewById(R.id.tv_sliding_menu_text));
+				holder = new TextViewHolder((TextView) vGroup.findViewById(R.id.tv_sliding_menu_text)
+						,(ImageView) vGroup.findViewById(R.id.iv_row_icon));
 				vGroup.setTag(holder);
 
 				view = vGroup; //Assign view to view group
@@ -216,6 +216,26 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 			}
 			//Set text row to the value passed in 
 			holder.textView.setText(dataObj.toString());
+
+			//Set icon source
+			if(dataObj.toString().equals("Start Trip")) {
+				holder.icon.setImageResource(R.drawable.ic_create_trip);
+				holder.icon.setVisibility(View.VISIBLE);
+			}
+			else if (dataObj.toString().equals("Trips")) {
+				holder.icon.setImageResource(R.drawable.ic_trips);
+				holder.icon.setVisibility(View.VISIBLE);
+			}
+			else if(dataObj.toString().equals("Inbox")) {
+				holder.icon.setImageResource(R.drawable.ic_inbox);
+				holder.icon.setVisibility(View.VISIBLE);
+			}
+			else if(dataObj.toString().equals("Outbox")) {
+				holder.icon.setImageResource(R.drawable.ic_outbox);
+				holder.icon.setVisibility(View.VISIBLE);
+			}
+			else
+				holder.icon.setVisibility(View.GONE);
 		}
 
 		return view; // Return view to display
@@ -236,9 +256,11 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 	private static class TextViewHolder { // Used to hold views per row in the
 											// List
 		final TextView textView;
+		final ImageView icon;
 
-		private TextViewHolder(TextView textView) {
+		private TextViewHolder(TextView textView, ImageView icon) {
 			this.textView = textView;
+			this.icon = icon;
 		}
 	}
 

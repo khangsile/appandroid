@@ -20,7 +20,6 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
 	private ArrayList<Trip> list;
 	private ArrayList<Color> colors;
 	private int layoutId;
-	private int minRowHeight = 150;
 
 	/*************************** View Holder ***************************/
 
@@ -63,9 +62,6 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
 			holder = (ViewHolder) convertView.getTag();
 			view = convertView;
 		}
-
-		view.setMinimumHeight(minRowHeight);
-		holder.color.setMinimumHeight(minRowHeight);
 		
 		Trip trip = (Trip) list.get(position);
 

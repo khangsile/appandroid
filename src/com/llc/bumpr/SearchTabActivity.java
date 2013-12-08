@@ -149,6 +149,8 @@ public class SearchTabActivity extends BumprActivity {
 		//as a image, text or switch row (First field) and the text for the row (Second field)
 		menuList.add(new Pair<String, Object>("Image", User.getActiveUser().getFirstName()
 				+ " " + User.getActiveUser().getLastName()));
+		menuList.add(new Pair<String, Object>("Text", "Trips"));
+		menuList.add(new Pair<String, Object>("Text", "Start Trip"));
 		menuList.add(new Pair<String, Object>("Text", "Inbox"));
 		menuList.add(new Pair<String, Object>("Text", "Outbox"));
 		menuList.add(new Pair<String, Object>("Text", "Logout"));
@@ -168,13 +170,23 @@ public class SearchTabActivity extends BumprActivity {
 					i = new Intent(getApplicationContext(), EditProfileActivity.class);
 					i.putExtra("user", User.getActiveUser());
 					break;
-				case 1: //Open Inbox
-					i = new Intent(getApplicationContext(), CreateTripActivity.class);
+				case 1: //Open the user settings page
+					i = new Intent(getApplicationContext(), MyTripsActivity.class);
+					i.putExtra("user", User.getActiveUser());
 					break;
-				case 2: //Open Outbox
+				case 2: //Open create trip page
 					i = new Intent(getApplicationContext(), CreateTripActivity.class);
+					i.putExtra("user", User.getActiveUser());
 					break;
-				case 3: //Logout
+				case 3: //Open Inbox
+					i = new Intent(getApplicationContext(), MyRequests.class);
+					i.putExtra("requestType", "Inbox");
+					break;
+				case 4: //Open Outbox
+					i = new Intent(getApplicationContext(), MyRequests.class);
+					i.putExtra("requestType", "Outbox");
+					break;
+				case 5: //Logout
 					SharedPreferences savedLogin = getSharedPreferences(LOGIN_PREF, 0);
 					Editor loginEditor = savedLogin.edit();
 					loginEditor.remove("auth_token");

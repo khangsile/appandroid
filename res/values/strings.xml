@@ -25,6 +25,7 @@
 	<string name="start_loc">Start Address</string>
 	<string name="submit">Submit</string>
 	<string name="tags">Trip Tags (Comma Separated)</string>
+	<string name="to">to</string>
 	<string name="trip_title">Trip Title</string>
 	<string name="trip_date">Trip Date:</string>
 	<string name="trip_price">Price</string>

@@ -3,18 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="@color/ghost_white">
+    android:background="@color/ghost_white"
+    android:minHeight="dp">
     
     <View android:id="@+id/view_color"
         android:layout_width="10dp"
-        android:layout_height="match_parent"        
-        android:background="#ffccee" />
+        android:layout_height="fill_parent" 
+        android:layout_alignParentLeft="true"       
+        android:background="#ffccee"
+        android:minHeight="92dp" />
     
     <TextView android:id="@+id/tv_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 	    android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/view_color"
+        android:layout_alignWithParentIfMissing="true"
         android:layout_marginLeft="5dp"
         android:textSize="12sp"
         android:text="Khang Le" />
@@ -29,9 +33,11 @@
         android:text="$35" />
     
     <RelativeLayout
+        android:id="@+id/rl_dest_view"
         android:layout_width="290dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" >
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="15dp" >
         
         <ImageView android:id="@+id/img_arrow"
             android:layout_width="60dp"
@@ -64,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/rl_dest_view"
         android:textSize="12sp"
         android:text="Dec 12, 2013" />
 
