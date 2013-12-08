@@ -252,7 +252,7 @@ public class CreateTripActivity extends BumprActivity implements
 			@Override
 			public void valueChanged(int value) {
 				tripPassengers.setText(value + " total passengers");
-				tripBldr.setNumSeats(value); //Set minimum number of passengers
+				tripBldr.setMinSeats(value); //Set minimum number of passengers
 			}
 			
 		});

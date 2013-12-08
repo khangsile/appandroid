@@ -25,6 +25,7 @@ public class CalendarPopUp extends PopupWindow {
 	private Context context;
 	private OnSubmitListener listener;
 	private TextView instructions;
+	private Button btnApply;
 	private CalendarPickerView calendar;
 	private Date date;
 	
@@ -70,8 +71,8 @@ public class CalendarPopUp extends PopupWindow {
 		instructions = (TextView) v.findViewById(R.id.tv_instructions);
 		
 		/** Set up buttons */
-		Button button = (Button) v.findViewById(R.id.btn_apply);
-		button.setOnClickListener(new OnClickListener() {
+		btnApply = (Button) v.findViewById(R.id.btn_apply);
+		btnApply.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -85,6 +86,10 @@ public class CalendarPopUp extends PopupWindow {
 	
 	public void setInstructions(String instruction) {
 		instructions.setText(instruction);
+	}
+	
+	public void setBtnApplyText(String action) {
+		btnApply.setText(action);
 	}
 	
 	/************************* ON SUBMIT INTERFACE ********************/

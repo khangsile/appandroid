@@ -19,6 +19,7 @@ public class MinPeoplePopUp extends PopupWindow {
 
 	private Context context;
 	private OnSubmitListener listener;
+	private Button btnApply;
 	private TextView instructions;
 	private TextView tvCount;
 	private int count = 1;
@@ -64,8 +65,8 @@ public class MinPeoplePopUp extends PopupWindow {
 			
 		});
 		
-		Button submit = (Button) v.findViewById(R.id.btn_apply);
-		submit.setOnClickListener(new OnClickListener() {
+		btnApply = (Button) v.findViewById(R.id.btn_apply);
+		btnApply.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -80,6 +81,10 @@ public class MinPeoplePopUp extends PopupWindow {
 	
 	public void setInstructions(String instruction) {
 		instructions.setText(instruction);
+	}
+	
+	public void setBtnApplyText(String action) {
+		btnApply.setText(action);
 	}
 	
 	/************************* BUTTON METHODS ********************/

@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -24,6 +21,8 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -33,29 +32,30 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
-import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.fragments.SearchListFragment;
 import com.llc.bumpr.fragments.SearchMapFragment;
-import com.llc.bumpr.lib.StringLocationTask;
 import com.llc.bumpr.popups.CalendarPopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp.OnSubmitListener;
 import com.llc.bumpr.sdk.lib.Location;
+import com.llc.bumpr.sdk.models.SearchRequest;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.Trip;
-import com.llc.bumpr.sdk.models.Trip.SearchRequest;
 import com.llc.bumpr.sdk.models.User;
 
 
 public class SearchTabActivity extends BumprActivity {	
 	
+	/** ViewPager used to switch between views/fragments */
 	private ViewPager pager;
 	
+	/** Sliding adapter for a ViewPager */
 	private PagerAdapter pagerAdapter;
 	
+	/** ArrayList to hold the fragments to use in a ViewPager */
 	private ArrayList<SherlockFragment> fragments = new ArrayList<SherlockFragment>();
 	
 	/** Reference to the sliding menu UI element */
@@ -73,6 +73,9 @@ public class SearchTabActivity extends BumprActivity {
 	/** Constant phrase to hold login details */
 	public static final String LOGIN_PREF = "bumprLogin";
 	
+	/** Code for startActivityForResult. Represents the code to search for a destination. */
+	public static final int DESTINATION_CODE = 1;
+	
 	/** SearchRequest Builder to create searches */
 	SearchRequest request = new SearchRequest();
 	
@@ -89,10 +92,10 @@ public class SearchTabActivity extends BumprActivity {
         pagerAdapter = new ScreenSlidePagerAdapter(manager);
         pager.setAdapter(pagerAdapter);
         
-        /*********************** SLIDING MENU *************************/
- 		View slMenu = LayoutInflater.from(getApplication()).inflate(
+       
+        //Sliding menu
+        View slMenu = LayoutInflater.from(getApplication()).inflate(
  				R.layout.sliding_menu, null);
-
  		lvMenu = (ListView) slMenu.findViewById(R.id.menu_list);
 
  		menuList = new ArrayList<Pair<String, Object>>();
@@ -112,6 +115,27 @@ public class SearchTabActivity extends BumprActivity {
 	@Override
 	protected void initializeMe(User activeUser) {
 		// TODO Auto-generated method stub
+	}
+	
+	/**
+	 * Get address back from the 
+	 */
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+     
+        if (requestCode == DESTINATION_CODE && resultCode == 200) {        
+        	Address address = data.getParcelableExtra("address");
+        	String query = data.getStringExtra("query");
+        	
+        	request.setEnd(new Location()
+        				.setLatitude(address.getLatitude())
+        				.setLongitude(address.getLongitude())
+        				.setTitle(query));
+        	search();
+        	
+        	getSherlock().dispatchInvalidateOptionsMenu();
+        }
+        
 	}
 
 	/**************************** SLIDING MENU ***************************/
@@ -214,46 +238,40 @@ public class SearchTabActivity extends BumprActivity {
 		super.onCreateOptionsMenu(menu);
 
 		SearchView searchView = new SearchView(getSupportActionBar().getThemedContext());
-        searchView.setQueryHint("Your Location");
+        searchView.setQueryHint("Where do you want to go?");
         searchView.setIconifiedByDefault(false);
-        searchView.setOnQueryTextListener(new OnQueryTextListener() {
+        searchView.setOnSearchClickListener(new OnClickListener() {
 
-                 @Override
-                 public boolean onQueryTextSubmit(String query) {
-                         request = new SearchRequest();
-                         Object[] string = {query};
-                         new StringLocationTask(getApplicationContext(), new Callback<List<Address>>() {
-
-							@Override
-							public void failure(RetrofitError arg0) {								
-							}
-
-							@Override
-							public void success(List<Address> arg0,
-									Response arg1) {
-								if (arg0 == null) return;
-								if (arg0.isEmpty()) return;
-								
-								Location end = new Location()
-									.setLatitude(arg0.get(0).getLatitude())
-									.setLongitude(arg0.get(0).getLongitude());
-								
-								request.setEnd(end);
-								search();
-							}
-                        	 
-                         }).execute(string);
-                         
-                         return false;
-                 }
-
-                 @Override
-                 public boolean onQueryTextChange(String newText) {
-                         return false;
-                 }
-                 
+			@Override
+			public void onClick(View view) {
+				SearchView searchView = (SearchView) view;
+				
+				Intent i = new Intent(getApplicationContext(), SearchLocationActivity.class);
+				i.putExtra("location", searchView.getQuery());
+				startActivityForResult(i, DESTINATION_CODE);
+				
+			}
+        	
         });
-         
+        searchView.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View view, boolean hasFocus) {
+				if (!hasFocus) return;
+				
+				SearchView searchView = (SearchView) view;
+				
+				Intent i = new Intent(getApplicationContext(), SearchLocationActivity.class);
+				i.putExtra("location", searchView.getQuery());
+				startActivityForResult(i, DESTINATION_CODE);
+			}
+        	
+        });
+        
+        if (request.getEnd() != null) {
+        	searchView.setQuery(request.getEnd().title, false);
+        }
+        
         menu.add("Search")
             .setActionView(searchView)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -368,16 +386,17 @@ public class SearchTabActivity extends BumprActivity {
 	
 	public void search() {
 		request.setContext(this);
-		request.setCallback(new FutureCallback<List<Trip>>() {
+		request.setCallback(new FutureCallback<String>() {
 
 			@Override
-			public void onCompleted(Exception arg0, List<Trip> arg1) {
+			public void onCompleted(Exception arg0, String arg1) {
 				if (arg0 == null && arg1 != null) {
-					if (arg1.isEmpty()) {
+					if (arg1 == "") {
+						Log.i("Trip", "Empty string");
 						//Sorry buddy. There ain't no trips.
 					} else {
-						Trip t = arg1.get(0);
-						Log.i("Trip", t.getStart().lat + "");
+						//Trip t = arg1.get(0);
+						Log.i("Trip", arg1);
 					}
 				} else {
 					arg0.printStackTrace();

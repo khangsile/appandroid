@@ -11,6 +11,7 @@ import android.location.Address;
 import android.location.Geocoder;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.koushikdutta.async.future.FutureCallback;
 
 /**
  * Takes a LatLng and converts it to an address
@@ -22,6 +23,10 @@ public class LatLngLocationTask extends GeocodeLocationTask {
 	public LatLngLocationTask(Context context, Callback<List<Address>> callback) {
 		super(context, callback);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public LatLngLocationTask(Context context, FutureCallback<List<Address>> cb) {
+		super(context, cb);
 	}
 	
 	@Override

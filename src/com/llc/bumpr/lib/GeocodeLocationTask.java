@@ -10,8 +10,10 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 
+import com.koushikdutta.async.future.FutureCallback;
+
 /**
- * Be fucking careful with the Object[] parameter...Cast correctly.
+ * Be careful with the Object[] parameter...Cast correctly.
  * @author KhangSiLe
  *
  */
@@ -19,6 +21,7 @@ public abstract class GeocodeLocationTask extends AsyncTask<Object, Void, List<A
 
 	protected Context context;
 	protected Callback<List<Address>> callback;
+	protected FutureCallback<List<Address>> cb;
 	
 	// geocoder to process queries
     private Geocoder geocoder;
@@ -29,6 +32,11 @@ public abstract class GeocodeLocationTask extends AsyncTask<Object, Void, List<A
 	public GeocodeLocationTask(Context context, Callback<List<Address>> callback) {
 		this.context = context;
 		this.callback = callback;
+	}
+	
+	public GeocodeLocationTask(Context context, FutureCallback<List<Address>> cb) {
+		this.context = context;
+		this.cb = cb;
 	}
 	
 	@Override
@@ -60,10 +68,17 @@ public abstract class GeocodeLocationTask extends AsyncTask<Object, Void, List<A
 	
 	@Override
 	protected void onPostExecute(List<Address> result){
-		if (result == null) 
-			callback.failure(null);
-		else 
-			callback.success(result, null);
+		
+		if (callback != null) {
+			if (result == null) 
+				callback.failure(null);
+			else 
+				callback.success(result, null);
+		}
+		
+		if (cb != null) {
+			cb.onCompleted(null, result);
+		}
 	}
 	
 	abstract protected List<Address> getAddressList(Object... params) throws SocketTimeoutException, IOException;

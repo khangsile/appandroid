@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <RelativeLayout android:id="@+id/rl_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:background="#dddddd">
+        
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp" 
+            android:weightSum="1"
+            android:background="@drawable/rounded_corner_txt_container" >
+            	
+            <AutoCompleteTextView android:id="@+id/autotv_search"
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:layout_weight=".90"
+            	android:layout_margin="2dp"
+            	android:padding="10dp"
+            	android:textSize="17sp"
+            	android:hint="Where do you want to go?"
+            	android:singleLine="true"
+            	android:background="@color/ghost_white"  />
+            
+            <Button android:id="@+id/btn_clear"  	    
+        		android:layout_width="wrap_content"
+        		android:layout_height="30dp"
+        		android:layout_weight=".10"
+        		android:layout_marginRight="2dp"
+        		android:layout_gravity="right|center_vertical"
+        		android:background="@drawable/ic_clear"
+        		android:onClick="clear" />
+          
+        </LinearLayout>
+        
+    </RelativeLayout>
+    
+    <View android:id="@+id/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/rl_container"
+        android:background="#ababab" />
+    
+    <RelativeLayout android:id="@+id/rl_list_container"
+		android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/view_divider"
+		android:minHeight="60dp"
+        android:background="#efefef" >
+        
+        <ListView android:id="@+id/list_destinations"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_margin="5dp"
+        	android:paddingBottom="5dp"
+        	android:divider="@null"
+        	android:minHeight="50dp"
+            android:background="@drawable/rounded_corner_txt_container" />
+        
+  	</RelativeLayout>
+    
+
+</RelativeLayout>

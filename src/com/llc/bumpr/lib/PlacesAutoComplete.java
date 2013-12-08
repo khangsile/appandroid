@@ -31,8 +31,6 @@ public class PlacesAutoComplete {
 	        sb.append("?input=" + URLEncoder.encode(input, "utf8"));
 	        sb.append("&sensor=false&key=" + API_KEY);
 	        
-	        Log.i(LOG_TAG, sb.toString());
-
 	        URL url = new URL(sb.toString());
 	        conn = (HttpURLConnection) url.openConnection();
 	        InputStreamReader in = new InputStreamReader(conn.getInputStream());
