@@ -10,8 +10,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
         android:textSize="13dp"
-        android:textStyle="bold"
-        android:text="Le Residence" />
+        android:textStyle="bold" />
     
     <TextView android:id="@+id/tv_address"
         android:layout_width="wrap_content"

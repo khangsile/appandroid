@@ -20,8 +20,7 @@
         android:layout_toRightOf="@id/view_color"
         android:layout_alignWithParentIfMissing="true"
         android:layout_marginLeft="5dp"
-        android:textSize="12sp"
-        android:text="Khang Le" />
+        android:textSize="12sp" />
     
     <TextView android:id="@+id/tv_cost"
         android:layout_width="wrap_content"
@@ -51,18 +50,18 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/img_arrow"
             android:layout_centerVertical="true"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:text="START" />
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:textStyle="bold" />
         
         <TextView android:id="@+id/tv_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/img_arrow"
             android:layout_centerVertical="true"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:text="END" />
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:textStyle="bold" />
         
    </RelativeLayout>
         
@@ -71,7 +70,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/rl_dest_view"
-        android:textSize="12sp"
-        android:text="Dec 12, 2013" />
+        android:textSize="12sp" />
 
 </RelativeLayout>

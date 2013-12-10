@@ -65,11 +65,13 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
 		
 		Trip trip = (Trip) list.get(position);
 
-		holder.tvUsername.setText("Khang Le");
-		holder.tvCost.setText("$35");
-		holder.tvDate.setText("December 12, 2013");
-		holder.tvStart.setText("CIN");
-		holder.tvEnd.setText("NYC");
+		holder.tvUsername.setText(trip.getOwner().getFirstName() + " " + trip.getOwner().getLastName());
+		holder.tvCost.setText(trip.getCost() + "");
+		//holder.tvDate.setText(trip.getDate().toString());
+		String start = trip.getStart().title;
+		holder.tvStart.setText(compressTitle(start));
+		String end = trip.getEnd().title;
+		holder.tvEnd.setText(compressTitle(end));
 		
 		int red = (int) (Math.random() * 240);
 		int blue = (int) (Math.random() * 255);
@@ -78,6 +80,17 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
 		holder.color.setBackgroundColor(Color.rgb(red, green, blue));
 				
 		return view;
+	}
+	
+	private String compressTitle(String title) {
+		String[] titles = title.split(",");
+		if (titles.length > 3) {
+			return titles[1] + titles[2];
+		} else if (titles.length > 2){
+			return titles[0] + titles[1];
+		} else {
+			return titles[0];
+		}
 	}
 
 }

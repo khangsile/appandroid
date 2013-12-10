@@ -7,7 +7,8 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,12 +28,16 @@ import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso.LoadedFrom;
+import com.squareup.picasso.Target;
 
 public class EditProfileActivity extends SherlockActivity {
 	/** List to hold the profile details that can be edited */
 	private List<String> settingList;
+	
 	/** Reference to the profile picture UI element */
-	private CircularImageView profPic;
+	private ImageView profPic;
 	
 	/** Reference to the User name UI element */
 	private TextView userName;
@@ -41,8 +47,12 @@ public class EditProfileActivity extends SherlockActivity {
 	
 	/**A reference to the current context to be used in inner classes */
 	final private Context context = this;
+	
 	/** A reference to the listview adapter */
 	private EditProfileListAdapter adt;
+	
+	/**A Target callback to handle the image view loading */
+	private Target target;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,9 +63,27 @@ public class EditProfileActivity extends SherlockActivity {
 		userName.setText(User.getActiveUser().getFirstName() + " " + User.getActiveUser().getLastName());
 
 		profPic = (CircularImageView) findViewById(R.id.img_user);
-		profPic.setImageResource(R.drawable.test_image);
 	
-		//Reference to profile list
+		target = new Target() {
+
+			@Override
+			public void onBitmapFailed(Drawable arg0) {
+				//do nothing
+			}
+
+			@Override
+			public void onBitmapLoaded(Bitmap arg0, LoadedFrom arg1) {
+				profPic.setImageBitmap(arg0);
+			}
+
+			@Override
+			public void onPrepareLoad(Drawable arg0) {
+				profPic.setImageResource(R.drawable.test_image);
+			}
+		};
+		
+		Picasso.with(context).load(User.getActiveUser().getProfileImage()+"?type=large").into(target);
+		
 		profSettings = (ListView) findViewById(R.id.lv_settings_list);
 		
 		//Set up settings list, create edit profile adapter, and set the adapter
@@ -64,7 +92,6 @@ public class EditProfileActivity extends SherlockActivity {
 		adt = new EditProfileListAdapter(this, settingList, User.getActiveUser());
 		profSettings.setAdapter(adt);
 		
-		//Initialize on click listener
 		initOnClickListener();
 	}
 
@@ -73,19 +100,15 @@ public class EditProfileActivity extends SherlockActivity {
 	 * depending on which item was clicked.
 	 */
 	private void initOnClickListener() {
-		// TODO Auto-generated method stub
 		profSettings.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				// TODO Auto-generated method stub
 				if (position == 2){ //Update Password dialog box!
-					//Inflate change password dialog
 					LayoutInflater li = LayoutInflater.from(context);
 					View changePassView = li.inflate(R.layout.change_password_dialog, null); 
 					
-					//Build alert dialog for current context and set title
 					AlertDialog.Builder changePassDialogBldr = new AlertDialog.Builder(context);
 					changePassDialogBldr.setTitle("Change Password");
 					
@@ -99,11 +122,10 @@ public class EditProfileActivity extends SherlockActivity {
 					
 					//Apply settings to the change dialog builder
 					changePassDialogBldr
-						.setCancelable(true) //Allow dialog to be canceled
+						.setCancelable(true) 
 						.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener(){
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								// TODO Auto-generated method stub
 								//Submit Password here when API endpoint is in place
 							}
 						})
@@ -112,12 +134,11 @@ public class EditProfileActivity extends SherlockActivity {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
-								dialog.cancel(); //Close dialog when cancel is pressed
+								dialog.cancel(); 
 							}
 							
 						});
-					//Create alert dialog and show it
+
 					AlertDialog changePassDialog = changePassDialogBldr.create();
 					changePassDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 					changePassDialog.show();
@@ -162,7 +183,7 @@ public class EditProfileActivity extends SherlockActivity {
 		}
 		//For testing
 		Toast.makeText(getApplicationContext(), user.toString(), Toast.LENGTH_SHORT).show();
-		//Get reference to active user to update
+
 		User activeUser = User.getActiveUser();
 		//Send request update
 		ApiRequest request = activeUser.getUpdateRequest(this, user, new FutureCallback<User>() {
@@ -178,7 +199,6 @@ public class EditProfileActivity extends SherlockActivity {
 			
 		});
 		
-		//Get active session and submit the request
 		Session session = Session.getSession();
 		session.sendRequest(request);
 	}

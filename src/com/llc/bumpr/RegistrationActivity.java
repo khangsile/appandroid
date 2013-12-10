@@ -77,7 +77,7 @@ public class RegistrationActivity extends Activity {
 					loginEditor.putString("auth_token", Session.getSession().getAuthToken());
 					loginEditor.commit();
 					
-					Intent i =  new Intent(getApplicationContext(), SearchDrivers.class); //Create intent to go to next
+					Intent i =  new Intent(getApplicationContext(), SearchTabActivity.class); //Create intent to go to next
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//Remove Login from stack
 					startActivity(i); //Start the intent
 				} else {

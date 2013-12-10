@@ -19,7 +19,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
 import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.lib.GCMRegistrationManager;
 import com.llc.bumpr.sdk.lib.ApiRequest;
@@ -69,14 +72,11 @@ public class LoginActivity extends Activity {
 		// Start dialog while it registers user to GCM and tries to log them in
 		final ProgressDialog pd = ProgressDialog.show(LoginActivity.this,
 				"Please Wait", "Checking for saved login...", false, true);
-		// Only allow the app to continue if Google Play Services is available!
 		if (GCMRegistrationManager.checkPlayServices(pd, context)) {
-			// Google Cloud Messaging Registration
 			gcm = new GCMRegistrationManager(context);
-			regId = gcm.getRegistrationIdFromGCM(); // Retrieve user registration id
+			regId = gcm.getRegistrationIdFromGCM(); 
 			Log.i(TAG, regId);
 
-			// If no registration id, register in the background!
 			if (TextUtils.isEmpty(regId)) {
 				gcm.registerInBackground();
 			}
@@ -90,10 +90,6 @@ public class LoginActivity extends Activity {
 
 		email = (EditText) findViewById(R.id.et_email);
 		password = (EditText) findViewById(R.id.et_password);
-	}
-	
-	public void initializeMe(User activeUser) {
-		
 	}
 	
 	/**
@@ -114,21 +110,9 @@ public class LoginActivity extends Activity {
 	 * @param pd
 	 */
 	private void checkSavedLogin(final ProgressDialog pd) {
-		// Temporary until we can find a better way to store the user state --
-		// Maybe store JSON of user object in future
-		if (!savedLogin.getString("email", "").contentEquals("")
-				&& !savedLogin.getString("password", "").contentEquals("")) {
-			String email = savedLogin.getString("email", ""); 
-			String password = savedLogin.getString("password", "");
+		if (!savedLogin.getString("auth_token", "").contentEquals("")) {
 			String authToken = savedLogin.getString("auth_token", "");
-
-			Login login = new Login.Builder()
-							.setEmail(email)
-							.setPassword(password)
-							.setRegistrationId(gcm.getRegistrationIdFromGCM())
-							.setPlatform("android")
-							.build();
-			
+			Log.i("auth_token", authToken);
 			if (authToken == null || authToken.trim().equals("")) return;
 			
 			Session session = Session.getSession();
@@ -204,8 +188,6 @@ public class LoginActivity extends Activity {
 				if (arg0 == null) {
 					// Store details upon successful login
 					SharedPreferences.Editor loginEditor = savedLogin.edit();
-					loginEditor.putString("email", email.getText().toString());
-					loginEditor.putString("password", password.getText().toString());
 					loginEditor.putString("auth_token", Session.getSession().getAuthToken());
 					loginEditor.commit();
 
@@ -267,18 +249,32 @@ public class LoginActivity extends Activity {
 									.setPlatform("android")
 									.setAccessToken(token)
 									.build();
+					
+					Request request = Request.newMeRequest(session, 
+				            new Request.GraphUserCallback() {
+				        @Override
+				        public void onCompleted(GraphUser user, Response response) {
+				        	String email = (String) user.getProperty("email");
+				        	Log.i("facebook email", email);
+				        }
+				    });
+				    request.executeAsync();
 
 					Session.getSession().loginWithFacebook(getApplicationContext(), login, new FutureCallback<User>() {
 
 						@Override
 						public void onCompleted(Exception arg0, User arg1) {
-							if (arg0 == null) {
-								//Intent i = new Intent(getApplicationContext(), SearchDrivers.class);
-								//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);							
-								//startActivity(i); // start new intent
+							if (arg0 == null && arg1 != null) {
+								SharedPreferences.Editor loginEditor = savedLogin.edit();
+								loginEditor.putString("auth_token", Session.getSession().getAuthToken());
+								loginEditor.commit();
+								Log.i("auth_token", Session.getSession().getAuthToken());
+
 								Intent i = new Intent(getApplicationContext(), SearchTabActivity.class);
 								startActivity(i);
 							} else {
+								com.facebook.Session.getActiveSession().closeAndClearTokenInformation();
+								
 								AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
 								builder.setTitle("Facebook Login Failed");
 								builder.setMessage("An error occurred while logging you in via Facebook. Please try logging in using facebook later.");
@@ -289,14 +285,14 @@ public class LoginActivity extends Activity {
 										dialog.cancel();
 									}
 								});
-										
+								arg0.printStackTrace();	
 								AlertDialog dg = builder.create();
 								dg.show();
 							} 
 						}
-					});
-				}
-			}
+					}); 
+				} 
+			} 
 		}, permissions);
 	}
 	

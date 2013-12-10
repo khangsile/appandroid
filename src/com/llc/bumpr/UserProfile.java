@@ -77,34 +77,9 @@ public class UserProfile extends Activity {
 		
 		//Set text values
 		userName.setText(user.getFirstName() + " " + user.getLastName());
-		//userLoc.setText(user.getCity() + ", " + user.getState());
-		//userCar.setText("Car: 2013 Camry Hybrid XLE");
-		//numSeats.setText("Seats: 4");
-		//carRate.setText("Rate: $" + user.getDriverProfile().getFee() + "per mile");
-		ArrayList<LatLng> points = new ArrayList<LatLng>();
-		points.add(new LatLng(trip.getStart().lat, trip.getStart().lon));
-		points.add(new LatLng(trip.getEnd().lat, trip.getEnd().lon));
-		Log.i("UserProfile-Start", trip.getStart().lat + " " + trip.getStart().lon);
-		Log.i("UserProfile-End", trip.getEnd().lat + " " + trip.getEnd().lon);
-		//Get the total distance of the trip
-		GMapV2Painter.getDistance(points, new Callback<Integer>() {
-
-			@Override
-			public void failure(RetrofitError arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void success(Integer arg0, Response arg1) {
-				// TODO Auto-generated method stub
-				float distanceInMiles = (float) (arg0 / 1600.0);
-				Double price = distanceInMiles * user.getDriverProfile().getFee();
-				TextView carRate = (TextView) findViewById(R.id.tv_car_rate);
-				carRate.setText("$" + String.format("%.2f", price));
-			}
-			
-		});
+		userLoc.setText(trip.getStart().title);
+		//numSeats.setText("Seats: " + trip.g);
+		carRate.setText("$" + String.format("%.2f", trip.getCost()));
 		
 		
 		//Get reviews and fill in review list view

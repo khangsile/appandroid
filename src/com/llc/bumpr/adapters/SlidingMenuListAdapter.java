@@ -9,6 +9,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koushikdutta.ion.Ion;
 import com.llc.bumpr.R;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.sdk.lib.ApiRequest;
@@ -28,17 +31,26 @@ import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.User;
 import com.llc.bumpr.services.DriverLocationService;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+import com.squareup.picasso.Picasso.LoadedFrom;
 
 public class SlidingMenuListAdapter extends BaseAdapter {
 	/** List holding data to be displayed in the list */
 	private List<Pair<String, Object>> data;
+	
 	/** LayoutInflater to inflate the rows */
 	private LayoutInflater inflater;
+	
 	/** Context of the application */
 	private Context context;
+	
 	/** User whose profile is being edited */
 	private User user;
 
+	/**A Target callback to handle the image view loading */
+	private Target target;
+	
 	/**
 	 * Constructor to set up the adapter
 	 * @param context Application Context
@@ -91,13 +103,12 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
-		Object dataObj = data.get(position).second; // Get data for the row
-		View view; //Reference to row to be displayed
+		Object dataObj = data.get(position).second; 
+		View view; 
 
 		if (data.get(position).first == "Image") { // Create Image Row
 			ImageViewHolder holder;
-
+			
 			if (convertView == null) { //New row being created
 				ViewGroup vGroup = (ViewGroup) inflater.inflate(
 						R.layout.sliding_menu_row_image, null); //Inflate the row
@@ -107,20 +118,20 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 				holder = new ImageViewHolder(
 						(CircularImageView) vGroup.findViewById(R.id.iv_sl_menu_prof_pic),
 						(TextView) vGroup.findViewById(R.id.tv_sl_menu_username));
-				vGroup.setTag(holder); //Set the tag
+								
+				vGroup.setTag(holder); 
 
 				view = vGroup; //Assign view to view group
 			} else {// If convert view exists!
 				// get the holder back
-				holder = (ImageViewHolder) convertView.getTag(); //Get holder from tag
-				view = convertView; //Assign view from convertview
+				holder = (ImageViewHolder) convertView.getTag(); 
+				view = convertView; 
 			}
-			//Set data in row
+			
 			holder.textView.setText(dataObj.toString());
-			holder.imageView.setImageResource(R.drawable.test_image);
+			loadImage(holder);
 		} 
 		else if (data.get(position).first == "Switch") { // Create Switch Row
-			//Reference to the view holder and the switch view
 			final SwitchViewHolder holder;
 			final Switch switchView;
 
@@ -128,24 +139,22 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 				ViewGroup vGroup = (ViewGroup) inflater.inflate(
 						R.layout.sliding_menu_row_switch, null); //Inflate row
 
-				// Use the view holder pattern to save already looked up
-				// subviews
 				holder = new SwitchViewHolder(
 						(TextView) vGroup.findViewById(R.id.tv_sl_menu_driver_mode),
 						(Switch) vGroup.findViewById(R.id.tb_sl_menu_switch));
 				vGroup.setTag(holder);
 				
-				switchView = holder.getSwitch(); //Assign switch reference for the row
+				switchView = holder.getSwitch(); 
 
 				view = vGroup;
 			} else {// If convert view exists!
-				// get the holder back
+
 				holder = (SwitchViewHolder) convertView.getTag();
-				//Assign the switch
+
 				switchView = holder.getSwitch();
 				view = convertView;
 			}
-			//Set the row text and check status
+
 			holder.textView.setText(dataObj.toString());
 			if(user.getDriverProfile() == null) //If user is not driver, set checked to false
 				holder.switchView.setChecked(false);
@@ -156,12 +165,10 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					// TODO Auto-generated method stub
+					
 					//Verify the user is a registered driver
 					if (user.getDriverProfile() != null){
-						//Toggle driver mode
-						Log.i("Mein Tag", isChecked + " ");
-						//Update driver status on toggle
+					
 						ApiRequest request = user.getDriverProfile().toggleStatusRequest(isChecked, new Callback<Driver>() {
 
 							@Override
@@ -187,7 +194,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 						});
 						Session.getSession().sendRequest(request);
 					} 
-					else{ //User is not a driver.  Set value to false and request they become a driver
+					else{ 
 						switchView.setChecked(false); //Not working for some reason
 						Toast.makeText(context, "Please register as driver before using this feature", Toast.LENGTH_SHORT).show();
 					}
@@ -195,29 +202,26 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 				
 			});
 		} 
-		else { // Create Text Row
+		else { 
 			TextViewHolder holder;
 
 			if (convertView == null) {//If new row, inflate row
 				ViewGroup vGroup = (ViewGroup) inflater.inflate(
 						R.layout.sliding_menu_row_text, null);
 
-				// Use the view holder pattern to save already looked up
-				// subviews
 				holder = new TextViewHolder((TextView) vGroup.findViewById(R.id.tv_sliding_menu_text)
 						,(ImageView) vGroup.findViewById(R.id.iv_row_icon));
 				vGroup.setTag(holder);
 
-				view = vGroup; //Assign view to view group
+				view = vGroup; 
 			} else {// If convert view exists!
-				// get the holder back
+
 				holder = (TextViewHolder) convertView.getTag();
 				view = convertView;
 			}
-			//Set text row to the value passed in 
+
 			holder.textView.setText(dataObj.toString());
 
-			//Set icon source
 			if(dataObj.toString().equals("Start Trip")) {
 				holder.icon.setImageResource(R.drawable.ic_create_trip);
 				holder.icon.setVisibility(View.VISIBLE);
@@ -238,7 +242,29 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 				holder.icon.setVisibility(View.GONE);
 		}
 
-		return view; // Return view to display
+		return view; 
+	}
+	
+	private void loadImage(final ImageViewHolder holder) {
+		target = new Target() {
+
+			@Override
+			public void onBitmapFailed(Drawable arg0) {
+				//do nothing
+			}
+
+			@Override
+			public void onBitmapLoaded(Bitmap arg0, LoadedFrom arg1) {
+				holder.imageView.setImageBitmap(arg0);
+			}
+
+			@Override
+			public void onPrepareLoad(Drawable arg0) {
+				holder.imageView.setImageResource(R.drawable.test_image);
+			}
+		};
+		
+		Picasso.with(context).load(User.getActiveUser().getProfileImage()+"?type=large").into(target);
 	}
 
 	/**View holders to improve performance of adapter! **/

@@ -19,7 +19,15 @@ public abstract class BumprActivity extends SherlockFragmentActivity {
 	 */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		getMe();
+	}
+	
+	protected void onResume() {
+		super.onResume();
+		getMe();
+	}
+	
+	private void getMe() {
 		if (User.getActiveUser() == null) {
 			Session session = Session.getSession();
 			if (session.getAuthToken() == null || session.getAuthToken().trim().equals("")) {

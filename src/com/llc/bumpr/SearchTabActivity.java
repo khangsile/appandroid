@@ -36,7 +36,9 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
 import com.llc.bumpr.fragments.SearchListFragment;
+import com.llc.bumpr.fragments.SearchListFragment.OnTripSelectedListener;
 import com.llc.bumpr.fragments.SearchMapFragment;
+import com.llc.bumpr.fragments.SearchTabFragment;
 import com.llc.bumpr.popups.CalendarPopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp;
 import com.llc.bumpr.popups.MinPeoplePopUp.OnSubmitListener;
@@ -56,7 +58,7 @@ public class SearchTabActivity extends BumprActivity {
 	private PagerAdapter pagerAdapter;
 	
 	/** ArrayList to hold the fragments to use in a ViewPager */
-	private ArrayList<SherlockFragment> fragments = new ArrayList<SherlockFragment>();
+	private ArrayList<SearchTabFragment> fragments = new ArrayList<SearchTabFragment>();
 	
 	/** Reference to the sliding menu UI element */
 	private SlidingMenu slidingMenu;
@@ -84,7 +86,18 @@ public class SearchTabActivity extends BumprActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_tab);
         
-        fragments.add(new SearchListFragment());
+        fragments.add(new SearchListFragment().setOnTripSelectedListener(new OnTripSelectedListener() {
+
+			@Override
+			public void onTripSelected(Trip trip) {
+				Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+				//Pass the driver user object to the page
+				intent.putExtra("user", trip.getOwner());
+				intent.putExtra("trip", trip);
+				startActivity(intent);
+			}
+        	
+        }));
         fragments.add(new SearchMapFragment());
         
         pager = (ViewPager) findViewById(R.id.pager);
@@ -191,6 +204,9 @@ public class SearchTabActivity extends BumprActivity {
 					Editor loginEditor = savedLogin.edit();
 					loginEditor.remove("auth_token");
 					loginEditor.commit();
+					
+					if (com.facebook.Session.getActiveSession() != null)
+						com.facebook.Session.getActiveSession().closeAndClearTokenInformation();
 					
 					Session session = Session.getSession();
 					session.logout(getApplicationContext(), new FutureCallback<String>() {
@@ -398,17 +414,19 @@ public class SearchTabActivity extends BumprActivity {
 	
 	public void search() {
 		request.setContext(this);
-		request.setCallback(new FutureCallback<String>() {
+		request.setCallback(new FutureCallback<List<Trip>>() {
 
 			@Override
-			public void onCompleted(Exception arg0, String arg1) {
+			public void onCompleted(Exception arg0, List<Trip> arg1) {
 				if (arg0 == null && arg1 != null) {
-					if (arg1 == "") {
+					if (arg1.isEmpty()) {
 						Log.i("Trip", "Empty string");
 						//Sorry buddy. There ain't no trips.
 					} else {
 						//Trip t = arg1.get(0);
-						Log.i("Trip", arg1);
+						for (SearchTabFragment fragment : fragments) {
+							fragment.listChanged(arg1);
+						}
 					}
 				} else {
 					arg0.printStackTrace();
