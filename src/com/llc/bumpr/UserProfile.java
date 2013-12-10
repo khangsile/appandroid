@@ -81,7 +81,6 @@ public class UserProfile extends Activity {
 		//numSeats.setText("Seats: " + trip.g);
 		carRate.setText("$" + String.format("%.2f", trip.getCost()));
 		
-		
 		//Get reviews and fill in review list view
 		initReviewList(); //Initialize list of review objects
 		//Create review adapter and assign this adapter to the list view
