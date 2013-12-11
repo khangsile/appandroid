@@ -338,7 +338,7 @@ public class SearchTabActivity extends BumprActivity {
 				
 			});
 			mPopUp.showAtLocation(pager, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
-			mPopUp.setInstructions("Set the number of guests");
+			mPopUp.setInstructions("Select the number of passengers");
 			return true;
 		case android.R.id.home: //App icon button pressed - show sliding menu
 			this.slidingMenu.toggle();

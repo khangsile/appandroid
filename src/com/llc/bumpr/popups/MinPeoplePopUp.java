@@ -105,7 +105,10 @@ public class MinPeoplePopUp extends PopupWindow {
 	public void setCount(int count) {
 		if (count > 0) {
 			this.count = count;
-			tvCount.setText(count + "");
+			if (count > 1)
+				tvCount.setText(count + " Passengers");
+			else 
+				tvCount.setText(count + " Passenger");
 		}
 	}
 	

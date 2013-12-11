@@ -249,16 +249,6 @@ public class LoginActivity extends Activity {
 									.setPlatform("android")
 									.setAccessToken(token)
 									.build();
-					
-					Request request = Request.newMeRequest(session, 
-				            new Request.GraphUserCallback() {
-				        @Override
-				        public void onCompleted(GraphUser user, Response response) {
-				        	String email = (String) user.getProperty("email");
-				        	Log.i("facebook email", email);
-				        }
-				    });
-				    request.executeAsync();
 
 					Session.getSession().loginWithFacebook(getApplicationContext(), login, new FutureCallback<User>() {
 

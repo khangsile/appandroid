@@ -38,7 +38,6 @@ public class CalendarPopUp extends PopupWindow {
 		setContentView(LayoutInflater.from(context).inflate(R.layout.calendar_popup, root));		
 		View v = getContentView();
 
-		
 		Calendar nextYear = Calendar.getInstance();
 		nextYear.add(Calendar.YEAR, 1);
 
