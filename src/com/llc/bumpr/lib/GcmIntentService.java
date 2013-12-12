@@ -17,6 +17,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.llc.bumpr.R;
 import com.llc.bumpr.RequestActivity;
 import com.llc.bumpr.SearchDrivers;
+import com.llc.bumpr.SearchTabActivity;
 import com.llc.bumpr.TripSummaryActivity;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Trip;
@@ -118,8 +119,8 @@ public class GcmIntentService extends IntentService {
             .setSmallIcon(R.drawable.ic_launcher)
             .setContentTitle("Seat Request Received")
             .setStyle(new NotificationCompat.BigTextStyle()
-            .bigText(requester.getFirstName() + " " + requester.getLastName() + " has request a seat."))
-            .setContentText(requester.getFirstName() + " " + requester.getLastName() + " has request a seat in your upcoming trip.")
+            .bigText(requester.getFirstName() + " " + requester.getLastName() + " has request a seat in your upcoming trip."))
+            .setContentText(requester.getFirstName() + " " + requester.getLastName() + " has request a seat.")
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
             .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
@@ -157,8 +158,8 @@ public class GcmIntentService extends IntentService {
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Seat Request Accepted")
                 .setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(host.getFirstName() + " " + host.getLastName() + " has accepted your request!"))
-                .setContentText(host.getFirstName() + " " + host.getLastName() + " has accepted your request for a seat!")
+                .bigText(host.getFirstName() + " " + host.getLastName() + " has accepted your request for a seat!"))
+                .setContentText(host.getFirstName() + " " + host.getLastName() + " has accepted your request!")
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
                 .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
@@ -171,7 +172,7 @@ public class GcmIntentService extends IntentService {
         	else {
         		//If the Driver rejected the ride request, take the user back to the search Driver page
         		Log.i(TAG, "Rejected response notification");
-        		Intent intent = new Intent(this, TripSummaryActivity.class);
+        		Intent intent = new Intent(this, SearchTabActivity.class);
         		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                         intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -181,9 +182,9 @@ public class GcmIntentService extends IntentService {
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Driving Request Rejected")
                 .setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has declined your request for a seat."))
-                .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has declined your request for " +
-                		"a seat.  Press here to continue searching for a ride!")
+                .bigText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has declined your request for " +
+                		"a seat.  Press here to continue searching for a ride!"))
+                .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has declined your request for a seat.")
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
                 .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
