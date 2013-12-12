@@ -58,24 +58,13 @@ public class PushNotification {
 	 * @throws JSONException Exception thrown from invalid json representation
 	 */
 	public PushNotification (JSONObject json, Context context) throws JSONException{
-		//Values is all types of requests
 		type = json.getString("type"); //Get Notification Type
 		requestId = json.getInt("id"); //Get Request id
-		
-		//user = new User(json.getJSONObject("user")); //User who made request
-		ApiRequest apiReq = User.getUser(context, json.getInt("user_id"), new FutureCallback<User>() {
-			@Override
-			public void onCompleted(Exception arg0, User arg1) {
-				// TODO Auto-generated method stub
-				user = arg1; //User that sent the request
-			}
-		});
-		Session.getSession().sendRequest(apiReq);
-		
-		//Create Trip object
-		//Type type = new TypeToken<Trip>(){}.getType();
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-DD'T'hh:mm:ss.sss'Z'").create();
-		trip = gson.fromJson(json.getJSONObject("trip").toString(), Trip.class);
+				
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-DD hh:mm:ss 'UTC'").create();
+		request = gson.fromJson(json.toString(), Request.class);
+		trip = request.getTrip();
+		user = request.getUser();
 		
 		if (type.equals("response")){
 			//Retrieve information for response type notification
@@ -95,6 +84,13 @@ public class PushNotification {
 	 */
 	public int getRequestId() {
 		return requestId;
+	}
+	
+	/**
+	 * @return Request representing the request
+	 */
+	public Request getRequest() {
+		return request;
 	}
 	
 	/**

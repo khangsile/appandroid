@@ -106,6 +106,8 @@ public class GcmIntentService extends IntentService {
         	//Attach objects to intent
         	intent.putExtra("user", requester);
         	intent.putExtra("trip", trip);
+        	intent.putExtra("request", pushNotification.getRequest());
+        	intent.putExtra("type", "response");
         	//Sent intent as pending intent
         	PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                     intent, Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -131,7 +133,7 @@ public class GcmIntentService extends IntentService {
         else if (pushNotification.getType().equals("response")){ //If type is response
         	Log.i(TAG, Boolean.toString(pushNotification.getAccepted()));
         	if (pushNotification.getAccepted()){
-        		//If the Driver accpeted the ride request
+        		//If the Driver accepted the ride request
         		/* Take the user to a Trip Summary page where they can mark the trip completed */
         		Log.i(TAG, "Inside Good Response");
         		Intent intent = new Intent(this, TripSummaryActivity.class);
@@ -144,6 +146,8 @@ public class GcmIntentService extends IntentService {
             	//attach objects to intent
             	intent.putExtra("user", host);
             	intent.putExtra("trip", trip);
+            	intent.putExtra("type", "accepted");
+            	intent.putExtra("request", pushNotification.getRequest());
         		
         		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                         intent, Intent.FLAG_ACTIVITY_NEW_TASK);

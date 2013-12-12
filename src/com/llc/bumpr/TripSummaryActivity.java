@@ -12,14 +12,11 @@ import android.content.IntentSender;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -30,6 +27,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.GMapV2Painter;
 import com.llc.bumpr.lib.LatLngLocationTask;
@@ -293,17 +291,32 @@ public class TripSummaryActivity extends BumprActivity implements
 		}
 	}
 	
+	/**
+	 * Send the request for the trip to the user
+	 * @param v
+	 */
 	protected void sendRequest(View v) {
-		// TODO Auto-generated method stub
-		
+		ApiRequest request = Request.postRequest(this, trip, new FutureCallback<String>() {
+
+			@Override
+			public void onCompleted(Exception arg0, String arg1) {
+				if (arg0 == null) {
+					finish();
+				} else {
+					arg0.printStackTrace();
+					// Something bad happened. We'll say something later.
+					finish(); // Temp.
+				}
+			}
+			
+		});
+		Session.getSession().sendRequest(request);
 	}
 
 	/**
 	 * Marks the request as complete!
 	 */
 	public void tripComplete(View v) {
-		//Complete trip
-		//ApiRequest apiRequest = request.
 		finish(); //Close trip summary
 	}
 	
@@ -320,21 +333,10 @@ public class TripSummaryActivity extends BumprActivity implements
 	 * @param accept the answer to the request
 	 */
 	public void answerRequest(final boolean accept) {
-		ApiRequest apiRequest = request.respondTo(accept, new Callback<Response>() {
+		ApiRequest apiRequest = request.respondTo(this, accept, new FutureCallback<String>() {
 
 			@Override
-			public void failure(RetrofitError arg0) {
-				Toast.makeText(TripSummaryActivity.this, "Error responding to this request.  Please try again!", Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void success(Response arg0, Response arg1) {
-				/*if (!accept) finish();
-				
-				Intent intent = new Intent(getApplicationContext(), CreateReviewActivity.class);
-				intent.putExtra("user", User.getActiveUser());
-				intent.putExtra("request", request);
-				startActivity(intent);*/
+			public void onCompleted(Exception arg0, String arg1) {
 				finish();
 			}
 			
@@ -344,8 +346,6 @@ public class TripSummaryActivity extends BumprActivity implements
 
 	@Override
 	protected void initializeMe(User activeUser) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

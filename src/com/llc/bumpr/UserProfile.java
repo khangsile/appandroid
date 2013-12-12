@@ -108,11 +108,6 @@ public class UserProfile extends Activity {
 	public void request(View v) {
 		
 		//Create Request object for this request using user, driver, and trip details
-		Request r = new Request.Builder()
-						.setDriverId(user.getDriverProfile().getId())
-						.setUserId(User.getActiveUser().getId())
-						.setTrip(trip)
-						.build();
 		//Get session and send up the request to the server 
 		Session session = Session.getSession();
 	}
