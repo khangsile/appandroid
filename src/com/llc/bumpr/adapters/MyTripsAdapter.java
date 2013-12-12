@@ -3,58 +3,43 @@ package com.llc.bumpr.adapters;
 import java.util.List;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.llc.bumpr.R;
+import com.llc.bumpr.sdk.models.Trip;
 
-public class MyTripsAdapter extends BaseAdapter {
+public class MyTripsAdapter extends ArrayAdapter<Trip> {
 	
 	/** Reference to List holding data to be displayed */
-	private List<Object> data;
+	private List<Trip> data;
+	
 	/** Reference to the application context */
 	private Context context;
+	
 	/** Reference to the row layout to be displayed */
 	private int layoutId;
 	
-	public MyTripsAdapter(Context context, List<Object> inData, int layoutId){
+	public MyTripsAdapter(Context context, List<Trip> inData, int layoutId){
+		super(context, layoutId, inData);
 		data = inData;
 		this.context = context;
 		this.layoutId = layoutId;
 	}
 
 	@Override
-	public int getCount() {
-		// TODO Auto-generated method stub
-		return data.size();
-	}
-
-	@Override
-	public Object getItem(int pos) {
-		// TODO Auto-generated method stub
-		return data.get(pos);
-	}
-
-	@Override
-	public long getItemId(int pos) {
-		// TODO Auto-generated method stub
-		return pos;
-	}
-
-	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
-		ViewHolder holder; //Reference to view holder
-        View view; //Reference to View
+		ViewHolder holder; 
+        View view; 
         
         if (convertView == null) { //If new view, inflate view
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 ViewGroup vGroup = (ViewGroup) inflater.inflate(layoutId, null);
                 
-                //Create new ViewHolder object
                 holder = new ViewHolder((TextView)vGroup.findViewById(R.id.tv_username), (TextView)vGroup.findViewById(R.id.tv_cost),
                 		(TextView) vGroup.findViewById(R.id.tv_start), (TextView) vGroup.findViewById(R.id.tv_end), 
                 		(TextView)vGroup.findViewById(R.id.tv_date), (View) vGroup.findViewById(R.id.view_color));
@@ -66,14 +51,17 @@ public class MyTripsAdapter extends BaseAdapter {
         	view = convertView;
         }
         
+        Trip t = data.get(position);
+        
         //Use class holder to and fill details with trip and driver details
-        holder.start.setText("Cincinnati");
+        holder.start.setText(compressTitle(t.getStart().title));
         holder.start.setTextSize(20f);
-        holder.end.setText(data.get(position).toString());
+        holder.end.setText(compressTitle(t.getEnd().title));
         holder.end.setTextSize(20f);
-        holder.tripCost.setText("23.45");
-        holder.userName.setText("Kyle Cooper");
-        holder.date.setText("December 6, 2013");
+        holder.tripCost.setText(t.getCost() + "");
+        holder.userName.setText(t.getOwner().getFirstName() +  " " + t.getOwner().getLastName());
+        java.text.DateFormat format = DateFormat.getMediumDateFormat(context);
+        holder.date.setText(format.format(t.getDate()));
         
         //Hide color bar from left side
         holder.viewColor.setVisibility(View.GONE);
@@ -82,8 +70,7 @@ public class MyTripsAdapter extends BaseAdapter {
 	}
 
 	/**View holders to improve performance of adapter! **/
-	private static class ViewHolder { // Used to hold views per row in the
-											// List
+	private static class ViewHolder { // Used to hold views per row in the list
 		final TextView userName;
 		final TextView tripCost;
 		final TextView start;
@@ -98,6 +85,17 @@ public class MyTripsAdapter extends BaseAdapter {
 			this.tripCost = tripCost;
 			this.date = date;
 			this.viewColor = viewColor;
+		}
+	}
+	
+	private String compressTitle(String title) {
+		String[] titles = title.split(",");
+		if (titles.length > 3) {
+			return titles[1] + titles[2];
+		} else if (titles.length > 2){
+			return titles[0] + titles[1];
+		} else {
+			return titles[0];
 		}
 	}
 	

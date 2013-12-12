@@ -93,6 +93,12 @@ public class CalendarPopUp extends PopupWindow {
 	
 	/************************* ON SUBMIT INTERFACE ********************/
 	
+	/**
+	 * A listener for when you submit your changes. This returns
+	 * a date object. 
+	 * @author KhangSiLe
+	 *
+	 */
 	public interface OnSubmitListener {
 		public void valueChanged(Date date);
 	}

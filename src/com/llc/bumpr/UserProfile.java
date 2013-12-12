@@ -115,20 +115,5 @@ public class UserProfile extends Activity {
 						.build();
 		//Get session and send up the request to the server 
 		Session session = Session.getSession();
-		session.sendRequest(r.postRequest(new Callback<Request>() {
-
-			@Override
-			public void failure(RetrofitError arg0) { // do nothing
-				Toast.makeText(getApplicationContext(),
-						"Error sending request",
-						Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void success(Request arg0, Response arg1) { // do nothing
-				finish();
-			}
-			
-		}));
 	}
 }

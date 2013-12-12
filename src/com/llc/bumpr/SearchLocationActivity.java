@@ -8,6 +8,7 @@ import android.location.Address;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -51,8 +52,11 @@ public class SearchLocationActivity extends BumprActivity {
 
 					@Override
 					public void onCompleted(Exception arg0, List<Address> arg1) {
+						if (arg0 != null) arg0.printStackTrace();
 						if (arg1 == null) return;
-						if (arg1.isEmpty()) return;
+						if (arg1.isEmpty()) {
+							return;
+						}
 						
 						Intent i = new Intent();
 						i.putExtra("address", arg1.get(0));
