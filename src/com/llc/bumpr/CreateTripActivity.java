@@ -44,6 +44,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.adapters.PlacesAutoCompleteAdapter;
 import com.llc.bumpr.lib.GMapV2Painter;
@@ -91,6 +92,12 @@ public class CreateTripActivity extends BumprActivity implements
 	
 	/** Reference to the Trip builder to build the trip */
 	private Trip.Builder tripBldr;
+	
+	/** Reference to the Start location */
+	private LatLng startLoc;
+	
+	/** Reference to the End location */
+	private LatLng endLoc;
 	
 	/** Reference to the map UI element */
 	private GoogleMap gMap;
@@ -306,16 +313,21 @@ public class CreateTripActivity extends BumprActivity implements
 					public void success(List<Address> arg0, Response arg1) {
 						endCoor = new Location(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()).setTitle(end);
 						tripBldr.setEnd(endCoor); //Set trip end coordinate
+						
+						startLoc = new LatLng(startCoor.lat, startCoor.lon);
+						endLoc = new LatLng(endCoor.lat, endCoor.lon);
 
 						// Set up list of points for trip to display route on the map
 						ArrayList<LatLng> points = new ArrayList<LatLng>();
-						points.add(new LatLng(startCoor.lat, startCoor.lon));
-						points.add(new LatLng(endCoor.lat, endCoor.lon));
+						points.add(startLoc);
+						points.add(endLoc);
 						
 						//Paint route on the map
 						GMapV2Painter painter = new GMapV2Painter(gMap, points);
 						painter.setWidth(8);
 						painter.paint();
+						
+						setMapZoom();
 						
 						pd.dismiss();
 					}
@@ -324,6 +336,14 @@ public class CreateTripActivity extends BumprActivity implements
 			}
 			
 		}).execute(starts);
+	}
+	
+	/**
+	 * Zoom the map to display the route
+	 */
+	protected void setMapZoom() {		
+		LatLngBounds bounds = new LatLngBounds.Builder().include(startLoc).include(endLoc).build();
+		gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
 	}
 	
 	/**

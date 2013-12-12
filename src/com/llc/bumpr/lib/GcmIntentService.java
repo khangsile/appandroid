@@ -116,7 +116,7 @@ public class GcmIntentService extends IntentService {
         	//Create notification
         	NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
-            .setSmallIcon(R.drawable.ic_launcher)
+            .setSmallIcon(R.drawable.appa_yip)
             .setContentTitle("Seat Request Received")
             .setStyle(new NotificationCompat.BigTextStyle()
             .bigText(requester.getFirstName() + " " + requester.getLastName() + " has request a seat in your upcoming trip."))
@@ -155,7 +155,7 @@ public class GcmIntentService extends IntentService {
         		//Build the notification and set the accepted text
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.appa_yip)
                 .setContentTitle("Seat Request Accepted")
                 .setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(host.getFirstName() + " " + host.getLastName() + " has accepted your request for a seat!"))
@@ -179,7 +179,7 @@ public class GcmIntentService extends IntentService {
         		//Build Notification with rejected text
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.appa_yip)
                 .setContentTitle("Driving Request Rejected")
                 .setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has declined your request for " +
