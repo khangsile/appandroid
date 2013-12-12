@@ -30,6 +30,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapController;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.GMapV2Painter;
 import com.llc.bumpr.lib.LatLngLocationTask;
@@ -39,9 +42,9 @@ import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
-public class TripSummaryActivity extends BumprActivity implements
+public class TripSummaryActivity extends BumprActivity /*implements
 		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener {
+		GooglePlayServicesClient.OnConnectionFailedListener*/ {
 	
 	/** Reference to the user asking for a ride */
 	private User user;
@@ -49,7 +52,7 @@ public class TripSummaryActivity extends BumprActivity implements
 	private Trip trip;
 	/** Reference to a Request object sent by the user */
 	private Request request;
-
+	
 	/** Reference to the Layout object holding the map fragment */
 	private LinearLayout map;
 
@@ -76,7 +79,7 @@ public class TripSummaryActivity extends BumprActivity implements
 				.findFragmentById(R.id.map_request)).getMap();
 
 		// Create new location client.
-		mLocationClient = new LocationClient(this, this, this);
+		//mLocationClient = new LocationClient(this, this, this);
 		
 		// Set up list of points for trip to display route on the map
 		ArrayList<LatLng> points = new ArrayList<LatLng>();
@@ -87,9 +90,11 @@ public class TripSummaryActivity extends BumprActivity implements
 		GMapV2Painter painter = new GMapV2Painter(gMap, points);
 		painter.setWidth(8);
 		painter.paint();
+		
+		setMapZoom();
 	}
 
-	@Override
+	/*@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
@@ -117,12 +122,12 @@ public class TripSummaryActivity extends BumprActivity implements
 			mLocationClient.connect();
 	}
 
-	/**
+	*//**
 	 * Verifies the user has Google Maps installed. If not, it requests them to
 	 * install Google Maps
 	 * 
 	 * @return Boolean value signifying if Google Maps is available
-	 */
+	 *//*
 	private boolean isGooglePlayServicesAvailable() {
 		// Verify user has good version of google play services. Necessary for
 		// maps
@@ -140,13 +145,13 @@ public class TripSummaryActivity extends BumprActivity implements
 		}
 	}
 
-	/**
+	*//**
 	 * Connection to GPS failed. Attempt to resolve it. Otherwise, catch the
 	 * exception
 	 * 
 	 * @param connResult
 	 *            Result from the connection attempt
-	 */
+	 *//*
 	@Override
 	public void onConnectionFailed(ConnectionResult connResult) {
 		// If Google Play Services can resolve the errors, allow it to resolve
@@ -163,10 +168,10 @@ public class TripSummaryActivity extends BumprActivity implements
 			}
 	}
 
-	/**
+	*//**
 	 * Connected to GPS successfully. Update current location and display marker
 	 * on the map.
-	 */
+	 *//*
 	@Override
 	public void onConnected(Bundle bundle) {
 		//Get last location from user
@@ -181,6 +186,17 @@ public class TripSummaryActivity extends BumprActivity implements
 
 	@Override
 	public void onDisconnected() {
+	}
+*/	
+	/**
+	 * Zoom the map into the route
+	 */
+	protected void setMapZoom() {
+		LatLng start = new LatLng(trip.getStart().lat, trip.getStart().lon);
+		LatLng end = new LatLng(trip.getEnd().lat, trip.getEnd().lon);
+		
+		LatLngBounds bounds = new LatLngBounds.Builder().include(start).include(end).build();
+		gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
 	}
 	
 	/**
@@ -229,7 +245,7 @@ public class TripSummaryActivity extends BumprActivity implements
 			@Override
 			public void success(List<Address> arg0, Response arg1) {
 				if (arg0.isEmpty()) return;
-				
+
 				TextView toAddress = (TextView) findViewById(R.id.tv_toAddress);
 				TextView toCityState = (TextView) findViewById(R.id.tv_toCityState);
 
@@ -247,10 +263,11 @@ public class TripSummaryActivity extends BumprActivity implements
 
 			@Override
 			public void success(List<Address> arg0, Response arg1) {
-				if (arg0.isEmpty()) return;
-				
+				if (arg0.isEmpty()) return;				
+
 				TextView fromAddress = (TextView) findViewById(R.id.tv_fromAddress);
 				TextView fromCityState = (TextView) findViewById(R.id.tv_fromCityState);
+				
 				fromAddress.setText(arg0.get(0).getAddressLine(0));
 				fromCityState.setText(arg0.get(0).getLocality());
 			}
