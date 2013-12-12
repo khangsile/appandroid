@@ -70,7 +70,6 @@ public class SearchListFragment extends SearchTabFragment {
 				Trip t = adapter.getItem(position);
 				listener.onTripSelected(t);
 			}
-        	
         });
     }
     

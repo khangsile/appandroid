@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.llc.bumpr.R;
+import com.llc.bumpr.lib.Colors;
 import com.llc.bumpr.sdk.models.Trip;
 
 public class SearchTripsAdapter extends ArrayAdapter<Trip> {
@@ -72,12 +74,10 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
 		holder.tvStart.setText(compressTitle(start));
 		String end = trip.getEnd().title;
 		holder.tvEnd.setText(compressTitle(end));
+		java.text.DateFormat format = DateFormat.getMediumDateFormat(context);
+        holder.tvDate.setText(format.format(trip.getDate()));
 		
-		int red = (int) (Math.random() * 240);
-		int blue = (int) (Math.random() * 255);
-		int green = (int) (Math.random() * 255);
-		
-		holder.color.setBackgroundColor(Color.rgb(red, green, blue));
+		holder.color.setBackgroundColor(Colors.getColor(position));
 				
 		return view;
 	}

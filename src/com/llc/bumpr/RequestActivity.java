@@ -26,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.GMapV2Painter;
 import com.llc.bumpr.lib.LatLngLocationTask;
@@ -95,7 +96,6 @@ public class RequestActivity extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		// Disconnect from client to stop getting user's location
 		mLocationClient.disconnect();
 		super.onStop();
@@ -249,14 +249,10 @@ public class RequestActivity extends SherlockFragmentActivity implements
 	 * @param accept the answer to the request
 	 */
 	public void answerRequest(final boolean accept) {
-		ApiRequest apiRequest = request.respondTo(accept, new Callback<Response>() {
+		ApiRequest apiRequest = request.respondTo(this, accept, new FutureCallback<String>() {
 
 			@Override
-			public void failure(RetrofitError arg0) {
-			}
-
-			@Override
-			public void success(Response arg0, Response arg1) {
+			public void onCompleted(Exception arg0, String arg1) {
 				if (!accept) finish();
 				
 				Intent intent = new Intent(getApplicationContext(), CreateReviewActivity.class);
