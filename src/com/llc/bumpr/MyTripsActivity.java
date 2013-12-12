@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.ActionBar;
 import com.llc.bumpr.adapters.MyRequestsAdapter;
 import com.llc.bumpr.adapters.MyTripsAdapter;
+import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
 public class MyTripsActivity extends BumprActivity {
@@ -58,14 +59,8 @@ public class MyTripsActivity extends BumprActivity {
 	}
 
 	private void initList() {
-		// TODO Auto-generated method stub
-		tripDetails = new ArrayList<Object>();
-		//Pass trip objects later
-		tripDetails.add("Orlando");
-		tripDetails.add("Florence");
-		tripDetails.add("Houston");
-		tripDetails.add("Nashville");
-		tripDetails.add("New York City");
+		// TODO Auto-generated method stub		
+		
 	}
 	
 	private void initOnClickListener() {
@@ -77,6 +72,14 @@ public class MyTripsActivity extends BumprActivity {
 					long id) {
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
+				
+				Trip t = (Trip) parent.getItemAtPosition(position); //Get the trip selected.
+				
+				//Check if date has already passed.  
+				
+				//If so, take them to the trip summary page.
+				
+				//Else, take them to the create trip activity, passing the trip object to let them update the trip
 			}
 			
 			

@@ -5,8 +5,8 @@
     
     <com.llc.bumpr.lib.CircularImageView
         android:id="@+id/img_user"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"

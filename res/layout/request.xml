@@ -28,6 +28,16 @@
         android:layout_below="@id/tv_fromAddress"
         android:textSize="12dp"
         android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/tv_tripPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_fromAddress"
+        android:layout_below="@id/tv_fromCityState"
+        android:layout_marginTop="7dp"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_toAddress"
@@ -47,13 +57,25 @@
         android:layout_below="@id/tv_toAddress"
         android:textSize="12dp"
         android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/tv_tripPassengers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/tv_toAddress"
+        android:layout_below="@id/tv_toCityState"
+        android:layout_marginTop="7dp"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/linear_layout_response"
-        android:layout_below="@id/tv_fromCityState"
-        android:layout_margin="10dp"
+        android:layout_below="@id/tv_tripPassengers"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="3dp"
         android:background="@drawable/edit_text_border" >
 
         <fragment
