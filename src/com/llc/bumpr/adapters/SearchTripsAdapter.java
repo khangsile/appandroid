@@ -1,5 +1,6 @@
 package com.llc.bumpr.adapters;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -68,8 +69,9 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
 		Trip trip = (Trip) list.get(position);
 
 		holder.tvUsername.setText(trip.getOwner().getFirstName() + " " + trip.getOwner().getLastName());
-		holder.tvCost.setText(trip.getCost() + "");
-		//holder.tvDate.setText(trip.getDate().toString());
+		
+		double cost = trip.getCost(); //Get cost and display with two decimal points
+		holder.tvCost.setText("$ " + new DecimalFormat("##.##").format(cost));
 		String start = trip.getStart().title;
 		holder.tvStart.setText(compressTitle(start));
 		String end = trip.getEnd().title;

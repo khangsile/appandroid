@@ -1,5 +1,6 @@
 package com.llc.bumpr;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,7 +151,8 @@ public class TripSummaryActivity extends BumprActivity /*implements
 		userPhoto.setImageResource(R.drawable.test_image);
 		
 		//Assign trip price and passenger count
-		((TextView) findViewById(R.id.tv_tripPrice)).setText("$ " + trip.getCost());
+		double cost = trip.getCost(); //Get cost and display with two decimal points
+		((TextView) findViewById(R.id.tv_tripPrice)).setText("$ " + new DecimalFormat("##.##").format(cost));
 		((TextView) findViewById(R.id.tv_tripPassengers)).setText(trip.getMinSeats() + " seats reserved");
 
 		//Fill in request views with request information
@@ -214,7 +216,7 @@ public class TripSummaryActivity extends BumprActivity /*implements
 					}
 				});
 			} else{
-				completeButton.setText("Trip Complete");
+				/*completeButton.setText("Trip Complete");
 				//Set on click listener
 				completeButton.setOnClickListener(new View.OnClickListener() {
 		
@@ -223,7 +225,8 @@ public class TripSummaryActivity extends BumprActivity /*implements
 						// TODO Auto-generated method stub
 						tripComplete(v);
 					}
-				});
+				});*/
+				completeButton.setVisibility(View.GONE);
 			}
 		}
 	}
