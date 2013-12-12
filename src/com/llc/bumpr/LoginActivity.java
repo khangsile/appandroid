@@ -123,7 +123,6 @@ public class LoginActivity extends Activity {
 				@Override
 				public void onCompleted(Exception arg0, User arg1) {
 					if (arg0 == null) {
-						Toast.makeText(getApplicationContext(), arg1.getFirstName(), Toast.LENGTH_LONG).show();
 						Intent i = new Intent(getApplicationContext(), SearchTabActivity.class);
 						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); 
 						startActivity(i);
