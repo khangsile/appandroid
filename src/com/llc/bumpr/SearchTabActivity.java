@@ -90,10 +90,11 @@ public class SearchTabActivity extends BumprActivity {
 
 			@Override
 			public void onTripSelected(Trip trip) {
-				Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+				Intent intent = new Intent(getApplicationContext(), TripSummaryActivity.class);
 				//Pass the driver user object to the page
 				intent.putExtra("user", trip.getOwner());
 				intent.putExtra("trip", trip);
+				intent.putExtra("type", "request"); //Notify the activity that user is making a request
 				startActivity(intent);
 			}
         	

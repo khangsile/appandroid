@@ -1,10 +1,21 @@
 package com.llc.bumpr.lib;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.koushikdutta.async.future.FutureCallback;
+import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.models.Driver;
 import com.llc.bumpr.sdk.models.Request;
+import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
@@ -29,13 +40,16 @@ public class PushNotification {
 	 */
 	private boolean accepted;
 	
+	/** Context for the context of the push notification object */
+	private Context context;
+	
 	/* Add more details later, such as trip id, etc. */
 	
 	/**
 	 * Default Constructor
 	 */
 	public PushNotification(){
-		
+
 	}
 	
 	/**
@@ -43,27 +57,28 @@ public class PushNotification {
 	 * @param json The json representation of the push notification
 	 * @throws JSONException Exception thrown from invalid json representation
 	 */
-	public PushNotification (JSONObject json) throws JSONException{
+	public PushNotification (JSONObject json, Context context) throws JSONException{
 		//Values is all types of requests
 		type = json.getString("type"); //Get Notification Type
-		requestId = json.getInt("request_id"); //Get Request id
-		trip = new Trip(json.getJSONObject("trip")); //Get trip object for the request
+		requestId = json.getInt("id"); //Get Request id
 		
-		if (type.equals("request")) {
-			//Retrieve information for request type notification
-			user = new User(json.getJSONObject("user")); //Get user requesting the trip
-			request = new Request.Builder()
-						.setId(requestId)
-						.setDriverId(User.getActiveUser().getDriverProfile().getId())
-						.setTrip(trip)
-						.setUserId(user.getId())
-						.build();
-		}
-		else if (type.equals("response")){
+		//user = new User(json.getJSONObject("user")); //User who made request
+		ApiRequest apiReq = User.getUser(context, json.getInt("user_id"), new FutureCallback<User>() {
+			@Override
+			public void onCompleted(Exception arg0, User arg1) {
+				// TODO Auto-generated method stub
+				user = arg1; //User that sent the request
+			}
+		});
+		Session.getSession().sendRequest(apiReq);
+		
+		//Create Trip object
+		//Type type = new TypeToken<Trip>(){}.getType();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-DD'T'hh:mm:ss.sss'Z'").create();
+		trip = gson.fromJson(json.getJSONObject("trip").toString(), Trip.class);
+		
+		if (type.equals("response")){
 			//Retrieve information for response type notification
-			user = new User(json.getJSONObject("user")); //Get driver who responded
-			Driver driver = new Driver(json.getJSONObject("user").getJSONObject("driver"));
-			user.setDriverProfile(driver);
 			accepted = json.getBoolean("accepted"); //Get response message
 		}
 	}
@@ -80,13 +95,6 @@ public class PushNotification {
 	 */
 	public int getRequestId() {
 		return requestId;
-	}
-	
-	/**
-	 * @return Request object
-	 */
-	public Request getRequest() {
-		return request;
 	}
 	
 	/**

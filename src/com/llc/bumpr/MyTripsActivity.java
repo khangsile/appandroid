@@ -78,14 +78,14 @@ public class MyTripsActivity extends BumprActivity {
 	}
 	
 	private void initOnClickListener() {
-		// TODO Auto-generated method stub
 		trips.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Toast.makeText(getApplicationContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
-			}	
+
+			}
 		});
 	}
 

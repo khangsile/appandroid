@@ -12,13 +12,15 @@ import android.content.IntentSender;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -31,16 +33,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.lib.GMapV2Painter;
 import com.llc.bumpr.lib.LatLngLocationTask;
+import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.models.Request;
+import com.llc.bumpr.sdk.models.Session;
+import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
-public class TripSummaryActivity extends SherlockFragmentActivity implements
+public class TripSummaryActivity extends BumprActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener {
 	
 	/** Reference to the user asking for a ride */
 	private User user;
-	/** Reference to the Request object sent by the user */
+	/** Reference to the Trip object sent by the user */
+	private Trip trip;
+	/** Reference to a Request object sent by the user */
 	private Request request;
 
 	/** Reference to the Layout object holding the map fragment */
@@ -73,8 +80,8 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 		
 		// Set up list of points for trip to display route on the map
 		ArrayList<LatLng> points = new ArrayList<LatLng>();
-		points.add(new LatLng(request.getTrip().getStart().lat, request.getTrip().getStart().lon));
-		points.add(new LatLng(request.getTrip().getEnd().lat, request.getTrip().getEnd().lon));
+		points.add(new LatLng(trip.getStart().lat, trip.getStart().lon));
+		points.add(new LatLng(trip.getEnd().lat, trip.getEnd().lon));
 		
 		//Paint route on the map
 		GMapV2Painter painter = new GMapV2Painter(gMap, points);
@@ -165,7 +172,7 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 		//Get last location from user
 		Location loc = mLocationClient.getLastLocation();
 		//Create latlong from this location
-		LatLng start = new LatLng(request.getTrip().getStart().lat, request.getTrip().getStart().lon);
+		LatLng start = new LatLng(trip.getStart().lat, trip.getStart().lon);
 		//Set zoom level for the map
 		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(start, 15);
 		//Move map to this location
@@ -182,7 +189,14 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 	protected void initialize() {
 		//Get objects passed to this activity
 		Bundle bundle = getIntent().getExtras();
+		
+		//Get the Request object passed and retrieve the trip associated with it 
 		request = (Request) bundle.getParcelable("request");
+		if(request != null)
+			trip = request.getTrip();
+		else //If no request object exists, grab the Trip object passed
+			trip = (Trip) bundle.getParcelable("trip");
+		
 		user = (User) bundle.getParcelable("user");
 
 		//If user is null or request is null, throw exception
@@ -190,7 +204,7 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 			throw new NullPointerException("Instance ('user') cannot be null");
 		}
 		
-		if(request == null) {
+		if(trip == null) {
 			throw new NullPointerException("Instance ('request') cannot be null");
 		}
 
@@ -200,6 +214,10 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 
 		CircularImageView userPhoto = (CircularImageView) findViewById(R.id.img_user);
 		userPhoto.setImageResource(R.drawable.test_image);
+		
+		//Assign trip price and passenger count
+		((TextView) findViewById(R.id.tv_tripPrice)).setText("$ " + trip.getCost());
+		((TextView) findViewById(R.id.tv_tripPassengers)).setText(trip.getMinSeats() + " seats reserved");
 
 		//Fill in request views with request information
 		new LatLngLocationTask(this, new Callback<List<Address>>() {
@@ -219,7 +237,7 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 				toCityState.setText(arg0.get(0).getLocality());
 			}
 			
-		}).execute(new LatLng(request.getTrip().getEnd().lat, request.getTrip().getEnd().lon));
+		}).execute(new LatLng(trip.getEnd().lat, trip.getEnd().lon));
 		
 		new LatLngLocationTask(this, new Callback<List<Address>>() {
 
@@ -237,27 +255,49 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 				fromCityState.setText(arg0.get(0).getLocality());
 			}
 			
-		}).execute(new LatLng(request.getTrip().getStart().lat, request.getTrip().getStart().lon));
+		}).execute(new LatLng(trip.getStart().lat, trip.getStart().lon));
 		
-		Button hideButton = (Button) findViewById(R.id.btn_decline);
-		Button completeButton = (Button) findViewById(R.id.btn_accept);
+		String type = (String) bundle.get("type");
 		
-		//Remove hide button from view and Set text of complete button
-		hideButton.setVisibility(View.GONE);
-		completeButton.setText("Trip Complete");
-		completeButton.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT,1f));
-		//Set on click listener
-		completeButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				tripComplete(v);
-			}
+		if(!type.equals("response")){ //Only use one of the buttons!
+			Button hideButton = (Button) findViewById(R.id.btn_decline);
+			Button completeButton = (Button) findViewById(R.id.btn_accept);
 			
-		});
+			//Remove hide button from view and Set text of complete button
+			hideButton.setVisibility(View.GONE);
+			completeButton.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT,1f));
+			
+			if(type.equals("request")){
+				completeButton.setText("Request a Seat");
+				//Set on click listener
+				completeButton.setOnClickListener(new View.OnClickListener() {
+		
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						sendRequest(v);
+					}
+				});
+			} else{
+				completeButton.setText("Trip Complete");
+				//Set on click listener
+				completeButton.setOnClickListener(new View.OnClickListener() {
+		
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						tripComplete(v);
+					}
+				});
+			}
+		}
 	}
 	
+	protected void sendRequest(View v) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	/**
 	 * Marks the request as complete!
 	 */
@@ -265,6 +305,47 @@ public class TripSummaryActivity extends SherlockFragmentActivity implements
 		//Complete trip
 		//ApiRequest apiRequest = request.
 		finish(); //Close trip summary
+	}
+	
+	public void acceptRequest(View v) {
+		answerRequest(true);
+	}
+
+	public void declineRequest(View v) {
+		answerRequest(false);
+	}
+	
+	/**
+	 * Sends a response to accept or decline the request
+	 * @param accept the answer to the request
+	 */
+	public void answerRequest(final boolean accept) {
+		ApiRequest apiRequest = request.respondTo(accept, new Callback<Response>() {
+
+			@Override
+			public void failure(RetrofitError arg0) {
+				Toast.makeText(TripSummaryActivity.this, "Error responding to this request.  Please try again!", Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void success(Response arg0, Response arg1) {
+				/*if (!accept) finish();
+				
+				Intent intent = new Intent(getApplicationContext(), CreateReviewActivity.class);
+				intent.putExtra("user", User.getActiveUser());
+				intent.putExtra("request", request);
+				startActivity(intent);*/
+				finish();
+			}
+			
+		});
+		Session.getSession().sendRequest(apiRequest);
+	}
+
+	@Override
+	protected void initializeMe(User activeUser) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -19,6 +19,7 @@ import com.llc.bumpr.RequestActivity;
 import com.llc.bumpr.SearchDrivers;
 import com.llc.bumpr.TripSummaryActivity;
 import com.llc.bumpr.sdk.models.Request;
+import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
 public class GcmIntentService extends IntentService {
@@ -64,7 +65,7 @@ public class GcmIntentService extends IntentService {
 				try {
 					JSONObject json = new JSONObject(extras.get("message").toString());
 					Log.i(TAG, json.toString());
-					sendNotification(new PushNotification(json)); 
+					sendNotification(new PushNotification(json, getApplicationContext())); 
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -95,20 +96,16 @@ public class GcmIntentService extends IntentService {
         //If type is request
         if (pushNotification.getType().equals("request")){
         	//Create intent to handle this Notification
-        	Intent intent = new Intent(this, RequestActivity.class);
+        	Intent intent = new Intent(this, TripSummaryActivity.class);
         	//Get objects to pass to the activity
-        	User rider = pushNotification.getUser();
-        	User activeUser = User.getActiveUser();
+        	User requester = pushNotification.getUser();
+        	User tripHost = User.getActiveUser();
         	//Create request object
-        	Request request = new Request.Builder()
-        							.setDriverId(activeUser.getDriverProfile().getId())
-        							.setUserId(rider.getId())
-        							.setTrip(pushNotification.getTrip())
-        							.setId(pushNotification.getRequestId())
-        							.build();
+        	Trip trip = pushNotification.getTrip();
+        	
         	//Attach objects to intent
-        	intent.putExtra("user", rider);
-        	intent.putExtra("request", request);
+        	intent.putExtra("user", requester);
+        	intent.putExtra("trip", trip);
         	//Sent intent as pending intent
         	PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                     intent, Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -117,10 +114,10 @@ public class GcmIntentService extends IntentService {
         	NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
             .setSmallIcon(R.drawable.ic_launcher)
-            .setContentTitle("Driving Request Received")
+            .setContentTitle("Seat Request Received")
             .setStyle(new NotificationCompat.BigTextStyle()
-            .bigText(rider.getFirstName() + " " + rider.getLastName() + " has request a ride."))
-            .setContentText(rider.getFirstName() + " " + rider.getLastName() + " has request a ride.")
+            .bigText(requester.getFirstName() + " " + requester.getLastName() + " has request a seat."))
+            .setContentText(requester.getFirstName() + " " + requester.getLastName() + " has request a seat in your upcoming trip.")
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
             .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
@@ -139,19 +136,14 @@ public class GcmIntentService extends IntentService {
         		Log.i(TAG, "Inside Good Response");
         		Intent intent = new Intent(this, TripSummaryActivity.class);
             	//Get objects to pass to the activity
-            	User driver = pushNotification.getUser();
-            	User activeUser = User.getActiveUser();
+            	User host = pushNotification.getUser();
+            	User requester = User.getActiveUser();
             	//Create request object
-            	Request request = new Request.Builder()
-            							.setDriverId(driver.getDriverProfile().getId())
-            							.setUserId(User.getActiveUser().getId())
-            							.setTrip(pushNotification.getTrip())
-            							.setId(pushNotification.getRequestId())
-            							.build();
+            	Trip trip = pushNotification.getTrip();
             	Log.i(TAG, "3");
             	//attach objects to intent
-            	intent.putExtra("user", driver);
-            	intent.putExtra("request", request);
+            	intent.putExtra("user", host);
+            	intent.putExtra("trip", trip);
         		
         		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                         intent, Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -159,10 +151,10 @@ public class GcmIntentService extends IntentService {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("Driving Request Accepted")
+                .setContentTitle("Seat Request Accepted")
                 .setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(driver.getFirstName() + " " + driver.getLastName() + " has accepted your ride request!"))
-                .setContentText(driver.getFirstName() + " " + driver.getLastName() + " has accepted your ride request!")
+                .bigText(host.getFirstName() + " " + host.getLastName() + " has accepted your request!"))
+                .setContentText(host.getFirstName() + " " + host.getLastName() + " has accepted your request for a seat!")
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
                 .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
@@ -175,7 +167,7 @@ public class GcmIntentService extends IntentService {
         	else {
         		//If the Driver rejected the ride request, take the user back to the search Driver page
         		Log.i(TAG, "Rejected response notification");
-        		Intent intent = new Intent(this, SearchDrivers.class);
+        		Intent intent = new Intent(this, TripSummaryActivity.class);
         		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                         intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -185,8 +177,9 @@ public class GcmIntentService extends IntentService {
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Driving Request Rejected")
                 .setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has rejected your ride request."))
-                .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has rejected your ride request.")
+                .bigText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has declined your request for a seat."))
+                .setContentText(pushNotification.getUser().getFirstName() + " " + pushNotification.getUser().getLastName() + " has declined your request for " +
+                		"a seat.  Press here to continue searching for a ride!")
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
                 .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE) //Make phone notify user and vibrate
