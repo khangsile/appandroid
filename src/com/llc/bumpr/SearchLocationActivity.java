@@ -35,10 +35,11 @@ public class SearchLocationActivity extends BumprActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_location);
 
+		getSupportActionBar().setTitle("");
 		search = (EditText) findViewById(R.id.autotv_search);		
 		listView = (ListView) findViewById(R.id.list_destinations);		
         adapter = new SearchLocationAdapter(this, R.layout.search_location_row, new ArrayList<String>());
-        listView.setAdapter(adapter);       
+        listView.setAdapter(adapter);
         
         listView.setOnItemClickListener(new OnItemClickListener() {
 

@@ -78,7 +78,7 @@ public class EditProfileActivity extends SherlockActivity {
 
 			@Override
 			public void onPrepareLoad(Drawable arg0) {
-				profPic.setImageResource(R.drawable.test_image);
+				profPic.setImageResource(R.drawable.missing);
 			}
 		};
 		

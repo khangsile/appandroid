@@ -260,7 +260,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 
 			@Override
 			public void onPrepareLoad(Drawable arg0) {
-				holder.imageView.setImageResource(R.drawable.test_image);
+				holder.imageView.setImageResource(R.drawable.missing);
 			}
 		};
 		

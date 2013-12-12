@@ -3,6 +3,8 @@ package com.llc.bumpr.adapters;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,10 @@ import com.llc.bumpr.R;
 import com.llc.bumpr.lib.CircularImageView;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Trip;
+import com.llc.bumpr.sdk.models.User;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso.LoadedFrom;
+import com.squareup.picasso.Target;
 
 public class MyRequestsAdapter extends ArrayAdapter<Request> {
 	/** Reference to List holding data to be displayed */
@@ -26,6 +32,9 @@ public class MyRequestsAdapter extends ArrayAdapter<Request> {
 	
 	/** String that denotes the type of adapter */
 	private String type;
+	
+	/** Target **/
+	private Target target;
 	
 	public MyRequestsAdapter(Context context, List<Request> inData, int layoutId, String type){
 		super(context, layoutId, inData);
@@ -61,11 +70,14 @@ public class MyRequestsAdapter extends ArrayAdapter<Request> {
         //Use class holder to and fill details with trip and driver details
         holder.startAdd.setText(compressTitle(t.getStart().title));
         holder.endAdd.setText(compressTitle(t.getEnd().title));
-        holder.imageView.setImageResource(R.drawable.test_image);
+		
+        
         if (type.equals("Inbox")) {
         	holder.userName.setText(r.getUser().getFirstName() + " " + r.getUser().getLastName());
+        	loadImage(holder, r.getUser().getProfileImage() + "?type=large");
         } else {
         	holder.userName.setText(t.getOwner().getFirstName() + " " + t.getOwner().getLastName());
+        	loadImage(holder, t.getOwner().getProfileImage() + "?type=large");
         }
         
         return view;
@@ -85,6 +97,28 @@ public class MyRequestsAdapter extends ArrayAdapter<Request> {
 			this.endAdd = endAdd;
 			this.userName = userName;
 		}
+	}
+	
+	private void loadImage(final ViewHolder holder, String url) {
+		target = new Target() {
+
+			@Override
+			public void onBitmapFailed(Drawable arg0) {
+				//do nothing
+			}
+
+			@Override
+			public void onBitmapLoaded(Bitmap arg0, LoadedFrom arg1) {
+				holder.imageView.setImageBitmap(arg0);
+			}
+
+			@Override
+			public void onPrepareLoad(Drawable arg0) {
+				holder.imageView.setImageResource(R.drawable.missing);
+			}
+		};
+		
+		Picasso.with(context).load(url).into(target);
 	}
 	
 	private String compressTitle(String title) {

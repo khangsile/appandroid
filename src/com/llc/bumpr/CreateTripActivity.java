@@ -120,7 +120,8 @@ public class CreateTripActivity extends BumprActivity implements
 		// Get map fragment!
 		gMap = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map_request)).getMap();
-
+		getSupportActionBar().setTitle("");
+		
 		// Create new location client.
 		mLocationClient = new LocationClient(this, this, this);
 		

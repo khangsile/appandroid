@@ -103,10 +103,10 @@ public class SearchTabActivity extends BumprActivity {
         
         pager = (ViewPager) findViewById(R.id.pager);
         FragmentManager manager = getSupportFragmentManager();
+        getSupportActionBar().setTitle("");
         pagerAdapter = new ScreenSlidePagerAdapter(manager);
         pager.setAdapter(pagerAdapter);
         
-       
         //Sliding menu
         View slMenu = LayoutInflater.from(getApplication()).inflate(
  				R.layout.sliding_menu, null);
