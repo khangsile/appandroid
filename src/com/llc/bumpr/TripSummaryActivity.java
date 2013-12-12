@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -74,6 +75,9 @@ public class TripSummaryActivity extends BumprActivity /*implements
 		//Initialize the header by displaying the rider
 		initialize();
 
+		//Grab GoogleMap view to tell when the view is finished being created
+		View mapFrag =  getSupportFragmentManager().findFragmentById(R.id.map_request).getView();
+		
 		// Get map fragment!
 		gMap = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map_request)).getMap();
@@ -91,105 +95,20 @@ public class TripSummaryActivity extends BumprActivity /*implements
 		painter.setWidth(8);
 		painter.paint();
 		
-		setMapZoom();
+		mapFrag.getViewTreeObserver().addOnGlobalLayoutListener(
+				new ViewTreeObserver.OnGlobalLayoutListener() {
+
+					@Override
+					public void onGlobalLayout() {
+						// TODO Auto-generated method stub
+						setMapZoom();
+					}
+					
+				});
 	}
 
-	/*@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-		//Connect to the location client and get the current location of the user
-		if (isGooglePlayServicesAvailable()) {
-			mLocationClient.connect();
-			// gMap.setMyLocationEnabled(true);
-		}
-	}
-
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		// Disconnect from client to stop getting user's location
-		mLocationClient.disconnect();
-		super.onStop();
-	}
-
-	// Handle results returned to the FragmentActivity by Google Play services
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == CONNECTION_FAILURE_RESOLUTION_REQUEST
-				&& resultCode == Activity.RESULT_OK)
-			// Attempt to reconnect if result is ok!
-			mLocationClient.connect();
-	}
-
-	*//**
-	 * Verifies the user has Google Maps installed. If not, it requests them to
-	 * install Google Maps
-	 * 
-	 * @return Boolean value signifying if Google Maps is available
-	 *//*
-	private boolean isGooglePlayServicesAvailable() {
-		// Verify user has good version of google play services. Necessary for
-		// maps
-		int retCode = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(getApplicationContext());
-		// If successful, carry on.
-		if (ConnectionResult.SUCCESS == retCode)
-			return true;
-		// Otherwise, request them to download GP Services
-		else { // If it can be resolved, fix it
-			if (GooglePlayServicesUtil.isUserRecoverableError(retCode))
-				GooglePlayServicesUtil.getErrorDialog(retCode, this,
-						RQS_GooglePlayServices).show();
-			return false;
-		}
-	}
-
-	*//**
-	 * Connection to GPS failed. Attempt to resolve it. Otherwise, catch the
-	 * exception
-	 * 
-	 * @param connResult
-	 *            Result from the connection attempt
-	 *//*
-	@Override
-	public void onConnectionFailed(ConnectionResult connResult) {
-		// If Google Play Services can resolve the errors, allow it to resolve
-		// the errors!
-		if (connResult.hasResolution())
-			try {
-				// Start activity that tries to resolve the error
-				connResult.startResolutionForResult(this,
-						CONNECTION_FAILURE_RESOLUTION_REQUEST);
-			} catch (IntentSender.SendIntentException e) {
-				// Thrown if Google Play Services canceled the original
-				// PendingIntent
-				e.printStackTrace();
-			}
-	}
-
-	*//**
-	 * Connected to GPS successfully. Update current location and display marker
-	 * on the map.
-	 *//*
-	@Override
-	public void onConnected(Bundle bundle) {
-		//Get last location from user
-		Location loc = mLocationClient.getLastLocation();
-		//Create latlong from this location
-		LatLng start = new LatLng(trip.getStart().lat, trip.getStart().lon);
-		//Set zoom level for the map
-		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngZoom(start, 15);
-		//Move map to this location
-		gMap.animateCamera(camUpdate);
-	}
-
-	@Override
-	public void onDisconnected() {
-	}
-*/	
 	/**
-	 * Zoom the map into the route
+	 * Zoom the map to display the route
 	 */
 	protected void setMapZoom() {
 		LatLng start = new LatLng(trip.getStart().lat, trip.getStart().lon);
@@ -337,7 +256,7 @@ public class TripSummaryActivity extends BumprActivity /*implements
 	 * @param accept the answer to the request
 	 */
 	public void answerRequest(final boolean accept) {
-		ApiRequest apiRequest = request.respondTo(accept, new Callback<Response>() {
+		/*ApiRequest apiRequest = request.respondTo(accept, new Callback<Response>() {
 
 			@Override
 			public void failure(RetrofitError arg0) {
@@ -351,12 +270,12 @@ public class TripSummaryActivity extends BumprActivity /*implements
 				Intent intent = new Intent(getApplicationContext(), CreateReviewActivity.class);
 				intent.putExtra("user", User.getActiveUser());
 				intent.putExtra("request", request);
-				startActivity(intent);*/
+				startActivity(intent);*//*
 				finish();
 			}
 			
 		});
-		Session.getSession().sendRequest(apiRequest);
+		Session.getSession().sendRequest(apiRequest); */
 	}
 
 	@Override
