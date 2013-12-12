@@ -13,7 +13,7 @@ public class Colors {
 	};
 	
 	public static int getColor(int pos) {
-		if (pos > colors.length || pos < 0) return 0;
+		if (pos >= colors.length || pos < 0) return 0;
 		return colors[pos];
 	}
 	
