@@ -6,54 +6,37 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.llc.bumpr.R;
 import com.llc.bumpr.lib.CircularImageView;
+import com.llc.bumpr.sdk.models.Request;
+import com.llc.bumpr.sdk.models.Trip;
 
-public class MyRequestsAdapter extends BaseAdapter {
+public class MyRequestsAdapter extends ArrayAdapter<Request> {
 	/** Reference to List holding data to be displayed */
-	private List<Object> data;
+	private List<Request> data;
+	
 	/** Reference to the application context */
 	private Context context;
+	
 	/** Reference to the row layout to be displayed */
 	private int layoutId;
 	
-	public MyRequestsAdapter(Context context, List<Object> inData, int layoutId){
+	/** String that denotes the type of adapter */
+	private String type;
+	
+	public MyRequestsAdapter(Context context, List<Request> inData, int layoutId, String type){
+		super(context, layoutId, inData);
 		data = inData;
 		this.context = context;
 		this.layoutId = layoutId;
-	}
-
-	@Override
-	public int getViewTypeCount() {
-		// TODO Auto-generated method stub
-		return 1; // 1 different view type used
-	}
-	
-	@Override
-	public int getCount() {
-		// TODO Auto-generated method stub
-		return data.size();
-	}
-
-	@Override
-	public Object getItem(int pos) {
-		// TODO Auto-generated method stub
-		//Return the driver so the correct user is reviewed!
-		return data.get(pos);
-	}
-	
-	@Override
-	public long getItemId(int position) {
-		// TODO Auto-generated method stub
-		return position;
+		this.type = type;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		ViewHolder holder; //Reference to view holder
         View view; //Reference to View
         
@@ -72,11 +55,18 @@ public class MyRequestsAdapter extends BaseAdapter {
         	view = convertView;
         }
         
+        Request r = data.get(position);
+        Trip t = r.getTrip();
+        
         //Use class holder to and fill details with trip and driver details
-        holder.startAdd.setText("Cincinnati, OH");
-        holder.endAdd.setText(data.get(position).toString());
+        holder.startAdd.setText(compressTitle(t.getStart().title));
+        holder.endAdd.setText(compressTitle(t.getEnd().title));
         holder.imageView.setImageResource(R.drawable.test_image);
-        holder.userName.setText("Kyle Cooper");
+        if (type.equals("Inbox")) {
+        	holder.userName.setText(r.getUser().getFirstName() + " " + r.getUser().getLastName());
+        } else {
+        	holder.userName.setText(t.getOwner().getFirstName() + " " + t.getOwner().getLastName());
+        }
         
         return view;
 	}
@@ -94,6 +84,17 @@ public class MyRequestsAdapter extends BaseAdapter {
 			this.startAdd = startAdd;
 			this.endAdd = endAdd;
 			this.userName = userName;
+		}
+	}
+	
+	private String compressTitle(String title) {
+		String[] titles = title.split(",");
+		if (titles.length > 3) {
+			return titles[1] + titles[2];
+		} else if (titles.length > 2){
+			return titles[0] + titles[1];
+		} else {
+			return titles[0];
 		}
 	}
 
