@@ -86,10 +86,19 @@ public class MyTripsActivity extends BumprActivity {
 					long id) {
 				Trip trip = (Trip) parent.getItemAtPosition(position);
 				
-				//Take you to trip guest list
-				Intent intent = new Intent(getApplicationContext(), FriendsListActivity.class);
-				intent.putExtra("trip", trip);
-				startActivity(intent);
+				ApiRequest request = Trip.getSummary(MyTripsActivity.this, trip.getId(), new FutureCallback<Trip>() {
+					@Override
+					public void onCompleted(Exception arg0, Trip arg1) {
+						// TODO Auto-generated method stub
+						Trip t = arg1;
+						
+						//Take you to trip guest list
+						Intent intent = new Intent(getApplicationContext(), FriendsListActivity.class);
+						intent.putExtra("trip", t);
+						startActivity(intent);
+					}
+				});
+				Session.getSession().sendRequest(request);
 			}
 		});
 	}

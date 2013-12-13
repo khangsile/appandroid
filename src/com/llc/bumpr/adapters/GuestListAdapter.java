@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,8 @@ public class GuestListAdapter extends ArrayAdapter<User> {
 		GuestListAdapter.users.add(trip.getOwner());
 		if(trip.getUsers() != null)
 			GuestListAdapter.users.addAll(trip.getUsers());
+		
+		Log.i("com.llc.bumpr users", GuestListAdapter.users.size()+"");
 	}
 
 	@Override
