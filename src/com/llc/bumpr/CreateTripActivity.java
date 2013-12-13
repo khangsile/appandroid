@@ -267,12 +267,13 @@ public class CreateTripActivity extends BumprActivity implements
 			@Override
 			public void valueChanged(int value) {
 				tripPassengers.setText(value + " total passengers");
-				tripBldr.setMinSeats(value); //Set minimum number of passengers
+				tripBldr.setNumSeats(value); //Set number of passengers
 			}
 			
 		});
 		mPopUp.showAtLocation(parent, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
 		mPopUp.setBtnApplyText("Submit");
+		mPopUp.setMinimum(1);
 		mPopUp.setInstructions("How many seats would you like to\nreserve for this trip?");
 	}
 	
@@ -361,6 +362,9 @@ public class CreateTripActivity extends BumprActivity implements
 	public void createTrip(View v){
 		final ProgressDialog pd = ProgressDialog.show(CreateTripActivity.this,
 				"Please Wait", "Creating your trip...", false, true);
+		
+		/******* CHANGE LATER -- HARDCODED SET MIN SEATS TO 2.  THIS SHOULD BE EDITABLE BY THE USER IN THE FUTURE ************/
+		tripBldr.setMinSeats(2);
 		
 		//Start progress dialog
 		Log.i("com.llc.bumpr", "Creating trip!");
