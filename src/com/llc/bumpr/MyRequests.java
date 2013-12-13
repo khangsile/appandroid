@@ -73,7 +73,6 @@ public class MyRequests extends BumprActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Request request = (Request) parent.getItemAtPosition(position);
-				Toast.makeText(getApplicationContext(), "" + request.getAccepted(), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

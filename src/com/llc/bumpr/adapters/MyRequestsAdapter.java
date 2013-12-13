@@ -56,7 +56,7 @@ public class MyRequestsAdapter extends ArrayAdapter<Request> {
                 ViewGroup vGroup = (ViewGroup) inflater.inflate(layoutId, null);
                 
                 //Create new ViewHolder object
-                holder = new ViewHolder((CircularImageView)vGroup.findViewById(R.id.iv_profile_pic), (TextView)vGroup.findViewById(R.id.tv_start_add), 
+                holder = new ViewHolder((View)vGroup.findViewById(R.id.view_color), (CircularImageView)vGroup.findViewById(R.id.iv_profile_pic), (TextView)vGroup.findViewById(R.id.tv_start_add), 
                 				(TextView)vGroup.findViewById(R.id.tv_end_add), (TextView)vGroup.findViewById(R.id.tv_driver_name), (RelativeLayout)vGroup.findViewById(R.id.rl_request_row));
                 
                 vGroup.setTag(holder);
@@ -72,6 +72,12 @@ public class MyRequestsAdapter extends ArrayAdapter<Request> {
         //Use class holder to and fill details with trip and driver details
         holder.startAdd.setText(compressTitle(t.getStart().title));
         holder.endAdd.setText(compressTitle(t.getEnd().title));
+        if (r.getAccepted() == null)
+        	holder.colorView.setBackgroundColor(0x0000);
+        else if(r.getAccepted() == true)
+        	holder.colorView.setBackgroundColor(0x00FF00);
+        else
+        	holder.colorView.setBackgroundColor(0xFF0000);
         
         if (type.equals("Inbox")) {
         	holder.userName.setText(r.getUser().getFirstName() + " " + r.getUser().getLastName());
@@ -87,13 +93,15 @@ public class MyRequestsAdapter extends ArrayAdapter<Request> {
 	/**View holders to improve performance of adapter! **/
 	private static class ViewHolder { // Used to hold views per row in the
 											// List
+		final View colorView;
 		final CircularImageView imageView;
 		final TextView userName;
 		final TextView startAdd;
 		final TextView endAdd;
 		final RelativeLayout row;
 
-		private ViewHolder(CircularImageView imageView, TextView startAdd, TextView endAdd, TextView userName, RelativeLayout row) {
+		private ViewHolder(View colorView, CircularImageView imageView, TextView startAdd, TextView endAdd, TextView userName, RelativeLayout row) {
+			this.colorView = colorView;
 			this.imageView = imageView;
 			this.startAdd = startAdd;
 			this.endAdd = endAdd;

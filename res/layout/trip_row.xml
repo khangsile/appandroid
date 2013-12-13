@@ -33,7 +33,7 @@
     
     <RelativeLayout
         android:id="@+id/rl_dest_view"
-        android:layout_width="290dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginBottom="15dp" >
