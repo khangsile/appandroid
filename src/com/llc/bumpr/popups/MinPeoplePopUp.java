@@ -99,7 +99,7 @@ public class MinPeoplePopUp extends PopupWindow {
 	}
 	
 	private void downPressed(View v) {
-		if (count > 2)
+		if (count <= 2)
 		setCount(count--);
 	}
 	

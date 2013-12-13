@@ -55,7 +55,8 @@ public class SearchListFragment extends SearchTabFragment {
         super.onActivityCreated(savedInstanceState);
         
         listView = (ListView) getActivity().findViewById(R.id.lv_search_trip);
-    	
+    	listView.setScrollingCacheEnabled(false);
+        
    	 	trips = new ArrayList<Trip>();
         colors = new ArrayList<Color>();
         
