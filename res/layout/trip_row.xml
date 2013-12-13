@@ -51,7 +51,7 @@
             android:layout_toLeftOf="@id/img_arrow"
             android:layout_centerVertical="true"
             android:gravity="center_horizontal"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
         
         <TextView android:id="@+id/tv_end"
@@ -60,7 +60,7 @@
             android:layout_toRightOf="@id/img_arrow"
             android:layout_centerVertical="true"
             android:gravity="center_horizontal"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
         
    </RelativeLayout>
