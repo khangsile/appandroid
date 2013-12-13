@@ -3,6 +3,7 @@ package com.llc.bumpr;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -86,7 +87,9 @@ public class MyTripsActivity extends BumprActivity {
 				Trip trip = (Trip) parent.getItemAtPosition(position);
 				
 				//Take you to trip guest list
-
+				Intent intent = new Intent(getApplicationContext(), FriendsListActivity.class);
+				intent.putExtra("trip", trip);
+				startActivity(intent);
 			}
 		});
 	}

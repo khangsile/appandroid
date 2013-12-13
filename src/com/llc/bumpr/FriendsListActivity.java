@@ -84,9 +84,6 @@ public class FriendsListActivity extends BumprActivity {
 					}
 					
 				});
-		
-		guestList = (ListView) findViewById(R.id.lv_guest_list);
-		//adapter = new GuestListAdapter(getApplicationContext(), R.id.)
 	}
 	
 	public void initialize() {
@@ -147,6 +144,10 @@ public class FriendsListActivity extends BumprActivity {
 			}
 			
 		}).execute(new LatLng(trip.getStart().lat, trip.getStart().lon));
+		
+		guestList = (ListView) findViewById(R.id.lv_guest_list);
+		adapter = new GuestListAdapter(getApplicationContext(), R.layout.trip_guest_row, trip);
+		guestList.setAdapter(adapter);
 	}
 	
 	/**
