@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="1" >
+    
+    <EditText android:id="@+id/et_search"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight=".72"
+        android:textSize="15sp"
+        android:singleLine="true"
+        android:hint="Where do you want to go?" />
+    
+    <Button android:id="@+id/btn_calendar"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_weight=".14"
+        android:background="@drawable/ic_menu_calendar" />
+    
+    <Button android:id="@+id/btn_people"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_weight=".14"
+        android:background="@drawable/ic_add_user" />
+    
+
+</LinearLayout>

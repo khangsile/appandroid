@@ -91,7 +91,7 @@ public class SearchLocationActivity extends BumprActivity {
 				}
 				
 				adapter.clear();
-				adapter.addAll(data);
+				if (data != null) adapter.addAll(data);
 				adapter.notifyDataSetChanged();
 			}
 

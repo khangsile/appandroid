@@ -59,7 +59,7 @@ public class SearchListFragment extends SearchTabFragment {
    	 	trips = new ArrayList<Trip>();
         colors = new ArrayList<Color>();
         
-        adapter = new SearchTripsAdapter(getActivity(), R.layout.trip_row, trips, colors);
+        adapter = new SearchTripsAdapter(getActivity(), R.layout.search_trip_row, trips, colors);
         listView.setAdapter(adapter);
         
         listView.setOnItemClickListener(new OnItemClickListener() {

@@ -26,7 +26,7 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
 
 	/*************************** View Holder ***************************/
 
-	static class ViewHolder {
+	private static class ViewHolder {
 		public TextView tvStart;
 		public TextView tvEnd;
 		public TextView tvUsername;
@@ -50,17 +50,18 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
 		if (convertView == null) { // If new row, inflate row
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inflater.inflate(layoutId, null);
+            ViewGroup vGroup = (ViewGroup) inflater.inflate(layoutId, null);
 
 			holder = new ViewHolder();
-			holder.tvCost = (TextView) view.findViewById(R.id.tv_cost);
-			holder.tvUsername = (TextView) view.findViewById(R.id.tv_username);
-			holder.tvDate = (TextView) view.findViewById(R.id.tv_date);
-			holder.tvStart = (TextView) view.findViewById(R.id.tv_start);
-			holder.tvEnd = (TextView) view.findViewById(R.id.tv_end);
-			holder.color = view.findViewById(R.id.view_color);
+			holder.tvCost = (TextView) vGroup.findViewById(R.id.tv_cost);
+			holder.tvUsername = (TextView) vGroup.findViewById(R.id.tv_username);
+			holder.tvDate = (TextView) vGroup.findViewById(R.id.tv_date);
+			holder.tvStart = (TextView) vGroup.findViewById(R.id.tv_start);
+			holder.tvEnd = (TextView) vGroup.findViewById(R.id.tv_end);
+			holder.color = vGroup.findViewById(R.id.view_color);
 
-			view.setTag(holder);
+			vGroup.setTag(holder);
+			view = vGroup;
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 			view = convertView;
@@ -71,7 +72,7 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
 		holder.tvUsername.setText(trip.getOwner().getFirstName() + " " + trip.getOwner().getLastName());
 		
 		double cost = trip.getCost(); //Get cost and display with two decimal points
-		holder.tvCost.setText("$ " + new DecimalFormat("##.##").format(cost));
+		holder.tvCost.setText("$" + new DecimalFormat("##.##").format(cost));
 		String start = trip.getStart().title;
 		holder.tvStart.setText(compressTitle(start));
 		String end = trip.getEnd().title;
