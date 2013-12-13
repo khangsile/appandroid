@@ -49,9 +49,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.squareup.picasso.Picasso.LoadedFrom;
 
-public class TripSummaryActivity extends BumprActivity /*implements
-		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener*/ {
+public class TripSummaryActivity extends BumprActivity {
 	
 	/** Reference to the user asking for a ride */
 	private User user;
@@ -65,9 +63,6 @@ public class TripSummaryActivity extends BumprActivity /*implements
 
 	/** Reference to the map UI element */
 	private GoogleMap gMap;
-
-	/** Reference to the location client (Allows use of GPS) */
-	private LocationClient mLocationClient;
 	
 	/**A Target callback to handle the image view loading */
 	private Target target;
@@ -96,9 +91,6 @@ public class TripSummaryActivity extends BumprActivity /*implements
 		
 		userPic = (ImageView) findViewById(R.id.img_user);
 		loadImage();
-
-		// Create new location client.
-		//mLocationClient = new LocationClient(this, this, this);
 		
 		// Set up list of points for trip to display route on the map
 		ArrayList<LatLng> points = new ArrayList<LatLng>();
