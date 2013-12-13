@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -22,6 +23,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -120,10 +123,6 @@ public class SearchTabActivity extends BumprActivity {
  		setMenuOnClickListener(); 
 
  		initSlidingMenu(slMenu);
- 		
- 		RelativeLayout parent = (RelativeLayout) findViewById(R.id.parent_view);
- 		//Remove focus when you enter the app
-		parent.requestFocus();
     }
 	
 	/**
@@ -274,7 +273,11 @@ public class SearchTabActivity extends BumprActivity {
 		getSupportActionBar().setCustomView(R.layout.search_tab_menu);
 		
 		EditText search = (EditText) findViewById(R.id.et_search);
-		//search.requestFocus();
+		search.requestFocus();
+		//Hide keyboard -- Keyboard shouldn't show in this view
+		getWindow().setSoftInputMode(
+			      WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
 		search.setOnClickListener(new OnClickListener() {
 
 			@Override
