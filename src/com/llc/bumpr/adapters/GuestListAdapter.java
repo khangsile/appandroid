@@ -46,8 +46,8 @@ public class GuestListAdapter extends ArrayAdapter<User> {
 		GuestListAdapter.users.add(trip.getOwner());
 		if(trip.getUsers() != null)
 			GuestListAdapter.users.addAll(trip.getUsers());
-		for(int i = 0; i < GuestListAdapter.users.size(); i++)
-			Log.i("com.llc.bumpr", GuestListAdapter.users.get(i).getFirstName());
+		
+		Log.i("com.llc.bumpr users", GuestListAdapter.users.size()+"");
 	}
 
 	@Override
