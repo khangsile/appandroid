@@ -25,13 +25,13 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.adapters.SlidingMenuListAdapter;
@@ -266,7 +266,7 @@ public class SearchTabActivity extends BumprActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
-		SearchView searchView = new SearchView(getSupportActionBar().getThemedContext());
+		/*SearchView searchView = new SearchView(getSupportActionBar().getThemedContext());
         searchView.setQueryHint("Where do you want to go?");
         searchView.setIconifiedByDefault(false);
         searchView.setOnSearchClickListener(new OnClickListener() {
@@ -307,6 +307,74 @@ public class SearchTabActivity extends BumprActivity {
                 
         MenuInflater inflater = getSupportMenuInflater();
  		inflater.inflate(R.menu.search_menu, menu);
+		*/
+		
+		getSupportActionBar().setDisplayShowCustomEnabled(true);
+		getSupportActionBar().setCustomView(R.layout.search_tab_menu);
+		
+		EditText search = (EditText) findViewById(R.id.et_search);
+		search.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent i = new Intent(getApplicationContext(), SearchLocationActivity.class);
+				startActivityForResult(i, DESTINATION_CODE);
+			}
+			
+		});
+		
+		search.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				if (!arg1) return; 
+				
+				Intent i = new Intent(getApplicationContext(), SearchLocationActivity.class);
+				startActivityForResult(i, DESTINATION_CODE);
+			}
+			
+		});
+		
+		Button minPeople = (Button) findViewById(R.id.btn_people);
+		minPeople.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Resources r = getResources();
+		        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
+				
+				MinPeoplePopUp mPopUp = new MinPeoplePopUp(getApplicationContext(), null, new OnSubmitListener() {
+					@Override
+					public void valueChanged(int value) {
+						request.setMinSeats(value);
+					}		
+				});
+				mPopUp.showAtLocation(pager, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
+				mPopUp.setInstructions("Select the number of passengers");
+			}	
+		});
+		
+		Button calendar = (Button) findViewById(R.id.btn_calendar);
+		calendar.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Resources r = getResources();
+		        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics());
+				
+				CalendarPopUp cPopUp = new CalendarPopUp(getApplicationContext(), null, new CalendarPopUp.OnSubmitListener() {
+
+					@Override
+					public void valueChanged(Date date) {
+		
+					}
+					
+				});
+				cPopUp.showAtLocation(pager, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
+				cPopUp.setInstructions("Find all rides after the chosen date.");
+			}
+			
+		});
 		
 		return true;
 	}

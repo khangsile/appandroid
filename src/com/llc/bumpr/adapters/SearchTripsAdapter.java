@@ -71,7 +71,7 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
 		holder.tvUsername.setText(trip.getOwner().getFirstName() + " " + trip.getOwner().getLastName());
 		
 		double cost = trip.getCost(); //Get cost and display with two decimal points
-		holder.tvCost.setText("$ " + new DecimalFormat("##.##").format(cost));
+		holder.tvCost.setText("$" + new DecimalFormat("##.##").format(cost));
 		String start = trip.getStart().title;
 		holder.tvStart.setText(compressTitle(start));
 		String end = trip.getEnd().title;
