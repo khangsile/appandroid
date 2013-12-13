@@ -264,49 +264,6 @@ public class SearchTabActivity extends BumprActivity {
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-
-		/*SearchView searchView = new SearchView(getSupportActionBar().getThemedContext());
-        searchView.setQueryHint("Where do you want to go?");
-        searchView.setIconifiedByDefault(false);
-        searchView.setOnSearchClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View view) {
-				SearchView searchView = (SearchView) view;
-				
-				Intent i = new Intent(getApplicationContext(), SearchLocationActivity.class);
-				i.putExtra("location", searchView.getQuery());
-				startActivityForResult(i, DESTINATION_CODE);
-				
-			}
-        	
-        });
-        searchView.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-			@Override
-			public void onFocusChange(View view, boolean hasFocus) {
-				if (!hasFocus) return;
-				
-				SearchView searchView = (SearchView) view;
-				
-				Intent i = new Intent(getApplicationContext(), SearchLocationActivity.class);
-				i.putExtra("location", searchView.getQuery());
-				startActivityForResult(i, DESTINATION_CODE);
-			}
-        	
-        });
-        
-        if (request.getEnd() != null) {
-        	searchView.setQuery(request.getEnd().title, false);
-        }
-        
-        menu.add("Search")
-            .setActionView(searchView)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-                
-        MenuInflater inflater = getSupportMenuInflater();
- 		inflater.inflate(R.menu.search_menu, menu);
-		*/
 		
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
 		getSupportActionBar().setCustomView(R.layout.search_tab_menu);
@@ -328,8 +285,6 @@ public class SearchTabActivity extends BumprActivity {
         	search.setText(request.getEnd().title);
         }
         
-		
-		
 		Button minPeople = (Button) findViewById(R.id.btn_people);
 		minPeople.setOnClickListener(new OnClickListener() {
 
@@ -460,8 +415,12 @@ public class SearchTabActivity extends BumprActivity {
     public void onBackPressed() {
     	if(slidingMenu.isMenuShowing())
     		slidingMenu.toggle();
-    	else
-    		super.onBackPressed();
+    	else {
+    		Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+    	}
     }
     
 	// If menu button pressed, show or hide the sliding menu
