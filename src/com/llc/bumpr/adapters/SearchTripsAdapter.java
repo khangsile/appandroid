@@ -81,7 +81,7 @@ public class SearchTripsAdapter extends ArrayAdapter<Trip> {
         holder.tvDate.setText(format.format(trip.getDate()));
 		
 		holder.color.setBackgroundColor(Colors.getColor(position));
-				
+		
 		return view;
 	}
 	

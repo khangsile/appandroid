@@ -305,7 +305,7 @@ public class CreateTripActivity extends BumprActivity implements
 			@Override
 			public void success(List<Address> arg0, Response arg1) {
 				Location location;
-				startCoor = new Location(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()).setTitle(start);
+				startCoor = new Location(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()).setTitle(compressTitle(start));
 				tripBldr.setStart(startCoor); //Set trip start coordinate
 				
 				Object[] ends = {end};
@@ -319,7 +319,7 @@ public class CreateTripActivity extends BumprActivity implements
 
 					@Override
 					public void success(List<Address> arg0, Response arg1) {
-						endCoor = new Location(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()).setTitle(end);
+						endCoor = new Location(arg0.get(0).getLatitude(), arg0.get(0).getLongitude()).setTitle(compressTitle(end));
 						tripBldr.setEnd(endCoor); //Set trip end coordinate
 						
 						startLoc = new LatLng(startCoor.lat, startCoor.lon);
@@ -513,5 +513,18 @@ public class CreateTripActivity extends BumprActivity implements
 
 	@Override
 	public void onDisconnected() {
+	}
+	
+	/******************************* HELPER ***************************/
+	
+	private String compressTitle(String title) {
+		String[] titles = title.split(",");
+		if (titles.length > 3) {
+			return titles[1] + titles[2];
+		} else if (titles.length > 2){
+			return titles[0] + titles[1];
+		} else {
+			return titles[0];
+		}
 	}
 }

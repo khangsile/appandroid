@@ -81,6 +81,9 @@ public class SearchListFragment extends SearchTabFragment {
     	adapter.clear();
     	adapter.addAll(trips);
     	adapter.notifyDataSetChanged();
+    	
+    	if (!trips.isEmpty())
+    		listView.setSelectionFromTop(0, 50);
 	}
 
     /********************** INTERFACE *************************/

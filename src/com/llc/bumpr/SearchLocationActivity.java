@@ -61,7 +61,7 @@ public class SearchLocationActivity extends BumprActivity {
 						
 						Intent i = new Intent();
 						i.putExtra("address", arg1.get(0));
-						i.putExtra("query", location);
+						i.putExtra("query", compressTitle(location));
 						setResult(200, i);
 						finish();
 					}
@@ -116,6 +116,19 @@ public class SearchLocationActivity extends BumprActivity {
 	
 	public void clear(View v) {
 		search.setText("");
+	}
+	
+	/*************************** HELPER *********************/
+	
+	private String compressTitle(String title) {
+		String[] titles = title.split(",");
+		if (titles.length > 3) {
+			return titles[1] + titles[2];
+		} else if (titles.length > 2){
+			return titles[0] + titles[1];
+		} else {
+			return titles[0];
+		}
 	}
 	
 }

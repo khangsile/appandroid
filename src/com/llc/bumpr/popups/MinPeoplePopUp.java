@@ -104,12 +104,13 @@ public class MinPeoplePopUp extends PopupWindow {
 	}
 	
 	private void upPressed(View v) {
-		setCount(++count);
+		count++;
+		setCount(count);
 	}
 	
 	private void downPressed(View v) {
-		if (count <= minimum)
-		setCount(count--);
+		if (count > minimum)
+			setCount(--count);
 	}
 	
 	public void setCount(int count) {
