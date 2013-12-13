@@ -144,10 +144,15 @@ public class SearchTabActivity extends BumprActivity {
         	Address address = data.getParcelableExtra("address");
         	String query = data.getStringExtra("query");
         	
-        	request.setEnd(new Location()
-        				.setLatitude(address.getLatitude())
-        				.setLongitude(address.getLongitude())
-        				.setTitle(query));
+        	if (address != null) {
+        		request.setEnd(new Location()
+        		.setLatitude(address.getLatitude())
+        		.setLongitude(address.getLongitude())
+        		.setTitle(query));
+        	} else {
+        		request.setEnd(new Location()
+        		.setTitle(query));
+        	}
         	search();
         	
         	getSherlock().dispatchInvalidateOptionsMenu();

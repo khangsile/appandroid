@@ -8,12 +8,14 @@ import android.location.Address;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.koushikdutta.async.future.FutureCallback;
 import com.llc.bumpr.adapters.SearchLocationAdapter;
@@ -103,6 +105,38 @@ public class SearchLocationActivity extends BumprActivity {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
+			}
+			
+		});
+		
+		search.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+				final String location = arg0.getText().toString();
+				Object[] params = { location };
+					
+				new StringLocationTask(getApplicationContext(), new FutureCallback<List<Address>>() {
+
+					@Override
+					public void onCompleted(Exception arg0, List<Address> arg1) {
+						Intent i = new Intent();
+
+						if (arg0 != null) arg0.printStackTrace();
+						if (arg1 != null) {
+							if (!arg1.isEmpty()) {
+								i.putExtra("address", arg1.get(0));
+							}
+						}
+							
+						i.putExtra("query", compressTitle(location));
+						setResult(200, i);
+						finish();
+					}
+						
+				}).execute(params);
+				
+				return false;
 			}
 			
 		});
