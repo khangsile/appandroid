@@ -248,6 +248,7 @@ public class CreateTripActivity extends BumprActivity implements
 			
 		});
 		cPopUp.showAtLocation(parent, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
+		cPopUp.setBtnApplyText("Submit");
 	}
 	
 	public void setPassengers(View v) {
@@ -265,7 +266,8 @@ public class CreateTripActivity extends BumprActivity implements
 			
 		});
 		mPopUp.showAtLocation(parent, Gravity.BOTTOM | Gravity.LEFT, 0, (int)px);
-		mPopUp.setInstructions("Minimum number of people required\nfor this trip");
+		mPopUp.setBtnApplyText("Submit");
+		mPopUp.setInstructions("How many seats would you like to\nreserve for this trip?");
 	}
 	
 	/**

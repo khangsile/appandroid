@@ -29,6 +29,7 @@ public class PlacesAutoComplete {
 	    try {
 	        StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
 	        sb.append("?input=" + URLEncoder.encode(input, "utf8"));
+	        sb.append("&types=(cities)");
 	        sb.append("&sensor=false&key=" + API_KEY);
 	        
 	        URL url = new URL(sb.toString());
