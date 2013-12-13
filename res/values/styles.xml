@@ -27,9 +27,10 @@
         <item name="switchStyle">@style/Widget.Holo.Light.CompoundButton.Switch</item>
     </style>
     
-    <style name="Widget.Styled.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">
-         <item name="background">@color/ghost_white</item>
-       	 <item name="android:background">@color/ghost_white</item>
+    <style name="Widget.Styled.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">       	 
+       	 <item name="background">@drawable/action_bar_background</item>
+       	 <item name="android:background">@drawable/action_bar_background</item>
+       	 
     </style>
     
     <style name="Widget.Styled.ActionBar.Tab" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">

@@ -60,7 +60,6 @@ public class MyRequests extends BumprActivity {
 		tripRequests = new ArrayList<Request>();
 		requestAdapter = new MyRequestsAdapter(this, tripRequests, R.layout.my_requests_row, extras.getString("requestType"));
 		requests.setAdapter(requestAdapter);
-		
 	}
 
 	/**
@@ -73,6 +72,8 @@ public class MyRequests extends BumprActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
+				Request request = (Request) parent.getItemAtPosition(position);
+				Toast.makeText(getApplicationContext(), "" + request.getAccepted(), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
