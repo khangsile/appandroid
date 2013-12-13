@@ -4,11 +4,13 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.llc.bumpr.R;
@@ -55,7 +57,7 @@ public class MyRequestsAdapter extends ArrayAdapter<Request> {
                 
                 //Create new ViewHolder object
                 holder = new ViewHolder((CircularImageView)vGroup.findViewById(R.id.iv_profile_pic), (TextView)vGroup.findViewById(R.id.tv_start_add), 
-                				(TextView)vGroup.findViewById(R.id.tv_end_add), (TextView)vGroup.findViewById(R.id.tv_driver_name));
+                				(TextView)vGroup.findViewById(R.id.tv_end_add), (TextView)vGroup.findViewById(R.id.tv_driver_name), (RelativeLayout)vGroup.findViewById(R.id.rl_request_row));
                 
                 vGroup.setTag(holder);
                 view = vGroup;
@@ -70,7 +72,6 @@ public class MyRequestsAdapter extends ArrayAdapter<Request> {
         //Use class holder to and fill details with trip and driver details
         holder.startAdd.setText(compressTitle(t.getStart().title));
         holder.endAdd.setText(compressTitle(t.getEnd().title));
-		
         
         if (type.equals("Inbox")) {
         	holder.userName.setText(r.getUser().getFirstName() + " " + r.getUser().getLastName());
@@ -90,12 +91,14 @@ public class MyRequestsAdapter extends ArrayAdapter<Request> {
 		final TextView userName;
 		final TextView startAdd;
 		final TextView endAdd;
+		final RelativeLayout row;
 
-		private ViewHolder(CircularImageView imageView, TextView startAdd, TextView endAdd, TextView userName) {
+		private ViewHolder(CircularImageView imageView, TextView startAdd, TextView endAdd, TextView userName, RelativeLayout row) {
 			this.imageView = imageView;
 			this.startAdd = startAdd;
 			this.endAdd = endAdd;
 			this.userName = userName;
+			this.row = row;
 		}
 	}
 	

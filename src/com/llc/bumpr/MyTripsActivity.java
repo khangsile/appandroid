@@ -83,7 +83,9 @@ public class MyTripsActivity extends BumprActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				Toast.makeText(getApplicationContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_LONG).show();
+				Trip trip = (Trip) parent.getItemAtPosition(position);
+				
+				//Take you to trip guest list
 
 			}
 		});

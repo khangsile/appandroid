@@ -10,6 +10,8 @@ import retrofit.client.Response;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,6 +45,9 @@ import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Session;
 import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+import com.squareup.picasso.Picasso.LoadedFrom;
 
 public class TripSummaryActivity extends BumprActivity /*implements
 		GooglePlayServicesClient.ConnectionCallbacks,
@@ -62,6 +68,12 @@ public class TripSummaryActivity extends BumprActivity /*implements
 
 	/** Reference to the location client (Allows use of GPS) */
 	private LocationClient mLocationClient;
+	
+	/**A Target callback to handle the image view loading */
+	private Target target;
+	
+	/** Reference to the Image View for the user picture */
+	private ImageView userPic;
 
 	/** Request value to get current location (Using GPS) */
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -81,6 +93,9 @@ public class TripSummaryActivity extends BumprActivity /*implements
 		// Get map fragment!
 		gMap = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map_request)).getMap();
+		
+		userPic = (ImageView) findViewById(R.id.img_user);
+		loadImage();
 
 		// Create new location client.
 		//mLocationClient = new LocationClient(this, this, this);
@@ -216,16 +231,6 @@ public class TripSummaryActivity extends BumprActivity /*implements
 					}
 				});
 			} else{
-				/*completeButton.setText("Trip Complete");
-				//Set on click listener
-				completeButton.setOnClickListener(new View.OnClickListener() {
-		
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						tripComplete(v);
-					}
-				});*/
 				completeButton.setVisibility(View.GONE);
 			}
 		}
@@ -287,6 +292,28 @@ public class TripSummaryActivity extends BumprActivity /*implements
 
 	@Override
 	protected void initializeMe(User activeUser) {
+	}
+	
+	private void loadImage() {
+		target = new Target() {
+
+			@Override
+			public void onBitmapFailed(Drawable arg0) {
+				userPic.setImageResource(R.drawable.missing);
+			}
+
+			@Override
+			public void onBitmapLoaded(Bitmap arg0, LoadedFrom arg1) {
+				userPic.setImageBitmap(arg0);
+			}
+
+			@Override
+			public void onPrepareLoad(Drawable arg0) {
+				userPic.setImageResource(R.drawable.missing);
+			}
+		};
+		
+		Picasso.with(TripSummaryActivity.this).load(user.getProfileImage()+"?type=large").into(target);
 	}
 
 }
