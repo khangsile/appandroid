@@ -144,6 +144,12 @@ public class CreateTripActivity extends BumprActivity implements
 		
 		createBtn = (Button) findViewById(R.id.btn_create);
 		
+		//Move to users current location
+		if (isGooglePlayServicesAvailable()) {
+			mLocationClient.connect();
+			// gMap.setMyLocationEnabled(true);
+		}
+		
 		//Set places autocomplete adapters
 		startAdd.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.auto_complete_list_item));
 		endAdd.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.auto_complete_list_item));
@@ -422,10 +428,10 @@ public class CreateTripActivity extends BumprActivity implements
 		super.onStart();
 		// Connect to the location client and get the current location of the
 		// user
-		if (isGooglePlayServicesAvailable()) {
+		/*if (isGooglePlayServicesAvailable()) {
 			mLocationClient.connect();
 			// gMap.setMyLocationEnabled(true);
-		}
+		}*/
 	}
 
 	@Override
