@@ -22,7 +22,7 @@ public class MinPeoplePopUp extends PopupWindow {
 	private Button btnApply;
 	private TextView instructions;
 	private TextView tvCount;
-	private int count = 1;
+	private int count = 2;
 	
 	public MinPeoplePopUp(Context context, ViewGroup root, OnSubmitListener listener) {
 		super(context);
