@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:layout_weight=".72"
         android:textSize="15sp"
+        android:singleLine="true"
         android:hint="Where do you want to go?" />
     
     <Button android:id="@+id/btn_calendar"

@@ -22,7 +22,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -313,27 +312,23 @@ public class SearchTabActivity extends BumprActivity {
 		getSupportActionBar().setCustomView(R.layout.search_tab_menu);
 		
 		EditText search = (EditText) findViewById(R.id.et_search);
+		search.requestFocus();
 		search.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View v) {
 				Intent i = new Intent(getApplicationContext(), SearchLocationActivity.class);
 				startActivityForResult(i, DESTINATION_CODE);
 			}
 			
 		});
 		
-		search.setOnFocusChangeListener(new OnFocusChangeListener() {
 
-			@Override
-			public void onFocusChange(View arg0, boolean arg1) {
-				if (!arg1) return; 
-				
-				Intent i = new Intent(getApplicationContext(), SearchLocationActivity.class);
-				startActivityForResult(i, DESTINATION_CODE);
-			}
-			
-		});
+        if (request.getEnd() != null) {
+        	search.setText(request.getEnd().title);
+        }
+        
+		
 		
 		Button minPeople = (Button) findViewById(R.id.btn_people);
 		minPeople.setOnClickListener(new OnClickListener() {

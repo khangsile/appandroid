@@ -7,8 +7,9 @@
 	<ListView android:id="@+id/lv_search_trip"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:padding="10dp"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
 	    android:divider="@android:color/transparent"
   		android:dividerHeight="10.0sp"
-  		android:background="#003366" />
+  		android:background="@drawable/san_fran" />
 </LinearLayout>
