@@ -113,6 +113,16 @@
             android:background="#e6e6fa"
             android:onClick="declineRequest"
             android:text="@string/decline" />
+        
+        <TextView
+            android:id="@+id/tv_acc_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:visibility="gone"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+            
     </LinearLayout>
 
 </RelativeLayout>

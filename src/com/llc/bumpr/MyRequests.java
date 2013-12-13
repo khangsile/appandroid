@@ -18,6 +18,7 @@ import com.llc.bumpr.adapters.MyRequestsAdapter;
 import com.llc.bumpr.sdk.lib.ApiRequest;
 import com.llc.bumpr.sdk.models.Request;
 import com.llc.bumpr.sdk.models.Session;
+import com.llc.bumpr.sdk.models.Trip;
 import com.llc.bumpr.sdk.models.User;
 
 public class MyRequests extends BumprActivity {
@@ -31,6 +32,8 @@ public class MyRequests extends BumprActivity {
 	private ActionBar abs;
 	/** Reference to the active user */
 	private User user;
+	/** Holder of the type of box you in are -- Inbox or Outbox */
+	private String boxType;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,8 @@ public class MyRequests extends BumprActivity {
 		//Get extras passed into this activity
 		Intent i = getIntent();
 		Bundle extras = i.getExtras();
+		
+		boxType = extras.getString("requestType");
 		
 		//Set the title of this activity to be the type of requests displayed
 		abs.setTitle(extras.getString("requestType"));
@@ -73,6 +78,54 @@ public class MyRequests extends BumprActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Request request = (Request) parent.getItemAtPosition(position);
+				
+				if(boxType.equals("Outbox")){
+					if((request.getAccepted() == null) || (request.getAccepted().booleanValue() == false)) { //If not answered yet or rejected, go to trip summary
+						Intent intent = new Intent(MyRequests.this, TripSummaryActivity.class);
+						intent.putExtra("user", request.getTrip().getOwner());
+			        	intent.putExtra("request", request);
+			        	
+			        	if(request.getAccepted() == null)
+			        		intent.putExtra("type", "review");
+			        	else {
+			        		intent.putExtra("type", request.getAccepted().toString());
+			        		Log.i("com.llc.bumpr.type", request.getAccepted().toString());
+			        	}
+			        	
+			        	startActivity(intent);
+						}
+					else { //If request accepted, go to Friend List viewer
+						ApiRequest apiReq = Trip.getSummary(MyRequests.this, request.getTrip().getId(), new FutureCallback<Trip>() {
+							@Override
+							public void onCompleted(Exception arg0, Trip arg1) {
+								// TODO Auto-generated method stub
+								Trip t = arg1;
+								
+								//Take you to trip guest list
+								Intent intent = new Intent(getApplicationContext(), FriendsListActivity.class);
+								intent.putExtra("trip", t);
+								startActivity(intent);
+							}
+						});
+						Session.getSession().sendRequest(apiReq);
+					}
+				} 
+				else {
+					if(request.getAccepted() == null){ //If inbox request is not yet answered, answer request
+						Intent intent = new Intent(MyRequests.this, TripSummaryActivity.class);
+						intent.putExtra("user", request.getUser());
+			        	intent.putExtra("request", request);
+			        	intent.putExtra("type", "response");
+			        	startActivity(intent);
+					}
+					else {
+						Intent intent = new Intent(MyRequests.this, TripSummaryActivity.class);
+						intent.putExtra("user", request.getTrip().getOwner());
+			        	intent.putExtra("request", request);
+			        	intent.putExtra("type", request.getAccepted().toString());
+			        	startActivity(intent);
+					}
+				}
 			}
 		});
 	}

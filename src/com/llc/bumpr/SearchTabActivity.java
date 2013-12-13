@@ -27,6 +27,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
@@ -119,6 +120,10 @@ public class SearchTabActivity extends BumprActivity {
  		setMenuOnClickListener(); 
 
  		initSlidingMenu(slMenu);
+ 		
+ 		RelativeLayout parent = (RelativeLayout) findViewById(R.id.parent_view);
+ 		//Remove focus when you enter the app
+		parent.requestFocus();
     }
 	
 	/**
@@ -269,7 +274,7 @@ public class SearchTabActivity extends BumprActivity {
 		getSupportActionBar().setCustomView(R.layout.search_tab_menu);
 		
 		EditText search = (EditText) findViewById(R.id.et_search);
-		search.requestFocus();
+		//search.requestFocus();
 		search.setOnClickListener(new OnClickListener() {
 
 			@Override

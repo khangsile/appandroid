@@ -73,11 +73,11 @@ public class MyRequestsAdapter extends ArrayAdapter<Request> {
         holder.startAdd.setText(compressTitle(t.getStart().title));
         holder.endAdd.setText(compressTitle(t.getEnd().title));
         if (r.getAccepted() == null)
-        	holder.colorView.setBackgroundColor(0x0000);
-        else if(r.getAccepted() == true)
-        	holder.colorView.setBackgroundColor(0x00FF00);
+        	holder.colorView.setBackgroundColor(Color.YELLOW);
+        else if(r.getAccepted().booleanValue() == true)
+        	holder.colorView.setBackgroundColor(Color.GREEN);
         else
-        	holder.colorView.setBackgroundColor(0xFF0000);
+        	holder.colorView.setBackgroundColor(Color.RED);
         
         if (type.equals("Inbox")) {
         	holder.userName.setText(r.getUser().getFirstName() + " " + r.getUser().getLastName());

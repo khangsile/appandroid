@@ -222,7 +222,24 @@ public class TripSummaryActivity extends BumprActivity {
 						sendRequest(v);
 					}
 				});
-			} else{
+			}
+			else if (type.equals("true")||type.equals("false")){
+				completeButton.setVisibility(View.GONE);
+				TextView resp = (TextView) findViewById(R.id.tv_acc_status);
+				resp.setVisibility(View.VISIBLE);
+				resp.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT,1f));
+				
+				if(type.equals("true")){
+					resp.setText("Accepted");
+					resp.setTextColor(0x000000);
+				}
+				else {
+					resp.setText("Rejected");
+					resp.setTextColor(0xFF0000);
+				}
+				
+			}
+			else{
 				completeButton.setVisibility(View.GONE);
 			}
 		}

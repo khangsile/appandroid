@@ -3,20 +3,20 @@
     android:id="@+id/rl_request_row"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="dp" >
+    android:minHeight="1dp" >
 
     <View android:id="@+id/view_color"
         android:layout_width="10dp"
-        android:layout_height="fill_parent" 
+        android:layout_height="80dp" 
         android:layout_alignParentLeft="true"       
-        android:background="#ffccee"
-        android:minHeight="92dp" />
+        android:background="#ffccee"/>
     
     <com.llc.bumpr.lib.CircularImageView
         android:id="@+id/iv_profile_pic"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_toRightOf="@id/view_color"
+        android:layout_centerVertical="true"
         android:padding="5dp" />
 
     <TextView
