@@ -25,6 +25,7 @@ public class GMapV2Painter {
 	private ArrayList<LatLng> points; // must be >= 2
 	private Document document;
 	private GMapV2Direction md;
+	//public static int count = 0;
 	
 	public static void getDistance(final ArrayList<LatLng> points, final Callback<Integer> cb) {
 		new AsyncTask<Object, Void, Integer>() {
@@ -72,6 +73,7 @@ public class GMapV2Painter {
 	
 	// possibly refactor to do individual stopping sections rather than the entire thing at once
 	public void paint() {
+		//count++;
 		new AsyncTask<Object, Void, PolylineOptions>() {
 
 			@Override
@@ -92,6 +94,7 @@ public class GMapV2Painter {
 			@Override
 			protected void onPostExecute(PolylineOptions rectLine) {
 					gMap.addPolyline(rectLine);
+					//count--;
 			}
 			
 		}.execute();

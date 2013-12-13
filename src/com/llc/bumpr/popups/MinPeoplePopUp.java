@@ -22,7 +22,8 @@ public class MinPeoplePopUp extends PopupWindow {
 	private Button btnApply;
 	private TextView instructions;
 	private TextView tvCount;
-	private int count = 2;
+	private int count = 1;
+	private int minimum = 1;
 	
 	public MinPeoplePopUp(Context context, ViewGroup root, OnSubmitListener listener) {
 		super(context);
@@ -87,6 +88,14 @@ public class MinPeoplePopUp extends PopupWindow {
 		btnApply.setText(action);
 	}
 	
+	public void setMinimum(int minimum) {
+		this.minimum = minimum;
+		if (count < minimum) {
+			count = minimum;
+			setCount(count);
+		}
+	}
+	
 	/************************* BUTTON METHODS ********************/
 	
 	private void submit(View v) {
@@ -99,7 +108,7 @@ public class MinPeoplePopUp extends PopupWindow {
 	}
 	
 	private void downPressed(View v) {
-		if (count <= 2)
+		if (count <= minimum)
 		setCount(count--);
 	}
 	

@@ -3,7 +3,9 @@ package com.llc.bumpr.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +46,9 @@ public class SearchMapFragment extends SearchTabFragment {
 		if (trips.isEmpty()) return;
 		
 		int index = 0; 
+		
+		final ProgressDialog pd = ProgressDialog.show(getActivity(),
+				"Please Wait", "Loading routes...", false, true);
 		for (Trip trip : trips) {
 			ArrayList<LatLng> points = new ArrayList<LatLng>();
 			points.add(new LatLng(trip.getStart().lat, trip.getStart().lon));
@@ -57,5 +62,7 @@ public class SearchMapFragment extends SearchTabFragment {
 			
 			index++;
 		}
+		pd.dismiss();
+		
 	}
 }
