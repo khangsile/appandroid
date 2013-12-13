@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.koushikdutta.async.future.FutureCallback;
@@ -45,6 +46,12 @@ public class MyTripsActivity extends BumprActivity {
 		user = User.getActiveUser();
 		
 		trips = (ListView) findViewById(R.id.lv_my_requests);
+		int dividerpx = (int)(10 * getResources().getDisplayMetrics().density + 0.5f);
+		ImageView v = new ImageView(this);
+		v.setBackgroundColor(Color.TRANSPARENT);
+		trips.setDivider(v.getDrawable());
+		trips.setDividerHeight(dividerpx);
+		trips.setBackgroundResource(R.drawable.san_fran);
 		
 		abs.setTitle("My Trips");	
 		
@@ -53,7 +60,7 @@ public class MyTripsActivity extends BumprActivity {
 		
 		//Create new adapter to display requests and use this adapter to display requests in the list view
 		tripDetails = new ArrayList<Trip>();
-		tripAdapter = new MyTripsAdapter(this, tripDetails, R.layout.trip_row);
+		tripAdapter = new MyTripsAdapter(this, tripDetails, R.layout.search_trip_row);
 		trips.setAdapter(tripAdapter);
 		
 		final int px = (int)(5 * getResources().getDisplayMetrics().density + 0.5f);
